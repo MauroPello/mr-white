@@ -117,8 +117,8 @@
     </div>
   </template>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
+import { saveGameStateToLocalStorage, clearSavedGameState } from '~/utils/gameStateStorage';
 import {
   useGamePhase,
   useActivePlayers,
@@ -146,7 +146,8 @@ const activePlayersState = useActivePlayers();
 const currentRound = useCurrentRound();
 const gameWordPairState = useGameWordPair();
 const assignmentsState = useAssignments();
-const playersListState = usePlayers();
+const playersListState = usePlayers(); // Need this for saving
+const numberOfUndercoversState = useNumberOfUndercovers(); // Need this for saving
 const currentVotes = useCurrentVotes();
 const votingPlayerIndex = useVotingPlayerIndex();
 const lastEliminatedState = useLastEliminated();
@@ -201,13 +202,60 @@ const isPlayerEliminated = (playerName: string): boolean => eliminatedPlayerName
 // --- Watchers --- (Unchanged)
 watch(activePlayersState, (newActivePlayers, oldActivePlayers) => {
     if (newActivePlayers && gamePhase.value !== 'showing_words' && !gamePhase.value.startsWith('game_over')) {
-         nextTick(() => {
-             checkAndDetermineWinner();
-         });
+        nextTick(() => { checkAndDetermineWinner(); });
     }
 }, { deep: true });
 
-// --- Methods --- (Unchanged functions: showWord, hideWordAndProceed, startVotingPhase, castVote, processVotes, goToDiscussion, getOriginalAssignmentsInOrder, playAgain)
+// --- NEW: Watcher for Auto-Saving Game State ---
+watchEffect(() => {
+    // This effect runs initially and whenever any of its dependencies change.
+    // We access all relevant state refs here, so any change triggers a save.
+    // Avoid saving during initial load if state isn't fully set or if phase is error
+    if (gamePhase.value && gamePhase.value !== 'error' && activePlayersState.value && assignmentsState.value) {
+        // Don't save immediately on setup if navigating right away
+        // A small delay can prevent saving incomplete initial state during navigation/setup
+        // However, for robustness, let's save whenever state is stable.
+         if (gamePhase.value !== 'showing_words' || wordShowingPlayerIndex.value > 0 || showingWord.value) {
+              // Save unless it's the very start of showing_words before interaction
+             saveCurrentGameState();
+         } else if (gamePhase.value === 'showing_words' && wordShowingPlayerIndex.value === 0 && !showingWord.value && activePlayersState.value?.length > 0) {
+             // If it IS the very start, maybe save initial state once?
+             // Let's rely on the save in index.vue after startGame for initial state.
+             // console.log("Skipping auto-save at initial word showing state.");
+         } else {
+             saveCurrentGameState(); // Save in other valid states
+         }
+    }
+});
+
+// Helper function to gather current state and save it (can be defined here or imported if moved)
+function saveCurrentGameState() {
+    // Make sure all required states have values before saving
+    // Especially check potentially null values like gameWordPair
+    if (!playersListState.value || !gameWordPairState.value || !assignmentsState.value || !activePlayersState.value ) {
+        console.warn("Attempted to save game state, but some essential refs are null/empty. Aborting save.", {
+             players: playersListState.value, gp: gameWordPairState.value, a: assignmentsState.value, ap: activePlayersState.value
+        });
+        return;
+    }
+
+    saveGameStateToLocalStorage({
+        players: playersListState.value,
+        gameWordPair: gameWordPairState.value,
+        assignments: assignmentsState.value,
+        numberOfUndercovers: numberOfUndercoversState.value,
+        activePlayers: activePlayersState.value,
+        currentRound: currentRound.value,
+        gamePhase: gamePhase.value,
+        currentVotes: currentVotes.value,
+        votingPlayerIndex: votingPlayerIndex.value,
+        wasVoteTied: wasVoteTiedState.value,
+        lastEliminated: lastEliminatedState.value,
+        eliminatedHistory: eliminatedHistory.value,
+        gameOverMessage: gameOverMessageState.value,
+        finalRoleReveal: finalRoleRevealState.value,
+    });
+}
 
 function showWord() { showingWord.value = true; }
 
@@ -379,10 +427,13 @@ function getOriginalAssignmentsInOrder(): PlayerAssignment[] {
     });
 }
 
+// Modified Play Again
 function playAgain() {
+  // Clear the saved state BEFORE navigating away
+  clearSavedGameState();
+  // Resetting global state is handled by index.vue on load/discard
   router.push('/');
 }
-
 
 // --- Lifecycle Hook ---
 onMounted(() => {
