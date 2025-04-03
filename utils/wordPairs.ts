@@ -1,30 +1,38 @@
 export interface WordPair {
-    civilian: string;
-    undercover: string;
-  }
+  civilian: string;
+  undercover: string;
+}
 
-  export const wordPairs: WordPair[] = [
-    { civilian: "Apple", undercover: "Pear" },
-    { civilian: "Dog", undercover: "Wolf" },
-    { civilian: "Sun", undercover: "Moon" },
-    { civilian: "Chair", undercover: "Stool" },
-    { civilian: "Coffee", undercover: "Tea" },
-    { civilian: "Car", undercover: "Bicycle" },
-    { civilian: "Book", undercover: "Magazine" },
-    { civilian: "Pizza", undercover: "Burger" },
-    { civilian: "Ocean", undercover: "Lake" },
-    { civilian: "Guitar", undercover: "Violin" },
-    { civilian: "Summer", undercover: "Winter" },
-    { civilian: "Doctor", undercover: "Nurse" },
-    { civilian: "Movie", undercover: "TV Show" },
-    { civilian: "Password", undercover: "Username"},
-    { civilian: "Milk", undercover: "Water"},
-    { civilian: "Beach", undercover: "Desert"},
-    // Add more pairs as desired!
-  ];
+// Translated Word Pairs (Italiano)
+export const wordPairs: WordPair[] = [
+  { civilian: "Mela", undercover: "Pera" },
+  { civilian: "Cane", undercover: "Lupo" },
+  { civilian: "Sole", undercover: "Luna" },
+  { civilian: "Sedia", undercover: "Sgabello" },
+  { civilian: "Caffè", undercover: "Tè" },
+  { civilian: "Auto", undercover: "Bicicletta" },
+  { civilian: "Libro", undercover: "Rivista" },
+  { civilian: "Pizza", undercover: "Hamburger" },
+  { civilian: "Oceano", undercover: "Lago" },
+  { civilian: "Chitarra", undercover: "Violino" },
+  { civilian: "Estate", undercover: "Inverno" },
+  { civilian: "Dottore", undercover: "Infermiere" },
+  { civilian: "Film", undercover: "Serie TV" },
+  { civilian: "Password", undercover: "Username" },
+  { civilian: "Latte", undercover: "Acqua" },
+  { civilian: "Spiaggia", undercover: "Deserto" },
+  { civilian: "Gatto", undercover: "Topo" },
+  { civilian: "Letto", undercover: "Divano" },
+  { civilian: "Calcio", undercover: "Basket" },
+  { civilian: "Pioggia", undercover: "Neve" },
+  { civilian: "Pasta", undercover: "Riso" },
+  { civilian: "Telefono", undercover: "Computer" },
+  { civilian: "Forchetta", undercover: "Cucchiaio" },
+  // Aggiungi altre coppie!
+];
 
-  // Helper function to get a random pair
-  export function getRandomWordPair(): WordPair {
-    const randomIndex = Math.floor(Math.random() * wordPairs.length);
-    return wordPairs[randomIndex];
-  }
+// Helper function to get a random pair
+export function getRandomWordPair(): WordPair {
+  const randomIndex = Math.floor(Math.random() * wordPairs.length);
+  return wordPairs[randomIndex];
+}

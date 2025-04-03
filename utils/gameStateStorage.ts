@@ -3,14 +3,14 @@ import type { WordPair } from '~/utils/wordPairs';
 
 // Define the structure of the saved state
 interface SavedGameState {
-  timestamp: number; // To know how old the save is (optional but good)
-  // --- Replicate state from useGameState ---
+  timestamp: number;
   players: string[];
   gameWordPair: WordPair | null;
   assignments: PlayerAssignment[];
   numberOfUndercovers: number;
   activePlayers: PlayerAssignment[];
   currentRound: number;
+  wordShowingPlayerIndex: number; // Included
   gamePhase: GamePhase;
   currentVotes: Record<string, number>;
   votingPlayerIndex: number;
@@ -28,12 +28,16 @@ const STORAGE_KEY = 'undercoverGameState';
  */
 export function saveGameStateToLocalStorage(state: Omit<SavedGameState, 'timestamp'>): void {
   try {
+    // Ensure essential parts are not null before saving
+    if (!state.players || !state.gameWordPair || !state.assignments || !state.activePlayers) {
+        console.warn("Aborting save: Essential game state parts are missing.", state);
+        return;
+    }
     const stateToSave: SavedGameState = {
       ...state,
       timestamp: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
-    // console.log('Game state saved:', stateToSave); // For debugging
   } catch (error) {
     console.error("Error saving game state to localStorage:", error);
   }
@@ -50,13 +54,30 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
       return null;
     }
     const savedState = JSON.parse(savedStateJSON) as SavedGameState;
-     // Optional: Could add validation here to check if structure is correct
-    // console.log('Game state loaded:', savedState); // For debugging
+
+    // Add default value for wordShowingPlayerIndex if loading old state
+    if (savedState.wordShowingPlayerIndex === undefined) {
+        savedState.wordShowingPlayerIndex = 0;
+    }
+
+    // Basic validation (check if essential keys exist)
+    if (
+        !savedState.players ||
+        !savedState.assignments ||
+        !savedState.activePlayers ||
+        savedState.numberOfUndercovers === undefined ||
+        savedState.currentRound === undefined ||
+        !savedState.gamePhase
+    ) {
+         console.warn("Loaded state is missing essential keys. Discarding.");
+         clearSavedGameState();
+         return null;
+    }
+
     return savedState;
   } catch (error) {
     console.error("Error loading game state from localStorage:", error);
-    // Clear potentially corrupted data
-    clearSavedGameState();
+    clearSavedGameState(); // Clear potentially corrupted data
     return null;
   }
 }
@@ -67,7 +88,6 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
 export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
-    // console.log('Saved game state cleared.'); // For debugging
   } catch (error) {
      console.error("Error clearing saved game state:", error);
   }
