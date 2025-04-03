@@ -114,7 +114,7 @@ onMounted(() => {
 
 const maxPossibleUndercovers = computed(() => {
     const len = playersState.value?.length ?? 0;
-    return Math.max(1, len - 1);
+    return Math.max(1, Math.floor(len / 2));
 });
 
 watch(playersState, (newPlayers) => {
