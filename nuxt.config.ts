@@ -6,7 +6,14 @@ import viewportConfig from "./viewport.config";
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/sitemap', "@nuxt/image", "@nuxtjs/robots", ["nuxt-viewport", viewportConfig], '@nuxt/ui'],
+  modules: [
+    '@nuxtjs/sitemap',
+    "@nuxt/image",
+    "@nuxtjs/robots",
+    ["nuxt-viewport", viewportConfig],
+    '@nuxt/ui',
+    "@nuxt/eslint",
+  ],
   components: ["~/components"],
   robots: robotsConfig,
   image: {

@@ -1,5 +1,5 @@
 import type { PlayerAssignment, GamePhase } from '~/composables/useGameState';
-import type { WordPair } from '~/utils/wordPairs';
+import type { WordPair } from '~/types/wordPairs';
 
 // Define the structure of the saved state
 interface SavedGameState {

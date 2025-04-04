@@ -3,13 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "type-check": "nuxt typecheck",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint --fix .",
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "start": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/eslint": "^1.3.0",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^2.21.1",
     "@nuxtjs/robots": "^5.2.8",

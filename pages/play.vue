@@ -1,7 +1,5 @@
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick, watchEffect } from 'vue';
-import { useRouter } from 'vue-router';
 import { saveGameStateToLocalStorage, clearSavedGameState } from '~/utils/gameStateStorage';
 import {
   useGamePhase, useActivePlayers, useCurrentRound, useGameWordPair,
@@ -83,7 +81,7 @@ watchEffect(() => {
 });
 
 // Watcher for Win Condition Check
-watch(activePlayersState, (newActivePlayers, oldActivePlayers) => {
+watch(activePlayersState, (newActivePlayers, _) => {
     // Check only after the showing words phase and if not already game over
     if (newActivePlayers && gamePhase.value !== 'showing_words' && !gamePhase.value.startsWith('game_over')) {
           nextTick(() => {
@@ -303,9 +301,9 @@ onMounted(() => {
 
           <UButton
               v-if="!showingWord"
-              @click="showWord"
               size="lg"
               icon="i-heroicons-eye"
+              @click="showWord"
               >
               Mostra la Mia Parola
           </UButton>
@@ -316,10 +314,10 @@ onMounted(() => {
                   {{ currentPlayerForWord.word }}
               </p>
               <UButton
-                  @click="hideWordAndProceed"
                   color="amber"
                   size="lg"
                   icon="i-heroicons-check-circle"
+                  @click="hideWordAndProceed"
               >
                   Capito! Nascondi & {{ isLastWordToShow ? 'Inizia Discussione' : 'Passa Telefono' }}
               </UButton>
@@ -360,11 +358,11 @@ onMounted(() => {
 
           <template #footer>
               <UButton
-                  @click="startVotingPhase"
                   color="orange"
                   size="lg"
                   block
                   icon="i-heroicons-chat-bubble-left-right"
+                  @click="startVotingPhase"
               >
                   Inizia Votazione
               </UButton>
@@ -389,11 +387,11 @@ onMounted(() => {
                   <UButton
                       v-for="option in votingOptions"
                       :key="option.name"
-                      @click="castVote(option.name)"
                       :disabled="option.name === currentPlayerForVote.name"
                       size="lg"
                       color="blue"
                       class="w-full max-w-xs"
+                      @click="castVote(option.name)"
                   >
                       Vota per {{ option.name }}
                   </UButton>
@@ -444,10 +442,10 @@ onMounted(() => {
               </p>
 
               <UButton
-                  @click="goToDiscussion"
                   color="violet"
                   size="lg"
                   icon="i-heroicons-forward-20-solid"
+                  @click="goToDiscussion"
                   >
                   Continua alla Prossima Discussione
               </UButton>
@@ -469,7 +467,8 @@ onMounted(() => {
               <h1 class="text-2xl font-bold">Partita Terminata!</h1>
           </template>
 
-          <h2 class="text-xl font-semibold mb-4"
+          <h2
+class="text-xl font-semibold mb-4"
               :class="{'text-red-600 dark:text-red-400': gamePhase === 'game_over_undercover_wins', 'text-green-600 dark:text-green-400': gamePhase === 'game_over_civilians_win'}">
               {{ gameOverMessageState }}
           </h2>
@@ -483,7 +482,8 @@ onMounted(() => {
           <UDivider label="Stato Finale" class="my-6" />
 
           <ul class="space-y-2 text-left max-w-md mx-auto mb-6">
-              <li v-for="player in finalRoleRevealState" :key="player.name"
+              <li
+v-for="player in finalRoleRevealState" :key="player.name"
                   class="p-3 rounded border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
               >
                    <span :class="{ 'font-bold text-red-600 dark:text-red-400': player.isUndercover }">
@@ -495,11 +495,11 @@ onMounted(() => {
           </ul>
 
           <UButton
-              @click="playAgain"
               color="green"
               size="xl"
               block
               icon="i-heroicons-arrow-path"
+              @click="playAgain"
           >
               Gioca Ancora
           </UButton>
@@ -513,7 +513,7 @@ onMounted(() => {
            <p class="text-gray-700 dark:text-gray-300 mb-4">
                Si è verificato un errore imprevisto. Per favore, riavvia il gioco.
            </p>
-           <UButton @click="playAgain" color="red" variant="outline" block size="lg">
+           <UButton color="red" variant="outline" block size="lg" @click="playAgain">
                Riavvia Gioco
            </UButton>
       </UCard>

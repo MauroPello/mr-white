@@ -1,4 +1,4 @@
-import type { WordPair } from '~/utils/wordPairs';
+import type { WordPair } from "~/types/wordPairs";
 
 // Structure for player assignments including their role
 export interface PlayerAssignment {

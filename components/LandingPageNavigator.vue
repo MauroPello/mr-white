@@ -8,6 +8,7 @@ const { isMobile } = useScreenSize();
   <div class="landing-page-navigator__container">
     <div
       class="flex flex-row items-center justify-center text-white bg-primary-500 w-full py-0.5 cursor-pointer text-center"
+      @click="navigateTo('/#gioca')"
     >
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">

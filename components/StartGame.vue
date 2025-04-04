@@ -203,10 +203,10 @@ function saveCurrentGameState() {
       </p>
 
       <div class="flex justify-center gap-4">
-        <UButton @click="resumeGame" color="green" size="lg">
+        <UButton color="green" size="lg" @click="resumeGame">
             Riprendi Partita
         </UButton>
-        <UButton @click="discardSavedGame" color="red" variant="soft" size="lg">
+        <UButton color="red" variant="soft" size="lg" @click="discardSavedGame">
             Scarta e Inizia Nuova
         </UButton>
       </div>
@@ -225,19 +225,19 @@ function saveCurrentGameState() {
             <div class="flex items-center gap-2">
                 <UInput
                     v-model.trim="newPlayerName"
-                    @keyup.enter="addPlayer"
                     placeholder="Nome giocatore..."
                     aria-label="Inserisci nome giocatore"
                     class="flex-grow"
                     size="lg"
                     icon="i-heroicons-user-plus"
+                    @keyup.enter="addPlayer"
                 />
                 <UButton
-                    @click="addPlayer"
                     :disabled="!newPlayerName"
                     icon="i-heroicons-plus-circle"
                     size="lg"
                     aria-label="Aggiungi Giocatore"
+                    @click="addPlayer"
                 />
             </div>
         </UFormGroup>
@@ -255,12 +255,12 @@ function saveCurrentGameState() {
                 >
                     <span class="text-gray-800 dark:text-gray-100">{{ player }}</span>
                     <UButton
-                        @click="removePlayer(index)"
                         icon="i-heroicons-x-circle-20-solid"
                         color="red"
                         variant="ghost"
                         size="sm"
                         aria-label="Rimuovi giocatore"
+                        @click="removePlayer(index)"
                         />
                 </li>
             </ul>
@@ -270,9 +270,9 @@ function saveCurrentGameState() {
          <UFormGroup v-if="playersState.length >= 3" label="Numero di Infiltrati" class="mb-6">
             <div class="flex items-center justify-center gap-2 flex-wrap">
                  <UInput
-                    type="number"
                     id="undercover-count"
                     v-model.number="selectedUndercovers"
+                    type="number"
                     :min="1"
                     :max="maxPossibleUndercovers"
                     aria-label="Numero di Infiltrati"
@@ -308,13 +308,13 @@ function saveCurrentGameState() {
 
         <!-- Start Button -->
         <UButton
-            @click="startNewGame"
             :disabled="playersState.length < 3 || selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers"
             size="xl"
             block
             color="primary"
             class="mt-4"
             trailing-icon="i-heroicons-arrow-right-circle-20-solid"
+            @click="startNewGame"
         >
             Inizia Nuova Partita
         </UButton>
