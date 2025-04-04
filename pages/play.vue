@@ -138,14 +138,14 @@
   const showingWord = ref(false);
 
   // Computed Properties
-  const currentPlayerForWord = computed<PlayerAssignment | null>(() => {
+  const currentPlayerForWord = computed<PlayerAssignment | undefined>(() => {
     const phase = gamePhase.value;
     const players = activePlayersState.value;
     const index = wordShowingPlayerIndex.value;
     if (phase === 'showing_words' && players && players.length > index && index >= 0) {
       return players[index];
     }
-    return null;
+    return undefined;
   });
 
   const isLastWordToShow = computed(() => {
@@ -154,14 +154,14 @@
       return index >= 0 && index >= activePlayersState.value.length - 1;
   });
 
-  const currentPlayerForVote = computed<PlayerAssignment | null>(() => {
+  const currentPlayerForVote = computed<PlayerAssignment | undefined>(() => {
     const phase = gamePhase.value;
     const players = activePlayersState.value;
     const index = votingPlayerIndex.value;
      if (phase === 'voting' && players && players.length > index && index >=0 ) {
         return players[index];
     }
-    return null;
+    return undefined;
   });
 
   const votingOptions = computed(() => activePlayersState.value || []);

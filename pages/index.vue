@@ -84,63 +84,53 @@ import {
   useWordShowingPlayerIndex,
   type PlayerAssignment
 } from '~/composables/useGameState';
+import { companyLogo, companySEODescription, companySEOTitle, companyUrl } from '~/constants/company';
 
 const router = useRouter();
 const newPlayerName = ref('');
 const selectedUndercovers = ref(1);
 const savedGameState = ref<ReturnType<typeof loadGameStateFromLocalStorage>>(null);
-const url = useRequestURL(); // Get current URL info
-
-// --- SEO Setup ---
-const pageTitle = "L'Infiltrato / Mr. White - Gioco di Società Online (Un Telefono)";
-const pageDescription = "Gioca online a L'Infiltrato (Mr. White) con amici usando un solo telefono! Scopri chi ha la parola diversa in questo divertente party game di bluff italiano.";
-// IMPORTANT: Replace with your actual deployed domain URL for canonical and OG tags
-const canonicalUrl = computed(() => url.href); // Use Nuxt's helper for the current URL
-// IMPORTANT: Replace with the absolute URL to your OG image after deployment
-const ogImageUrl = computed(() => `${url.origin}/og-image.png`); // Assumes image is in /public
 
 useHead({
   htmlAttrs: {
     lang: 'it-IT' // Set language globally for the page
   },
-  title: pageTitle,
+  title: companySEOTitle,
   meta: [
     // Standard Meta Tags
-    { name: 'description', content: pageDescription },
+    { name: 'description', content: companySEODescription },
     { name: 'keywords', content: "l'infiltrato, infiltrato, mr white, gioco società, gioco di gruppo, party game, gioco parole, gioco bluff, undercover game, giocare online, un telefono, italiano" },
     // Open Graph (Facebook, LinkedIn, etc.)
-    { property: 'og:title', content: pageTitle },
-    { property: 'og:description', content: pageDescription },
+    { property: 'og:title', content: companySEOTitle },
+    { property: 'og:description', content: companySEODescription },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: canonicalUrl },
-    { property: 'og:image', content: ogImageUrl },
+    { property: 'og:url', content: companyUrl },
+    { property: 'og:image', content: companyLogo },
     { property: 'og:image:width', content: '1200' }, // Optional: Specify image dimensions
     { property: 'og:image:height', content: '630' },
     { property: 'og:locale', content: 'it_IT' },
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: pageTitle },
-    { name: 'twitter:description', content: pageDescription },
-    { name: 'twitter:image', content: ogImageUrl },
+    { name: 'twitter:title', content: companySEOTitle },
+    { name: 'twitter:description', content: companySEODescription },
+    { name: 'twitter:image', content: companyLogo },
     // { name: 'twitter:site', content: '@tuoUsernameTwitter' }, // Optional: If you have a Twitter handle
   ],
   link: [
     // Canonical URL
-    { rel: 'canonical', href: canonicalUrl }
+    { rel: 'canonical', href: companyUrl }
   ],
-  // --- Structured Data (JSON-LD) ---
   script: [
     {
       type: 'application/ld+json',
-      // Use innerHTML or children; children is often preferred for complex objects
-      children: computed(() => JSON.stringify({
+      innerHTML: computed(() => JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [ // Use @graph for multiple related entities
           {
             "@type": "WebApplication",
             "name": "L'Infiltrato / Mr. White - Gioco Online",
-            "description": pageDescription,
-            "url": canonicalUrl.value,
+            "description": companySEODescription,
+            "url": companyUrl,
             "applicationCategory": "GameApplication",
             "operatingSystem": "Web Browser", // Indicate it runs in a browser
             "browserRequirements": "Requires JavaScript",
@@ -151,14 +141,14 @@ useHead({
               "priceCurrency": "EUR"
             },
             // Link to the Game entity
-            "subjectOf": { "@id": `${canonicalUrl.value}#game` }
+            "subjectOf": { "@id": `${companyUrl}#game` }
           },
           {
             "@type": "Game",
-            "@id": `${canonicalUrl.value}#game`, // Unique ID for the game entity
+            "@id": `${companyUrl}#game`, // Unique ID for the game entity
             "name": "L'Infiltrato (Mr. White / Undercover)",
             "description": "Un party game di bluff in cui i giocatori ricevono una parola segreta, tranne uno (o più) 'infiltrati' che ne ricevono una simile ma diversa. L'obiettivo è scoprire gli infiltrati (o sopravvivere come infiltrato) descrivendo la propria parola senza essere troppo ovvi.",
-            "url": canonicalUrl.value,
+            "url": companyUrl,
             "inLanguage": "it-IT",
             "genre": ["Party game", "Word game", "Bluffing game", "Gioco di società"],
             "keywords": "l'infiltrato, infiltrato, mr white, undercover, gioco parole, gioco bluff, party game, gioco società, un telefono",
@@ -275,7 +265,12 @@ function startNewGame() {
   const { civilian, undercover } = selectedPair;
   const playerIndices = Array.from({ length: numPlayers }, (_, i) => i);
   // Fisher-Yates Shuffle
-  for (let i = playerIndices.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [playerIndices[i], playerIndices[j]] = [playerIndices[j], playerIndices[i]]; }
+  for (let i = playerIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    if (playerIndices[i] && playerIndices[j]) {
+      [playerIndices[i], playerIndices[j]] = [playerIndices[j], playerIndices[i]!];
+    }
+  }
   const undercoverIndices = new Set(playerIndices.slice(0, numUndercovers));
 
   const initialAssignments: PlayerAssignment[] = playersState.value.map((name, index) => ({
@@ -286,7 +281,12 @@ function startNewGame() {
 
   const shuffledAssignments = [...initialAssignments];
   // Fisher-Yates Shuffle (for reveal order)
-  for (let i = shuffledAssignments.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffledAssignments[i], shuffledAssignments[j]] = [shuffledAssignments[j], shuffledAssignments[i]]; }
+  for (let i = shuffledAssignments.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    if (shuffledAssignments[i] && shuffledAssignments[j]) {
+      [shuffledAssignments[i], shuffledAssignments[j]] = [shuffledAssignments[j], shuffledAssignments[i]!];
+    }
+  }
 
   // Populate global state refs
   gameWordPair.value = selectedPair;
