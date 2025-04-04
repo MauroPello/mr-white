@@ -25,6 +25,9 @@ export default defineNuxtConfig({
     description: companySEODescription,
     logo: companyLogo,
   },
+  colorMode: {
+    preference: "light",
+  },
   sitemap: {
     autoLastmod: true,
     credits: false,
