@@ -281,215 +281,251 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container play-page">
-    <!-- Phase: Showing Words -->
-    <div v-if="gamePhase === 'showing_words'">
-        <h1>Round {{ currentRound }}: Rivela Parole</h1>
-        <div v-if="currentPlayerForWord">
-          <h2>Passa il telefono a <span class="player-name">{{ currentPlayerForWord.name }}</span></h2>
-          <p v-if="!showingWord">Tocca sotto quando sei pronto/a.</p>
-          <button v-if="!showingWord" @click="showWord" class="action-button">Mostra la Mia Parola</button>
-          <div v-if="showingWord" class="word-reveal">
-            <p>La tua parola è:</p>
-            <strong class="revealed-word">{{ currentPlayerForWord.word }}</strong>
-            <button @click="hideWordAndProceed" class="action-button hide-button">
-              Capito! Nascondi & {{ isLastWordToShow ? 'Inizia Discussione' : 'Passa Telefono' }}
-            </button>
-          </div>
-        </div>
-        <div v-else class="error-message">Errore: Impossibile determinare il giocatore corrente per la rivelazione della parola. Ricarica o riavvia.</div>
-    </div>
+    <UContainer class="py-8">
 
-    <!-- Phase: Discussing -->
-    <div v-else-if="gamePhase === 'discussing'">
-      <h1>Round {{ currentRound }}: Discussione</h1>
-      <div v-if="wasVoteTiedState" class="tie-message info-box">
-          L'ultima votazione è finita in parità! Nessuno è stato eliminato/a. Discutete di nuovo!
-      </div>
-        <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
-        <p>Mettete giù il telefono e discutete! Cercate di trovare l'Infiltrato/gli Infiltrati.</p>
-        <p>Quando siete pronti, il gruppo dovrebbe decidere di iniziare a votare.</p>
-        <button @click="startVotingPhase" class="action-button start-voting-button">Inizia Votazione</button>
-    </div>
+      <!-- Phase: Showing Words -->
+      <UCard v-if="gamePhase === 'showing_words'" class="text-center">
+        <template #header>
+          <h1 class="text-xl font-semibold">Round {{ currentRound }}: Rivela Parole</h1>
+        </template>
 
-    <!-- Phase: Voting -->
-    <div v-else-if="gamePhase === 'voting'">
-          <h1>Round {{ currentRound }}: Votazione</h1>
-          <div v-if="currentPlayerForVote">
-              <h2><span class="player-name">{{ currentPlayerForVote.name }}</span>, per favore vota!</h2>
-              <p>Chi sospetti sia un Infiltrato?</p>
-              <div class="voting-options">
-                <button
-                    v-for="option in votingOptions"
-                    :key="option.name"
-                    @click="castVote(option.name)"
-                    class="action-button vote-button"
-                    :disabled="option.name === currentPlayerForVote.name">
-                    Vota per {{ option.name }}
-                </button>
-              </div>
-          </div>
-          <div v-else class="error-message">Errore: Impossibile determinare il votante corrente. Ricarica o riavvia.</div>
-    </div>
+        <div v-if="currentPlayerForWord" class="space-y-4">
+          <h2 class="text-lg">
+              Passa il telefono a
+              <UBadge color="primary" variant="subtle" size="lg">
+                  {{ currentPlayerForWord.name }}
+              </UBadge>
+          </h2>
 
-    <!-- Phase: Elimination -->
-    <div v-else-if="gamePhase === 'elimination'">
-        <h1>Round {{ currentRound }}: Eliminazione</h1>
-        <div v-if="lastEliminatedState" class="elimination-box info-box">
-            <p class="elimination-result">
-                In base ai voti,
-                <span class="player-name eliminated-player">{{ lastEliminatedState.name }}</span>
-                è stato/a eliminato/a!
-            </p>
-              <p>
-                  {{ lastEliminatedState.name }} era
-                  <strong :class="{'undercover-player': lastEliminatedState.isUndercover}">
-                      {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Cittadino" }}!
-                  </strong>
+          <p v-if="!showingWord" class="text-gray-600 dark:text-gray-400">
+              Tocca sotto quando sei pronto/a.
+          </p>
+
+          <UButton
+              v-if="!showingWord"
+              @click="showWord"
+              size="lg"
+              icon="i-heroicons-eye"
+              >
+              Mostra la Mia Parola
+          </UButton>
+
+          <UCard v-if="showingWord" class="bg-white dark:bg-gray-800 border-primary-500 dark:border-primary-400 border-2">
+              <p class="text-gray-700 dark:text-gray-300 mb-2">La tua parola è:</p>
+              <p class="text-3xl font-bold text-red-600 dark:text-red-400 my-4 p-4 border border-dashed border-gray-300 dark:border-gray-600 rounded break-words bg-gray-50 dark:bg-gray-700/50">
+                  {{ currentPlayerForWord.word }}
               </p>
-              <p>Ci sono {{ activePlayersState.length }} giocatori rimasti.</p>
-              <button @click="goToDiscussion" class="action-button next-round-button">Continua alla Prossima Discussione</button>
+              <UButton
+                  @click="hideWordAndProceed"
+                  color="amber"
+                  size="lg"
+                  icon="i-heroicons-check-circle"
+              >
+                  Capito! Nascondi & {{ isLastWordToShow ? 'Inizia Discussione' : 'Passa Telefono' }}
+              </UButton>
+          </UCard>
         </div>
-          <div v-else class="error-message">Errore: Dettagli eliminazione mancanti, ma in fase di eliminazione. Ricarica o riavvia.</div>
-    </div>
 
-    <!-- Phase: Game Over -->
-    <div v-else-if="gamePhase.startsWith('game_over')">
-        <h1>Partita Terminata!</h1>
-        <h2 :class="{'undercover-wins': gamePhase === 'game_over_undercover_wins', 'civilians-win': gamePhase === 'game_over_civilians_win'}">
-            {{ gameOverMessageState }}
-        </h2>
-        <p v-if="gameWordPairState">Le parole erano: <strong>{{ gameWordPairState.civilian }}</strong> (Cittadino) e <strong>{{ gameWordPairState.undercover }}</strong> (Infiltrato)</p>
-        <h3>Stato Finale:</h3>
-        <ul class="results-list">
-            <li v-for="player in finalRoleRevealState" :key="player.name">
-                  <span :class="{ 'undercover-player': player.isUndercover }">
-                      {{ player.name }}: {{ player.word }}
-                      <span v-if="player.isUndercover"> (Infiltrato!)</span>
-                      <span v-if="isPlayerEliminated(player.name)" class="eliminated-tag"> (Eliminato/a)</span>
-                </span>
-            </li>
-        </ul>
-          <button @click="playAgain" class="action-button play-again-button">Gioca Ancora</button>
-    </div>
+        <UAlert
+          v-else
+          icon="i-heroicons-exclamation-circle"
+          color="red"
+          variant="soft"
+          title="Errore Interno"
+          description="Impossibile determinare il giocatore corrente per la rivelazione della parola. Ricarica o riavvia."
+          />
+      </UCard>
 
-    <!-- Phase: Error State -->
-      <div v-else-if="gamePhase === 'error'">
-        <h1>Errore</h1>
-        <p>Si è verificato un errore imprevisto. Per favore, riavvia il gioco.</p>
-        <button @click="playAgain" class="action-button play-again-button">Riavvia Gioco</button>
-      </div>
+      <!-- Phase: Discussing -->
+      <UCard v-else-if="gamePhase === 'discussing'" class="text-center">
+          <template #header>
+              <h1 class="text-xl font-semibold">Round {{ currentRound }}: Discussione</h1>
+          </template>
+
+          <UAlert
+              v-if="wasVoteTiedState"
+              icon="i-heroicons-hand-raised"
+              color="yellow"
+              variant="subtle"
+              title="Votazione in Parità!"
+              description="Nessuno è stato eliminato/a. Discutete di nuovo!"
+              class="mb-4"
+           />
+
+          <div class="space-y-4 text-gray-700 dark:text-gray-300">
+              <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
+              <p>Mettete giù il telefono e discutete! Cercate di trovare l'Infiltrato/gli Infiltrati.</p>
+              <p>Quando siete pronti, iniziate a votare.</p>
+          </div>
+
+          <template #footer>
+              <UButton
+                  @click="startVotingPhase"
+                  color="orange"
+                  size="lg"
+                  block
+                  icon="i-heroicons-chat-bubble-left-right"
+              >
+                  Inizia Votazione
+              </UButton>
+          </template>
+      </UCard>
+
+      <!-- Phase: Voting -->
+      <UCard v-else-if="gamePhase === 'voting'" class="text-center">
+          <template #header>
+               <h1 class="text-xl font-semibold">Round {{ currentRound }}: Votazione</h1>
+          </template>
+
+          <div v-if="currentPlayerForVote" class="space-y-4">
+              <h2 class="text-lg">
+                  <UBadge color="primary" variant="subtle" size="lg">
+                      {{ currentPlayerForVote.name }}
+                  </UBadge>, per favore vota!
+              </h2>
+              <p class="text-gray-600 dark:text-gray-400">Chi sospetti sia un Infiltrato?</p>
+
+              <div class="flex flex-col items-center gap-3 mt-6">
+                  <UButton
+                      v-for="option in votingOptions"
+                      :key="option.name"
+                      @click="castVote(option.name)"
+                      :disabled="option.name === currentPlayerForVote.name"
+                      size="lg"
+                      color="blue"
+                      class="w-full max-w-xs"
+                  >
+                      Vota per {{ option.name }}
+                  </UButton>
+               </div>
+          </div>
+
+          <UAlert
+              v-else
+              icon="i-heroicons-exclamation-circle"
+              color="red"
+              variant="soft"
+              title="Errore Interno"
+              description="Impossibile determinare il votante corrente. Ricarica o riavvia."
+          />
+      </UCard>
+
+      <!-- Phase: Elimination -->
+      <UCard v-else-if="gamePhase === 'elimination'" class="text-center">
+           <template #header>
+               <h1 class="text-xl font-semibold">Round {{ currentRound }}: Eliminazione</h1>
+           </template>
+
+          <div v-if="lastEliminatedState">
+              <UAlert
+                  icon="i-heroicons-user-minus-20-solid"
+                  color="red"
+                  variant="subtle"
+                  class="mb-4"
+              >
+                  <template #title>
+                      <span class="font-semibold">Eliminato/a!</span>
+                  </template>
+                  <template #description>
+                       In base ai voti,
+                      <UBadge color="red" variant="solid">{{ lastEliminatedState.name }}</UBadge>
+                      è stato/a eliminato/a!
+                      <p class="mt-1">
+                          Era
+                           <span class="font-semibold" :class="{'text-red-600 dark:text-red-400': lastEliminatedState.isUndercover, 'text-green-600 dark:text-green-400': !lastEliminatedState.isUndercover}">
+                              {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Cittadino" }}!
+                           </span>
+                      </p>
+                  </template>
+              </UAlert>
+
+              <p class="text-gray-600 dark:text-gray-400 my-4">
+                  Ci sono {{ activePlayersState.length }} giocatori rimasti.
+              </p>
+
+              <UButton
+                  @click="goToDiscussion"
+                  color="violet"
+                  size="lg"
+                  icon="i-heroicons-forward-20-solid"
+                  >
+                  Continua alla Prossima Discussione
+              </UButton>
+          </div>
+
+          <UAlert
+              v-else
+              icon="i-heroicons-exclamation-circle"
+              color="red"
+              variant="soft"
+              title="Errore Interno"
+              description="Dettagli eliminazione mancanti. Ricarica o riavvia."
+          />
+      </UCard>
+
+      <!-- Phase: Game Over -->
+      <UCard v-else-if="gamePhase.startsWith('game_over')" class="text-center">
+          <template #header>
+              <h1 class="text-2xl font-bold">Partita Terminata!</h1>
+          </template>
+
+          <h2 class="text-xl font-semibold mb-4"
+              :class="{'text-red-600 dark:text-red-400': gamePhase === 'game_over_undercover_wins', 'text-green-600 dark:text-green-400': gamePhase === 'game_over_civilians_win'}">
+              {{ gameOverMessageState }}
+          </h2>
+
+          <p v-if="gameWordPairState" class="text-gray-600 dark:text-gray-400 mb-4">
+              Le parole erano:
+              <UBadge variant="soft" color="gray" size="md">{{ gameWordPairState.civilian }}</UBadge> (Cittadino) e
+              <UBadge variant="soft" color="red" size="md">{{ gameWordPairState.undercover }}</UBadge> (Infiltrato)
+          </p>
+
+          <UDivider label="Stato Finale" class="my-6" />
+
+          <ul class="space-y-2 text-left max-w-md mx-auto mb-6">
+              <li v-for="player in finalRoleRevealState" :key="player.name"
+                  class="p-3 rounded border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+              >
+                   <span :class="{ 'font-bold text-red-600 dark:text-red-400': player.isUndercover }">
+                       {{ player.name }}: {{ player.word }}
+                       <UBadge v-if="player.isUndercover" color="red" variant="subtle" size="xs" class="ml-1">Infiltrato!</UBadge>
+                       <span v-if="isPlayerEliminated(player.name)" class="italic text-gray-500 dark:text-gray-400 text-sm ml-1"> (Eliminato/a)</span>
+                  </span>
+              </li>
+          </ul>
+
+          <UButton
+              @click="playAgain"
+              color="green"
+              size="xl"
+              block
+              icon="i-heroicons-arrow-path"
+          >
+              Gioca Ancora
+          </UButton>
+      </UCard>
+
+      <!-- Phase: Error State -->
+      <UCard v-else-if="gamePhase === 'error'">
+           <template #header>
+              <h1 class="text-xl font-semibold text-red-600 dark:text-red-400">Errore</h1>
+           </template>
+           <p class="text-gray-700 dark:text-gray-300 mb-4">
+               Si è verificato un errore imprevisto. Per favore, riavvia il gioco.
+           </p>
+           <UButton @click="playAgain" color="red" variant="outline" block size="lg">
+               Riavvia Gioco
+           </UButton>
+      </UCard>
+
       <!-- Fallback Loading -->
-      <div v-else> <p>Caricamento partita...</p> </div>
-  </div>
-</template>
+      <div v-else class="text-center py-10">
+          <p class="text-gray-500 dark:text-gray-400">Caricamento partita...</p>
+          <!-- Optional: Add a USkeleton or loading spinner here -->
+           <USkeleton class="h-12 w-1/2 mx-auto my-4" />
+           <USkeleton class="h-8 w-3/4 mx-auto my-4" />
+           <USkeleton class="h-10 w-1/3 mx-auto my-4" />
+      </div>
 
-<style scoped lang="postcss">
-.container {
-@apply max-w-[500px] mx-auto my-4 p-6 bg-[#f0f8ff] rounded-lg shadow-md font-sans text-center min-h-[80vh];
-}
-
-h1 {
-@apply text-[1.8rem] text-[#333] mb-4;
-}
-
-h2 {
-@apply text-[1.4rem] text-[#555] mb-4;
-}
-
-p {
-@apply text-[#555] leading-relaxed mb-4;
-}
-
-.player-name {
-@apply font-bold text-[#007bff] bg-[#e7f3ff] px-2 py-[0.1em] rounded inline-block;
-}
-
-.eliminated-player {
-@apply font-bold text-[#721c24] rounded;
-}
-
-.action-button {
-@apply px-6 py-3 bg-[#17a2b8] text-white border border-transparent rounded cursor-pointer text-base transition-colors duration-200 mt-2 mr-2 inline-block align-middle disabled:bg-[#cccccc] disabled:cursor-not-allowed disabled:opacity-70 hover:enabled:bg-[#138496];
-}
-
-.hide-button {
-@apply bg-[#ffc107] text-[#333] hover:enabled:bg-[#e0a800];
-}
-
-.start-voting-button {
-@apply bg-[#fd7e14] hover:enabled:bg-[#e66a0a];
-}
-
-.next-round-button {
-@apply bg-[#6f42c1] hover:enabled:bg-[#5a34a1];
-}
-
-.play-again-button {
-@apply bg-[#28a745] w-[90%] mt-6 hover:enabled:bg-[#218838];
-}
-
-.word-reveal {
-@apply bg-white p-6 border-2 border-[#17a2b8] rounded mt-4;
-}
-
-.revealed-word {
-@apply block text-2xl font-bold text-[#dc3545] my-3 p-3 bg-[#fdfdfe] border border-dashed border-[#ccc] rounded break-words;
-}
-
-.voting-options {
-@apply mt-6 flex flex-col items-center gap-3;
-}
-
-.vote-button {
-@apply bg-[#007bff] w-[80%] max-w-[300px] p-4 text-[1.1rem] hover:enabled:bg-[#0056b3] disabled:bg-[#6c757d] disabled:border-[#6c757d] disabled:text-[#eee];
-}
-
-.info-box {
-@apply border p-4 rounded mt-4 mb-6 text-center;
-}
-
-.tie-message {
-@apply bg-[#fff3cd] border border-[#ffeeba] text-[#856404] font-bold;
-}
-
-.elimination-box {
-@apply bg-[#f8d7da] border border-[#f5c6cb] text-[#721c24];
-}
-
-.elimination-result {
-@apply text-[1.1rem] mb-2;
-}
-
-.results-list {
-@apply list-none p-0 mt-4 text-left max-w-[380px] mx-auto;
-}
-
-.results-list li {
-@apply bg-white p-3 mb-2 border border-[#eee] rounded text-[0.95rem];
-}
-
-.results-list li span {
-@apply block;
-}
-
-.undercover-player {
-@apply font-bold text-[#dc3545];
-}
-
-.eliminated-tag {
-@apply italic text-[#6c757d] ml-2 text-[0.9em];
-}
-
-.undercover-wins {
-@apply text-[#dc3545];
-}
-
-.civilians-win {
-@apply text-[#28a745];
-}
-
-.error-message {
-@apply text-[#721c24] bg-[#f8d7da] border border-[#f5c6cb] p-4 rounded mt-4;
-}
-</style>
+    </UContainer>
+  </template>

@@ -190,13 +190,6 @@ function saveCurrentGameState() {
 
 <template>
   <UContainer class="py-8">
-    <h1 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-2">
-        L'Infiltrato
-    </h1>
-    <p class="text-center text-gray-600 dark:text-gray-300 mb-8">
-        Il gioco di bluff e parole nascoste, con un solo telefono!
-    </p>
-
     <!-- Resume Option -->
     <UCard v-if="savedGameState" class="mb-8 bg-primary-50 dark:bg-primary-900/50">
       <template #header>
