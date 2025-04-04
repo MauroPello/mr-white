@@ -15,6 +15,10 @@
     <!-- New Game Setup -->
     <div v-if="!savedGameState">
         <h2>Impostazione Nuova Partita</h2>
+        <p>
+            Gioca a L'Infiltrato (o Mr. White) online con i tuoi amici usando un solo telefono!
+            Un party game di bluff e parole nascoste.
+        </p>
 
         <div class="add-player section">
           <input
@@ -85,6 +89,92 @@ const router = useRouter();
 const newPlayerName = ref('');
 const selectedUndercovers = ref(1);
 const savedGameState = ref<ReturnType<typeof loadGameStateFromLocalStorage>>(null);
+const url = useRequestURL(); // Get current URL info
+
+// --- SEO Setup ---
+const pageTitle = "L'Infiltrato / Mr. White - Gioco di Società Online (Un Telefono)";
+const pageDescription = "Gioca online a L'Infiltrato (Mr. White) con amici usando un solo telefono! Scopri chi ha la parola diversa in questo divertente party game di bluff italiano.";
+// IMPORTANT: Replace with your actual deployed domain URL for canonical and OG tags
+const canonicalUrl = computed(() => url.href); // Use Nuxt's helper for the current URL
+// IMPORTANT: Replace with the absolute URL to your OG image after deployment
+const ogImageUrl = computed(() => `${url.origin}/og-image.png`); // Assumes image is in /public
+
+useHead({
+  htmlAttrs: {
+    lang: 'it-IT' // Set language globally for the page
+  },
+  title: pageTitle,
+  meta: [
+    // Standard Meta Tags
+    { name: 'description', content: pageDescription },
+    { name: 'keywords', content: "l'infiltrato, infiltrato, mr white, gioco società, gioco di gruppo, party game, gioco parole, gioco bluff, undercover game, giocare online, un telefono, italiano" },
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: pageTitle },
+    { property: 'og:description', content: pageDescription },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: canonicalUrl },
+    { property: 'og:image', content: ogImageUrl },
+    { property: 'og:image:width', content: '1200' }, // Optional: Specify image dimensions
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:locale', content: 'it_IT' },
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: pageTitle },
+    { name: 'twitter:description', content: pageDescription },
+    { name: 'twitter:image', content: ogImageUrl },
+    // { name: 'twitter:site', content: '@tuoUsernameTwitter' }, // Optional: If you have a Twitter handle
+  ],
+  link: [
+    // Canonical URL
+    { rel: 'canonical', href: canonicalUrl }
+  ],
+  // --- Structured Data (JSON-LD) ---
+  script: [
+    {
+      type: 'application/ld+json',
+      // Use innerHTML or children; children is often preferred for complex objects
+      children: computed(() => JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [ // Use @graph for multiple related entities
+          {
+            "@type": "WebApplication",
+            "name": "L'Infiltrato / Mr. White - Gioco Online",
+            "description": pageDescription,
+            "url": canonicalUrl.value,
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Web Browser", // Indicate it runs in a browser
+            "browserRequirements": "Requires JavaScript",
+            "inLanguage": "it-IT",
+            "offers": {
+              "@type": "Offer",
+              "price": "0", // Free to play
+              "priceCurrency": "EUR"
+            },
+            // Link to the Game entity
+            "subjectOf": { "@id": `${canonicalUrl.value}#game` }
+          },
+          {
+            "@type": "Game",
+            "@id": `${canonicalUrl.value}#game`, // Unique ID for the game entity
+            "name": "L'Infiltrato (Mr. White / Undercover)",
+            "description": "Un party game di bluff in cui i giocatori ricevono una parola segreta, tranne uno (o più) 'infiltrati' che ne ricevono una simile ma diversa. L'obiettivo è scoprire gli infiltrati (o sopravvivere come infiltrato) descrivendo la propria parola senza essere troppo ovvi.",
+            "url": canonicalUrl.value,
+            "inLanguage": "it-IT",
+            "genre": ["Party game", "Word game", "Bluffing game", "Gioco di società"],
+            "keywords": "l'infiltrato, infiltrato, mr white, undercover, gioco parole, gioco bluff, party game, gioco società, un telefono",
+            "numberOfPlayers": {
+              "@type": "QuantitativeValue",
+              "minValue": 3 // Minimum players required by the game rules
+              // Max value could be added if there's a practical limit
+            },
+            "playMode": "MultiPlayer", // Can be played by multiple people
+            "gamePlatform": "Browser" // Runs in a web browser
+          }
+        ]
+      }))
+    }
+  ]
+});
 
 // Get global state refs
 const playersState = usePlayers();
