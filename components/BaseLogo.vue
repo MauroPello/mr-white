@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { companyUrl, mediaFolder } from "~/constants/company";
+import { companyLogo } from "~/constants/company";
 
 defineProps<{ small?: boolean }>();
 
@@ -8,7 +8,7 @@ useHead({
     {
       rel: "preload",
       as: "image",
-      href: `${companyUrl}${mediaFolder}logo.png`,
+      href: companyLogo,
     },
   ],
 });
