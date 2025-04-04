@@ -36,8 +36,7 @@ const { isMobile } = useScreenSize();
         <div class="hidden md:block">
           <UButton
             size="sm"
-            class="text-base sm:text-lg"
-            color="gray"
+            class="text-base sm:text-lg text-gray-700 hover:text-black"
             variant="ghost"
             to="/regole"
           >
@@ -45,8 +44,7 @@ const { isMobile } = useScreenSize();
           </UButton>
           <UButton
             size="sm"
-            class="text-base sm:text-lg"
-            color="gray"
+            class="text-base sm:text-lg text-gray-700 hover:text-black"
             variant="ghost"
             to="/consigli"
           >

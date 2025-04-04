@@ -497,6 +497,7 @@ v-for="player in finalRoleRevealState" :key="player.name"
           <UButton
               color="green"
               size="xl"
+              class="w-full max-w-xs mx-auto"
               block
               icon="i-heroicons-arrow-path"
               @click="playAgain"

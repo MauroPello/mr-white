@@ -8,7 +8,7 @@ export default defineAppConfig({
     },
     card: {
       body: {
-        base: "h-full shadow-[0_0px_5px_-0px_rgba(0,0,0,0.05)]",
+        base: "h-full",
       },
       ring: "ring-0",
     }
