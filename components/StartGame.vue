@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { getRandomWordPair } from '~/utils/wordPairs';
 import { saveGameStateToLocalStorage, loadGameStateFromLocalStorage, clearSavedGameState } from '~/utils/gameStateStorage';
 import {
@@ -17,8 +15,6 @@ const newPlayerName = ref('');
 const selectedUndercovers = ref(1);
 const savedGameState = ref<ReturnType<typeof loadGameStateFromLocalStorage>>(null);
 
-
-// Get global state refs
 const playersState = usePlayers();
 const gameWordPair = useGameWordPair();
 const assignments = useAssignments();
@@ -37,10 +33,9 @@ const wordShowingPlayerIndex = useWordShowingPlayerIndex();
 
 onMounted(() => {
     savedGameState.value = loadGameStateFromLocalStorage();
-    // Always reset global state initially; it will be populated either by resumeGame or startNewGame
     resetGlobalGameState();
     if (!savedGameState.value) {
-        resetLocalSetupState(); // Only reset the form input state if not resuming
+        resetLocalSetupState();
     }
 });
 
@@ -51,20 +46,18 @@ const maxPossibleUndercovers = computed(() => {
 
 watch(playersState, (newPlayers) => {
     const len = newPlayers?.length ?? 0;
-    const maxAllowed = Math.max(1, len - 1);
+    const maxAllowed = Math.max(1, Math.floor(len / 2));
     if (selectedUndercovers.value > maxAllowed) {
         selectedUndercovers.value = maxAllowed;
     }
-     if (selectedUndercovers.value < 1 && len >= 1) {
+     if (selectedUndercovers.value < 1 && len >= 3) {
         selectedUndercovers.value = 1;
     }
 }, { deep: true });
 
 function resetLocalSetupState() {
-    // Resets only the form inputs, not the global state managed by usePlayers
     selectedUndercovers.value = 1;
     newPlayerName.value = '';
-    // playersState is reset globally in resetGlobalGameState
 }
 
 function resetGlobalGameState() {
@@ -88,19 +81,20 @@ function resetGlobalGameState() {
 function addPlayer() {
   const nameToAdd = newPlayerName.value.trim();
   if (nameToAdd && !playersState.value.includes(nameToAdd)) {
-    playersState.value.push(nameToAdd); // Update global state directly
+    playersState.value.push(nameToAdd);
     newPlayerName.value = '';
   } else if (playersState.value.includes(nameToAdd)) {
+    // Consider using UToast for non-blocking notifications instead of alert
     alert(`${nameToAdd} è già in gioco!`);
   }
 }
 
 function removePlayer(index: number) {
-  playersState.value.splice(index, 1); // Update global state directly
+  playersState.value.splice(index, 1);
 }
 
 function startNewGame() {
-  clearSavedGameState(); // Clear any old save first
+  clearSavedGameState();
 
   const numPlayers = playersState.value.length;
   const numUndercovers = selectedUndercovers.value;
@@ -110,41 +104,24 @@ function startNewGame() {
    }
 
   const selectedPair = getRandomWordPair();
-  if (!selectedPair) { // Handle case where word pairs might be empty
-      alert("Errore: Impossibile caricare le coppie di parole.");
-      return;
-  }
+  if (!selectedPair) { alert("Errore: Impossibile caricare le coppie di parole."); return; }
+
   const { civilian, undercover } = selectedPair;
   const playerIndices = Array.from({ length: numPlayers }, (_, i) => i);
-  // Fisher-Yates Shuffle
-  for (let i = playerIndices.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    if (playerIndices[i] && playerIndices[j]) {
-      [playerIndices[i], playerIndices[j]] = [playerIndices[j], playerIndices[i]!];
-    }
-  }
+  for (let i = playerIndices.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [playerIndices[i], playerIndices[j]] = [playerIndices[j]!, playerIndices[i]!]; }
   const undercoverIndices = new Set(playerIndices.slice(0, numUndercovers));
 
   const initialAssignments: PlayerAssignment[] = playersState.value.map((name, index) => ({
-      name: name,
-      word: undercoverIndices.has(index) ? undercover : civilian,
-      isUndercover: undercoverIndices.has(index)
+      name: name, word: undercoverIndices.has(index) ? undercover : civilian, isUndercover: undercoverIndices.has(index)
   }));
 
   const shuffledAssignments = [...initialAssignments];
-  // Fisher-Yates Shuffle (for reveal order)
-  for (let i = shuffledAssignments.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    if (shuffledAssignments[i] && shuffledAssignments[j]) {
-      [shuffledAssignments[i], shuffledAssignments[j]] = [shuffledAssignments[j], shuffledAssignments[i]!];
-    }
-  }
+  for (let i = shuffledAssignments.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffledAssignments[i], shuffledAssignments[j]] = [shuffledAssignments[j]!, shuffledAssignments[i]!]; }
 
-  // Populate global state refs
   gameWordPair.value = selectedPair;
-  assignments.value = initialAssignments; // Store original order
+  assignments.value = initialAssignments;
   numberOfUndercoversState.value = numUndercovers;
-  activePlayers.value = shuffledAssignments; // Start with shuffled for play
+  activePlayers.value = shuffledAssignments;
   currentRound.value = 1;
   gamePhase.value = 'showing_words';
   wordShowingPlayerIndex.value = 0;
@@ -155,9 +132,8 @@ function startNewGame() {
   finalRoleReveal.value = [];
   eliminatedHistory.value = [];
   wasVoteTied.value = false;
-  // playersState is already set via user input
 
-  saveCurrentGameState(); // Save the newly initialized state
+  saveCurrentGameState();
   router.push('/play');
 }
 
@@ -180,7 +156,7 @@ function resumeGame() {
     gameOverMessage.value = savedGameState.value.gameOverMessage;
     finalRoleReveal.value = savedGameState.value.finalRoleReveal;
 
-    savedGameState.value = null; // Clear the temporary holder
+    savedGameState.value = null;
     router.push('/play');
 }
 
@@ -188,7 +164,7 @@ function discardSavedGame() {
     clearSavedGameState();
     savedGameState.value = null;
     resetLocalSetupState();
-    resetGlobalGameState(); // Ensure global state is also clean for the new form
+    resetGlobalGameState();
 }
 
 function formatTimestamp(timestamp: number): string {
@@ -197,232 +173,159 @@ function formatTimestamp(timestamp: number): string {
 }
 
 function saveCurrentGameState() {
-    // Gather current state values. Ensure required ones are not null.
     if (!playersState.value || !gameWordPair.value || !assignments.value || !activePlayers.value ) {
-         console.warn("Attempted to save, but essential state missing.");
-         return;
+         console.warn("Attempted to save, but essential state missing."); return;
     }
     saveGameStateToLocalStorage({
-        players: playersState.value,
-        gameWordPair: gameWordPair.value,
-        assignments: assignments.value,
-        numberOfUndercovers: numberOfUndercoversState.value,
-        activePlayers: activePlayers.value,
-        currentRound: currentRound.value,
-        wordShowingPlayerIndex: wordShowingPlayerIndex.value,
-        gamePhase: gamePhase.value,
-        currentVotes: currentVotes.value,
-        votingPlayerIndex: votingPlayerIndex.value,
-        wasVoteTied: wasVoteTied.value,
-        lastEliminated: lastEliminated.value,
-        eliminatedHistory: eliminatedHistory.value,
-        gameOverMessage: gameOverMessage.value,
+        players: playersState.value, gameWordPair: gameWordPair.value, assignments: assignments.value,
+        numberOfUndercovers: numberOfUndercoversState.value, activePlayers: activePlayers.value,
+        currentRound: currentRound.value, wordShowingPlayerIndex: wordShowingPlayerIndex.value,
+        gamePhase: gamePhase.value, currentVotes: currentVotes.value, votingPlayerIndex: votingPlayerIndex.value,
+        wasVoteTied: wasVoteTied.value, lastEliminated: lastEliminated.value,
+        eliminatedHistory: eliminatedHistory.value, gameOverMessage: gameOverMessage.value,
         finalRoleReveal: finalRoleReveal.value,
     });
 }
 </script>
 
-
 <template>
-  <div class="container setup-page">
-    <h1>L'Infiltrato</h1>
+  <UContainer class="py-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-2">
+        L'Infiltrato
+    </h1>
+    <p class="text-center text-gray-600 dark:text-gray-300 mb-8">
+        Il gioco di bluff e parole nascoste, con un solo telefono!
+    </p>
 
     <!-- Resume Option -->
-    <div v-if="savedGameState" class="resume-section section">
-      <h2>Riprendere Partita Precedente?</h2>
-      <p>Trovato stato partita del {{ formatTimestamp(savedGameState.timestamp) }}.</p>
-      <div class="resume-buttons">
-        <button @click="resumeGame" class="action-button resume-button">Riprendi Partita</button>
-        <button @click="discardSavedGame" class="action-button discard-button">Scarta e Inizia Nuova</button>
-      </div>
-    </div>
+    <UCard v-if="savedGameState" class="mb-8 bg-primary-50 dark:bg-primary-900/50">
+      <template #header>
+        <h2 class="text-xl font-semibold text-primary-700 dark:text-primary-300">
+            Riprendere Partita Precedente?
+        </h2>
+      </template>
 
-    <!-- New Game Setup -->
-    <div v-if="!savedGameState">
-      <h2>Impostazione Nuova Partita</h2>
-      <p>
-          Gioca a L'Infiltrato (o Mr. White) online con i tuoi amici usando un solo telefono!
-          Un party game di bluff e parole nascoste.
+      <p class="text-gray-700 dark:text-gray-300 mb-4">
+        Trovato stato partita del {{ formatTimestamp(savedGameState.timestamp) }}.
       </p>
 
-      <div class="add-player section">
-        <input
-          v-model.trim="newPlayerName"
-          @keyup.enter="addPlayer"
-          placeholder="Inserisci nome giocatore"
-          aria-label="Inserisci nome giocatore"
-        />
-        <button @click="addPlayer" :disabled="!newPlayerName">Aggiungi Giocatore</button>
+      <div class="flex justify-center gap-4">
+        <UButton @click="resumeGame" color="green" size="lg">
+            Riprendi Partita
+        </UButton>
+        <UButton @click="discardSavedGame" color="red" variant="soft" size="lg">
+            Scarta e Inizia Nuova
+        </UButton>
       </div>
+    </UCard>
 
-      <div v-if="playersState.length > 0" class="section">
-        <h3>Giocatori ({{ playersState.length }}):</h3>
-        <ul class="player-list">
-          <li v-for="(player, index) in playersState" :key="player"> <!-- Use player name as key if unique -->
-            <span>{{ player }}</span>
-            <button @click="removePlayer(index)" class="remove-btn" aria-label="Rimuovi giocatore">×</button>
-          </li>
-        </ul>
-      </div>
+    <!-- New Game Setup -->
+    <UCard v-if="!savedGameState">
+        <template #header>
+             <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                Impostazione Nuova Partita
+            </h2>
+        </template>
 
-      <div v-if="playersState.length >= 3" class="section undercover-select">
-        <label for="undercover-count">Numero di Infiltrati:</label>
-        <input
-            type="number"
-            id="undercover-count"
-            v-model.number="selectedUndercovers"
-            :min="1"
-            :max="maxPossibleUndercovers"
-            aria-label="Numero di Infiltrati"
-        />
-        <span>(Min: 1, Max: {{ maxPossibleUndercovers }})</span>
-      </div>
+        <!-- Add Player Section -->
+        <UFormGroup label="Aggiungi Giocatore" class="mb-6">
+            <div class="flex items-center gap-2">
+                <UInput
+                    v-model.trim="newPlayerName"
+                    @keyup.enter="addPlayer"
+                    placeholder="Nome giocatore..."
+                    aria-label="Inserisci nome giocatore"
+                    class="flex-grow"
+                    size="lg"
+                    icon="i-heroicons-user-plus"
+                />
+                <UButton
+                    @click="addPlayer"
+                    :disabled="!newPlayerName"
+                    icon="i-heroicons-plus-circle"
+                    size="lg"
+                    aria-label="Aggiungi Giocatore"
+                />
+            </div>
+        </UFormGroup>
 
-      <div v-if="playersState.length < 3" class="warning">
-        Servono almeno 3 giocatori per iniziare.
-      </div>
-      <div v-if="playersState.length >= 3 && (selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers)" class="warning">
-        Numero di Infiltrati non valido (Min: 1, Max: {{ maxPossibleUndercovers }}).
-      </div>
+        <!-- Player List -->
+        <div v-if="playersState.length > 0" class="mb-6">
+            <h3 class="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
+                Giocatori ({{ playersState.length }}):
+            </h3>
+            <ul class="space-y-2">
+                <li
+                    v-for="(player, index) in playersState"
+                    :key="player"
+                    class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
+                >
+                    <span class="text-gray-800 dark:text-gray-100">{{ player }}</span>
+                    <UButton
+                        @click="removePlayer(index)"
+                        icon="i-heroicons-x-circle-20-solid"
+                        color="red"
+                        variant="ghost"
+                        size="sm"
+                        aria-label="Rimuovi giocatore"
+                        />
+                </li>
+            </ul>
+        </div>
 
-      <button
-        class="start-button"
-        @click="startNewGame"
-        :disabled="playersState.length < 3 || selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers"
-      >
-        Inizia Nuova Partita
-      </button>
-    </div>
-  </div>
+        <!-- Number of Undercovers Selection -->
+         <UFormGroup v-if="playersState.length >= 3" label="Numero di Infiltrati" class="mb-6">
+            <div class="flex items-center justify-center gap-2 flex-wrap">
+                 <UInput
+                    type="number"
+                    id="undercover-count"
+                    v-model.number="selectedUndercovers"
+                    :min="1"
+                    :max="maxPossibleUndercovers"
+                    aria-label="Numero di Infiltrati"
+                    class="w-20 text-center"
+                    size="md"
+                />
+                 <span class="text-sm text-gray-500 dark:text-gray-400">
+                    (Min: 1, Max: {{ maxPossibleUndercovers }})
+                 </span>
+            </div>
+         </UFormGroup>
+
+
+        <!-- Validation Messages -->
+         <UAlert
+            v-if="playersState.length < 3"
+            icon="i-heroicons-exclamation-triangle"
+            color="orange"
+            variant="soft"
+            title="Attenzione"
+            description="Servono almeno 3 giocatori per iniziare."
+            class="mb-4"
+         />
+         <UAlert
+            v-if="playersState.length >= 3 && (selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers)"
+            icon="i-heroicons-exclamation-circle"
+            color="red"
+            variant="soft"
+            title="Errore"
+            :description="`Numero di Infiltrati non valido (Min: 1, Max: ${maxPossibleUndercovers}).`"
+            class="mb-4"
+         />
+
+        <!-- Start Button -->
+        <UButton
+            @click="startNewGame"
+            :disabled="playersState.length < 3 || selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers"
+            size="xl"
+            block
+            color="primary"
+            class="mt-4"
+            trailing-icon="i-heroicons-arrow-right-circle-20-solid"
+        >
+            Inizia Nuova Partita
+        </UButton>
+
+    </UCard>
+  </UContainer>
 </template>
-
-<style scoped lang="postcss">
-.container {
-  @apply max-w-[500px] mx-auto my-8 p-8 bg-[#f9f9f9] rounded-lg shadow-md font-sans text-center;
-}
-
-h1 {
-  @apply text-[#333] mb-2;
-}
-
-h2 {
-  @apply text-[#555] mb-6;
-}
-
-.section {
-  @apply mb-6 pb-4 border-b border-[#eee];
-}
-
-.section:last-of-type {
-  @apply border-b-0 pb-0 mb-0;
-}
-
-.add-player {
-  @apply flex gap-2;
-}
-
-input[type="text"],
-input[type="number"] {
-  @apply p-3 border border-[#ccc] rounded text-base;
-}
-
-input[type="text"] {
-  @apply flex-grow;
-}
-
-input[type="number"] {
-  @apply w-[60px] text-center mx-2;
-}
-
-button {
-  @apply px-6 py-3 bg-[#007bff] text-white border-0 rounded cursor-pointer text-base transition-colors duration-200;
-}
-
-button:disabled {
-  @apply bg-[#cccccc] cursor-not-allowed;
-}
-
-button:not(:disabled):hover {
-  @apply bg-[#0056b3];
-}
-
-.player-list {
-  @apply list-none p-0 m-0 text-left;
-}
-
-.player-list li {
-  @apply bg-white p-2 px-4 mb-2 border border-[#eee] rounded flex justify-between items-center;
-}
-
-.remove-btn {
-  @apply bg-[#dc3545] text-white border-0 rounded-full w-6 h-6 text-base leading-none cursor-pointer p-0 shrink-0;
-}
-
-.remove-btn:hover {
-  @apply bg-[#c82333];
-}
-
-.undercover-select {
-  @apply flex items-center justify-center flex-wrap gap-2;
-}
-
-.undercover-select label {
-  @apply mr-2 font-bold;
-}
-
-.undercover-select span {
-  @apply text-[0.9em] text-[#666] ml-2;
-}
-
-.warning {
-  @apply text-[#dc3545] mb-4 font-bold;
-}
-
-.start-button {
-  @apply w-full p-4 text-xl bg-[#28a745] mt-6;
-}
-
-.start-button:not(:disabled):hover {
-  @apply bg-[#218838];
-}
-
-.resume-section {
-  @apply border-2 border-[#007bff] bg-[#e7f3ff] p-6 rounded-lg mb-8;
-}
-
-.resume-section h2 {
-  @apply text-[#0056b3] mt-0 mb-4;
-}
-
-.resume-section p {
-  @apply mb-6 text-[#333];
-}
-
-.resume-buttons {
-  @apply flex justify-center gap-4;
-}
-
-.action-button {
-  @apply px-6 py-[0.8rem] border-0 rounded-[5px] cursor-pointer text-base font-bold transition-colors duration-200 ease-linear;
-}
-
-.action-button:hover {
-  @apply -translate-y-[1px];
-}
-
-.resume-button {
-  @apply bg-[#28a745] text-white;
-}
-
-.resume-button:hover {
-  @apply bg-[#218838];
-}
-
-.discard-button {
-  @apply bg-[#dc3545] text-white;
-}
-
-.discard-button:hover {
-  @apply bg-[#c82333];
-}
-</style>
