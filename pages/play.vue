@@ -1,106 +1,3 @@
-<template>
-  <div class="container play-page">
-    <!-- Phase: Showing Words -->
-    <div v-if="gamePhase === 'showing_words'">
-        <h1>Round {{ currentRound }}: Rivela Parole</h1>
-        <div v-if="currentPlayerForWord">
-          <h2>Passa il telefono a <span class="player-name">{{ currentPlayerForWord.name }}</span></h2>
-          <p v-if="!showingWord">Tocca sotto quando sei pronto/a.</p>
-          <button v-if="!showingWord" @click="showWord" class="action-button">Mostra la Mia Parola</button>
-          <div v-if="showingWord" class="word-reveal">
-            <p>La tua parola è:</p>
-            <strong class="revealed-word">{{ currentPlayerForWord.word }}</strong>
-            <button @click="hideWordAndProceed" class="action-button hide-button">
-              Capito! Nascondi & {{ isLastWordToShow ? 'Inizia Discussione' : 'Passa Telefono' }}
-            </button>
-          </div>
-        </div>
-        <div v-else class="error-message">Errore: Impossibile determinare il giocatore corrente per la rivelazione della parola. Ricarica o riavvia.</div>
-    </div>
-
-    <!-- Phase: Discussing -->
-    <div v-else-if="gamePhase === 'discussing'">
-      <h1>Round {{ currentRound }}: Discussione</h1>
-      <div v-if="wasVoteTiedState" class="tie-message info-box">
-          L'ultima votazione è finita in parità! Nessuno è stato eliminato/a. Discutete di nuovo!
-      </div>
-        <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
-        <p>Mettete giù il telefono e discutete! Cercate di trovare l'Infiltrato/gli Infiltrati.</p>
-        <p>Quando siete pronti, il gruppo dovrebbe decidere di iniziare a votare.</p>
-        <button @click="startVotingPhase" class="action-button start-voting-button">Inizia Votazione</button>
-    </div>
-
-    <!-- Phase: Voting -->
-    <div v-else-if="gamePhase === 'voting'">
-          <h1>Round {{ currentRound }}: Votazione</h1>
-          <div v-if="currentPlayerForVote">
-              <h2><span class="player-name">{{ currentPlayerForVote.name }}</span>, per favore vota!</h2>
-              <p>Chi sospetti sia un Infiltrato?</p>
-              <div class="voting-options">
-                <button
-                    v-for="option in votingOptions"
-                    :key="option.name"
-                    @click="castVote(option.name)"
-                    class="action-button vote-button"
-                    :disabled="option.name === currentPlayerForVote.name">
-                    Vota per {{ option.name }}
-                </button>
-              </div>
-          </div>
-          <div v-else class="error-message">Errore: Impossibile determinare il votante corrente. Ricarica o riavvia.</div>
-    </div>
-
-    <!-- Phase: Elimination -->
-    <div v-else-if="gamePhase === 'elimination'">
-        <h1>Round {{ currentRound }}: Eliminazione</h1>
-        <div v-if="lastEliminatedState" class="elimination-box info-box">
-            <p class="elimination-result">
-                In base ai voti,
-                <span class="player-name eliminated-player">{{ lastEliminatedState.name }}</span>
-                è stato/a eliminato/a!
-            </p>
-              <p>
-                  {{ lastEliminatedState.name }} era
-                  <strong :class="{'undercover-player': lastEliminatedState.isUndercover}">
-                      {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Cittadino" }}!
-                  </strong>
-              </p>
-              <p>Ci sono {{ activePlayersState.length }} giocatori rimasti.</p>
-              <button @click="goToDiscussion" class="action-button next-round-button">Continua alla Prossima Discussione</button>
-        </div>
-          <div v-else class="error-message">Errore: Dettagli eliminazione mancanti, ma in fase di eliminazione. Ricarica o riavvia.</div>
-    </div>
-
-    <!-- Phase: Game Over -->
-    <div v-else-if="gamePhase.startsWith('game_over')">
-        <h1>Partita Terminata!</h1>
-        <h2 :class="{'undercover-wins': gamePhase === 'game_over_undercover_wins', 'civilians-win': gamePhase === 'game_over_civilians_win'}">
-            {{ gameOverMessageState }}
-        </h2>
-        <p v-if="gameWordPairState">Le parole erano: <strong>{{ gameWordPairState.civilian }}</strong> (Cittadino) e <strong>{{ gameWordPairState.undercover }}</strong> (Infiltrato)</p>
-        <h3>Stato Finale:</h3>
-        <ul class="results-list">
-            <li v-for="player in finalRoleRevealState" :key="player.name">
-                  <span :class="{ 'undercover-player': player.isUndercover }">
-                      {{ player.name }}: {{ player.word }}
-                      <span v-if="player.isUndercover"> (Infiltrato!)</span>
-                      <span v-if="isPlayerEliminated(player.name)" class="eliminated-tag"> (Eliminato/a)</span>
-                </span>
-            </li>
-        </ul>
-          <button @click="playAgain" class="action-button play-again-button">Gioca Ancora</button>
-    </div>
-
-    <!-- Phase: Error State -->
-      <div v-else-if="gamePhase === 'error'">
-        <h1>Errore</h1>
-        <p>Si è verificato un errore imprevisto. Per favore, riavvia il gioco.</p>
-        <button @click="playAgain" class="action-button play-again-button">Riavvia Gioco</button>
-      </div>
-      <!-- Fallback Loading -->
-      <div v-else> <p>Caricamento partita...</p> </div>
-  </div>
-</template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick, watchEffect } from 'vue';
@@ -381,8 +278,111 @@ onMounted(() => {
         }
   }
 });
-
 </script>
+
+<template>
+  <div class="container play-page">
+    <!-- Phase: Showing Words -->
+    <div v-if="gamePhase === 'showing_words'">
+        <h1>Round {{ currentRound }}: Rivela Parole</h1>
+        <div v-if="currentPlayerForWord">
+          <h2>Passa il telefono a <span class="player-name">{{ currentPlayerForWord.name }}</span></h2>
+          <p v-if="!showingWord">Tocca sotto quando sei pronto/a.</p>
+          <button v-if="!showingWord" @click="showWord" class="action-button">Mostra la Mia Parola</button>
+          <div v-if="showingWord" class="word-reveal">
+            <p>La tua parola è:</p>
+            <strong class="revealed-word">{{ currentPlayerForWord.word }}</strong>
+            <button @click="hideWordAndProceed" class="action-button hide-button">
+              Capito! Nascondi & {{ isLastWordToShow ? 'Inizia Discussione' : 'Passa Telefono' }}
+            </button>
+          </div>
+        </div>
+        <div v-else class="error-message">Errore: Impossibile determinare il giocatore corrente per la rivelazione della parola. Ricarica o riavvia.</div>
+    </div>
+
+    <!-- Phase: Discussing -->
+    <div v-else-if="gamePhase === 'discussing'">
+      <h1>Round {{ currentRound }}: Discussione</h1>
+      <div v-if="wasVoteTiedState" class="tie-message info-box">
+          L'ultima votazione è finita in parità! Nessuno è stato eliminato/a. Discutete di nuovo!
+      </div>
+        <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
+        <p>Mettete giù il telefono e discutete! Cercate di trovare l'Infiltrato/gli Infiltrati.</p>
+        <p>Quando siete pronti, il gruppo dovrebbe decidere di iniziare a votare.</p>
+        <button @click="startVotingPhase" class="action-button start-voting-button">Inizia Votazione</button>
+    </div>
+
+    <!-- Phase: Voting -->
+    <div v-else-if="gamePhase === 'voting'">
+          <h1>Round {{ currentRound }}: Votazione</h1>
+          <div v-if="currentPlayerForVote">
+              <h2><span class="player-name">{{ currentPlayerForVote.name }}</span>, per favore vota!</h2>
+              <p>Chi sospetti sia un Infiltrato?</p>
+              <div class="voting-options">
+                <button
+                    v-for="option in votingOptions"
+                    :key="option.name"
+                    @click="castVote(option.name)"
+                    class="action-button vote-button"
+                    :disabled="option.name === currentPlayerForVote.name">
+                    Vota per {{ option.name }}
+                </button>
+              </div>
+          </div>
+          <div v-else class="error-message">Errore: Impossibile determinare il votante corrente. Ricarica o riavvia.</div>
+    </div>
+
+    <!-- Phase: Elimination -->
+    <div v-else-if="gamePhase === 'elimination'">
+        <h1>Round {{ currentRound }}: Eliminazione</h1>
+        <div v-if="lastEliminatedState" class="elimination-box info-box">
+            <p class="elimination-result">
+                In base ai voti,
+                <span class="player-name eliminated-player">{{ lastEliminatedState.name }}</span>
+                è stato/a eliminato/a!
+            </p>
+              <p>
+                  {{ lastEliminatedState.name }} era
+                  <strong :class="{'undercover-player': lastEliminatedState.isUndercover}">
+                      {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Cittadino" }}!
+                  </strong>
+              </p>
+              <p>Ci sono {{ activePlayersState.length }} giocatori rimasti.</p>
+              <button @click="goToDiscussion" class="action-button next-round-button">Continua alla Prossima Discussione</button>
+        </div>
+          <div v-else class="error-message">Errore: Dettagli eliminazione mancanti, ma in fase di eliminazione. Ricarica o riavvia.</div>
+    </div>
+
+    <!-- Phase: Game Over -->
+    <div v-else-if="gamePhase.startsWith('game_over')">
+        <h1>Partita Terminata!</h1>
+        <h2 :class="{'undercover-wins': gamePhase === 'game_over_undercover_wins', 'civilians-win': gamePhase === 'game_over_civilians_win'}">
+            {{ gameOverMessageState }}
+        </h2>
+        <p v-if="gameWordPairState">Le parole erano: <strong>{{ gameWordPairState.civilian }}</strong> (Cittadino) e <strong>{{ gameWordPairState.undercover }}</strong> (Infiltrato)</p>
+        <h3>Stato Finale:</h3>
+        <ul class="results-list">
+            <li v-for="player in finalRoleRevealState" :key="player.name">
+                  <span :class="{ 'undercover-player': player.isUndercover }">
+                      {{ player.name }}: {{ player.word }}
+                      <span v-if="player.isUndercover"> (Infiltrato!)</span>
+                      <span v-if="isPlayerEliminated(player.name)" class="eliminated-tag"> (Eliminato/a)</span>
+                </span>
+            </li>
+        </ul>
+          <button @click="playAgain" class="action-button play-again-button">Gioca Ancora</button>
+    </div>
+
+    <!-- Phase: Error State -->
+      <div v-else-if="gamePhase === 'error'">
+        <h1>Errore</h1>
+        <p>Si è verificato un errore imprevisto. Per favore, riavvia il gioco.</p>
+        <button @click="playAgain" class="action-button play-again-button">Riavvia Gioco</button>
+      </div>
+      <!-- Fallback Loading -->
+      <div v-else> <p>Caricamento partita...</p> </div>
+  </div>
+</template>
 
 <style scoped lang="postcss">
 .container {

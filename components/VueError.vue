@@ -18,11 +18,6 @@ const router = useRouter();
     <p class="w-[90%] text-lg bg-slate-200 rounded-lg p-4">
       {{ isPageNotFound ? "Pagina non trovata" : error }}
     </p>
-    <p class="w-[80%] pb-3 text-xl text-center">
-      Nel caso questo errore ti vieti di usare le funzionalità offerte da
-      Tutario, non esitare a inviare una email a
-      <span>. Grazie!</span>
-    </p>
     <div class="flex flex-row gap-4">
       <UButton
         size="xl"

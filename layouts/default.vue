@@ -4,12 +4,23 @@ import { Analytics } from '@vercel/analytics/nuxt';
 </script>
 
 <template>
-  <div>
-    <slot />
+  <div class="landing-page-base">
+    <LandingPageNavigator />
+    <div class="landing-page-base__main">
+      <slot />
+    </div>
+    <LandingPageFooter />
     <SpeedInsights/>
     <Analytics/>
   </div>
 </template>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
+.landing-page-base {
+  @apply w-full h-screen flex flex-col;
+
+  &__main {
+    @apply w-full pt-20 flex-1;
+  }
+}
 </style>
