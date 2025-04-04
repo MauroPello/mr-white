@@ -370,37 +370,133 @@ function saveCurrentGameState() {
 }
 </script>
 
-<style scoped>
-.container { max-width: 500px; margin: 2rem auto; padding: 2rem; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); font-family: sans-serif; text-align: center; }
-h1 { color: #333; margin-bottom: 0.5rem; }
-h2 { color: #555; margin-bottom: 1.5rem; }
-.section { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
-.section:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; } /* Adjust spacing for last section */
-.add-player { display: flex; gap: 0.5rem; }
-input[type="text"], input[type="number"] { padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-input[type="text"] { flex-grow: 1; }
-input[type="number"] { width: 60px; text-align: center; margin: 0 0.5rem; }
-button { padding: 0.75rem 1.5rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; transition: background-color 0.2s ease; }
-button:disabled { background-color: #cccccc; cursor: not-allowed; }
-button:not(:disabled):hover { background-color: #0056b3; }
-.player-list { list-style: none; padding: 0; margin: 0; text-align: left; }
-.player-list li { background-color: #fff; padding: 0.5rem 1rem; margin-bottom: 0.5rem; border: 1px solid #eee; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-.remove-btn { background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 1rem; line-height: 1; cursor: pointer; padding: 0; flex-shrink: 0; }
-.remove-btn:hover { background-color: #c82333; }
-.undercover-select { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem; }
-.undercover-select label { margin-right: 0.5rem; font-weight: bold; }
-.undercover-select span { font-size: 0.9em; color: #666; margin-left: 0.5rem; }
-.warning { color: #dc3545; margin-bottom: 1rem; font-weight: bold; }
-.start-button { width: 100%; padding: 1rem; font-size: 1.2rem; background-color: #28a745; margin-top: 1.5rem; }
-.start-button:not(:disabled):hover { background-color: #218838; }
-.resume-section { border: 2px solid #007bff; background-color: #e7f3ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
-.resume-section h2 { color: #0056b3; margin-top: 0; margin-bottom: 1rem; }
-.resume-section p { margin-bottom: 1.5rem; color: #333; }
-.resume-buttons { display: flex; justify-content: center; gap: 1rem; }
-.action-button { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
-.action-button:hover { transform: translateY(-1px); }
-.resume-button { background-color: #28a745; color: white; }
-.resume-button:hover { background-color: #218838; }
-.discard-button { background-color: #dc3545; color: white; }
-.discard-button:hover { background-color: #c82333; }
+<style scoped lang="postcss">
+.container {
+  @apply max-w-[500px] mx-auto my-8 p-8 bg-[#f9f9f9] rounded-lg shadow-md font-sans text-center;
+}
+
+h1 {
+  @apply text-[#333] mb-2;
+}
+
+h2 {
+  @apply text-[#555] mb-6;
+}
+
+.section {
+  @apply mb-6 pb-4 border-b border-[#eee];
+}
+
+.section:last-of-type {
+  @apply border-b-0 pb-0 mb-0;
+}
+
+.add-player {
+  @apply flex gap-2;
+}
+
+input[type="text"],
+input[type="number"] {
+  @apply p-3 border border-[#ccc] rounded text-base;
+}
+
+input[type="text"] {
+  @apply flex-grow;
+}
+
+input[type="number"] {
+  @apply w-[60px] text-center mx-2;
+}
+
+button {
+  @apply px-6 py-3 bg-[#007bff] text-white border-0 rounded cursor-pointer text-base transition-colors duration-200;
+}
+
+button:disabled {
+  @apply bg-[#cccccc] cursor-not-allowed;
+}
+
+button:not(:disabled):hover {
+  @apply bg-[#0056b3];
+}
+
+.player-list {
+  @apply list-none p-0 m-0 text-left;
+}
+
+.player-list li {
+  @apply bg-white p-2 px-4 mb-2 border border-[#eee] rounded flex justify-between items-center;
+}
+
+.remove-btn {
+  @apply bg-[#dc3545] text-white border-0 rounded-full w-6 h-6 text-base leading-none cursor-pointer p-0 shrink-0;
+}
+
+.remove-btn:hover {
+  @apply bg-[#c82333];
+}
+
+.undercover-select {
+  @apply flex items-center justify-center flex-wrap gap-2;
+}
+
+.undercover-select label {
+  @apply mr-2 font-bold;
+}
+
+.undercover-select span {
+  @apply text-[0.9em] text-[#666] ml-2;
+}
+
+.warning {
+  @apply text-[#dc3545] mb-4 font-bold;
+}
+
+.start-button {
+  @apply w-full p-4 text-xl bg-[#28a745] mt-6;
+}
+
+.start-button:not(:disabled):hover {
+  @apply bg-[#218838];
+}
+
+.resume-section {
+  @apply border-2 border-[#007bff] bg-[#e7f3ff] p-6 rounded-lg mb-8;
+}
+
+.resume-section h2 {
+  @apply text-[#0056b3] mt-0 mb-4;
+}
+
+.resume-section p {
+  @apply mb-6 text-[#333];
+}
+
+.resume-buttons {
+  @apply flex justify-center gap-4;
+}
+
+.action-button {
+  @apply px-6 py-[0.8rem] border-0 rounded-[5px] cursor-pointer text-base font-bold transition-colors duration-200 ease-linear;
+}
+
+.action-button:hover {
+  @apply -translate-y-[1px];
+}
+
+.resume-button {
+  @apply bg-[#28a745] text-white;
+}
+
+.resume-button:hover {
+  @apply bg-[#218838];
+}
+
+.discard-button {
+  @apply bg-[#dc3545] text-white;
+}
+
+.discard-button:hover {
+  @apply bg-[#c82333];
+}
 </style>
