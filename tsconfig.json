@@ -1,4 +1,16 @@
 {
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true
+  },
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "exclude": [
+    // things coming from `./.nuxt/tsconfig.json`
+    "./node_modules",
+    "./dist",
+    "./.output",
+  ]
 }

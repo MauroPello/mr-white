@@ -1,14 +1,15 @@
-<script setup lang="ts">
-useHead({
-  htmlAttrs: {
-    lang: 'it-IT'
-  }
-})
-</script>
-
 <template>
   <div>
-    <NuxtPage />
+    <NuxtLoadingIndicator color="rgb(var(--color-primary-600))" />
+    <NuxtLayout>
+      <NuxtErrorBoundary>
+        <NuxtPage />
+
+        <template #error="{ error }">
+          <VueError :error="error" />
+        </template>
+      </NuxtErrorBoundary>
+    </NuxtLayout>
   </div>
 </template>
 
