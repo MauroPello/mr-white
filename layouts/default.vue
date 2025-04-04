@@ -4,9 +4,11 @@ import { Analytics } from '@vercel/analytics/nuxt';
 </script>
 
 <template>
-  <slot />
-  <SpeedInsights/>
-  <Analytics/>
+  <div>
+    <slot />
+    <SpeedInsights/>
+    <Analytics/>
+  </div>
 </template>
 
 <style lang="postcss" scoped>
