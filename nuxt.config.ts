@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     ["nuxt-viewport", viewportConfig],
     '@nuxt/ui',
     "@nuxt/eslint",
+    "@nuxtjs/color-mode",
   ],
   components: ["~/components"],
   robots: robotsConfig,
