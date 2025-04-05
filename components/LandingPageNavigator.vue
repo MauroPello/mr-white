@@ -2,6 +2,16 @@
 import { companyName } from "~/constants/company";
 
 const { isMobile } = useScreenSize();
+
+const router = useRouter();
+
+const play = async () => {
+  const originPath = router.currentRoute.value.path;
+  await router.push('/#gioca');
+  if (originPath !== '/') {
+    router.go(0);
+  }
+};
 </script>
 
 <template>
@@ -47,7 +57,7 @@ const { isMobile } = useScreenSize();
           label="Gioca"
           :size="isMobile ? 'md' : 'xl'"
           class="text-base sm:text-lg"
-          to="/#gioca"
+          @click="play"
         />
       </div>
     </div>

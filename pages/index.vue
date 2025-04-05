@@ -67,18 +67,13 @@ useHead({
   ]
 });
 
+const router = useRouter();
+
 onMounted(() => {
   if (loadGameStateFromLocalStorage()) {
-    scrollToGame();
+    router.push('/#gioca');
   }
 });
-
-const scrollToGame = () => {
-  const element = document.getElementById('gioca');
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
-  }
-};
 </script>
 
 <template>
@@ -92,7 +87,7 @@ const scrollToGame = () => {
         Il gioco di società dove tutti conoscono la parola segreta... tranne Mr. White! Scopri l'infiltrato o confondi gli altri giocatori in questo divertente party game di bluff. Si gioca tutti con un solo telefono!
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
-        <UButton icon="i-heroicons-play-circle" size="xl" @click="scrollToGame">
+        <UButton icon="i-heroicons-play-circle" size="xl" to="/#gioca">
           Inizia a Giocare
         </UButton>
         <UButton to="/consigli" variant="ghost" icon="i-heroicons-book-open" size="xl" color="gray">
