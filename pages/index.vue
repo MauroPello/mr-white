@@ -86,7 +86,7 @@ onMounted(() => {
       <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
         Il gioco di società dove tutti conoscono la parola segreta... tranne Mr. White! Scopri l'infiltrato o confondi gli altri giocatori in questo divertente party game di bluff. Si gioca tutti con un solo telefono!
       </p>
-      <div class="mt-10 flex items-center justify-center gap-x-2 md:gap-x-6">
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
         <UButton icon="i-heroicons-play-circle" size="xl" to="/#gioca">
           Inizia a Giocare
         </UButton>
@@ -136,7 +136,8 @@ onMounted(() => {
     <!-- Why Play Section -->
      <div class="py-16">
        <div class="text-center mb-12">
-         <UIcon name="i-heroicons-puzzle-piece" class="text-4xl text-primary mb-3" />
+         <!-- Consider changing this icon if it feels repetitive with the How to Play section -->
+         <UIcon name="i-heroicons-squares-plus" class="text-4xl text-primary mb-3" />
          <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
            Perché Giocare a Mr. White?
          </h2>
@@ -185,6 +186,27 @@ onMounted(() => {
         Configura la tua partita qui sotto e inizia subito a scoprire chi è l'infiltrato!
       </p>
       <StartGame class="max-w-2xl mx-auto" />
+    </div>
+
+    <div class="py-16 text-center dark:border-gray-800 mt-16">
+      <UIcon name="i-heroicons-gift" class="text-4xl text-primary mb-3" />
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
+        Ti piace Mr. White? Offrimi un caffè!
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+        Se ti stai divertendo con {{ companyName }}, puoi supportare il mantenimento e lo sviluppo del gioco offrendomi un caffè virtuale. Ogni contributo, anche piccolo, è molto apprezzato e mi aiuta a mantenere il gioco gratuito per tutti!
+      </p>
+      <UButton
+        icon="i-heroicons-banknotes"
+        size="xl"
+        to="https://paypal.me/MrWhiteGioco"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="soft"
+        color="primary"
+      >
+        Supporta con PayPal
+      </UButton>
     </div>
   </UContainer>
 </template>
