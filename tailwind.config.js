@@ -9,7 +9,6 @@ module.exports = {
     "./nuxt.config.{js,ts}",
     "./app.vue",
   ],
-  darkMode: false, // Disable OS-based dark mode detection
   theme: {
     extend: {
       width: {
