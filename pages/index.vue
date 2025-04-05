@@ -79,6 +79,22 @@ onMounted(() => {
 
 <template>
   <UContainer class="py-12">
+    <Link
+      v-for="type in ['png', 'x-icon']"
+      :key="type"
+      rel="icon"
+      :href="companyLogo"
+      :type="`image/${type}`"
+    />
+
+    <Link
+      v-for="size in [16, 32, 180]"
+      :key="size"
+      :rel="size === 180 ? 'apple-touch-icon' : 'icon'"
+      :href="companyLogo"
+      :sizes="`${size}x${size}`"
+    />
+
     <div class="text-center mb-16">
       <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl mb-4">
         {{ companyName }}
