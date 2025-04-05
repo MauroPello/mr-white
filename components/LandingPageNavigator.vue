@@ -45,7 +45,7 @@ const play = async () => {
         </NuxtLink>
         <UButton
           size="sm"
-          class="text-base sm:text-lg text-gray-700 hover:text-black"
+          class="text-base sm:text-lg text-gray-700 hover:text-black hidden md:block"
           variant="ghost"
           to="/consigli"
         >

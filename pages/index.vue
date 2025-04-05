@@ -86,7 +86,7 @@ onMounted(() => {
       <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
         Il gioco di società dove tutti conoscono la parola segreta... tranne Mr. White! Scopri l'infiltrato o confondi gli altri giocatori in questo divertente party game di bluff. Si gioca tutti con un solo telefono!
       </p>
-      <div class="mt-10 flex items-center justify-center gap-x-6">
+      <div class="mt-10 flex items-center justify-center gap-x-2 md:gap-x-6">
         <UButton icon="i-heroicons-play-circle" size="xl" to="/#gioca">
           Inizia a Giocare
         </UButton>
