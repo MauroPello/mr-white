@@ -246,17 +246,19 @@ function getOriginalAssignmentsInOrder(): PlayerAssignment[] {
     });
 }
 
-function playAgain() {
+async function playAgain() {
   clearSavedGameState();
-  router.push('/');
+  await router.push('/#gioca');
+  router.go(0);
 }
 
-onMounted(() => {
+onMounted(async () => {
   const isGameOver = gamePhase.value.startsWith('game_over');
     // Robust check for valid state on load
   if (!assignmentsState.value || assignmentsState.value.length === 0 || !activePlayersState.value || (activePlayersState.value.length === 0 && !isGameOver) || !gameWordPairState.value ) {
     console.warn("Play page loaded with invalid/missing state, redirecting.");
-    router.replace('/');
+    await router.push('/#gioca');
+    router.go(0);
     return;
   }
 
@@ -352,7 +354,7 @@ onMounted(() => {
 
           <div class="space-y-4 text-gray-700 dark:text-gray-300">
               <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
-              <p>Mettete giù il telefono e discutete! Cercate di trovare l'Infiltrato/gli Infiltrati.</p>
+              <p>Mettete giù il telefono e discutete! Cercate di trovare Mr. White.</p>
               <p>Quando siete pronti, iniziate a votare.</p>
           </div>
 
