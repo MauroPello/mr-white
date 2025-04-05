@@ -31,6 +31,7 @@ useHead({
         "@graph": [
           {
             "@type": "WebApplication",
+            "@id": `${companyUrl}#website`,
             "name": companySEOTitle,
             "description": companySEODescription,
             "url": companyUrl,
@@ -78,7 +79,6 @@ onMounted(() => {
 
 <template>
   <UContainer class="py-12">
-    <!-- Hero Section -->
     <div class="text-center mb-16">
       <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl mb-4">
         {{ companyName }}
@@ -96,7 +96,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- How to Play Section -->
     <div class="py-16">
       <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-2">
         Come si Gioca?
@@ -133,7 +132,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Why Play Section -->
      <div class="py-16">
        <div class="text-center mb-12">
          <UIcon name="i-heroicons-squares-plus" class="text-4xl text-primary mb-3" />
@@ -176,7 +174,6 @@ onMounted(() => {
        </div>
      </div>
 
-    <!-- Start Game Section -->
     <div id="gioca" class="py-16">
       <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-2">
         Pronto a Giocare?

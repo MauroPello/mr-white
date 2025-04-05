@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { companyName, companyUrl, companyLogo } from '~/constants/company';
 
-// --- SEO Meta ---
 const consigliSEOTitle = `Consigli e Strategie per Vincere a ${companyName}`;
 const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White. Impara a bluffare e a scoprire l'infiltrato!`;
 const consigliPageUrl = `${companyUrl}/consigli`;
@@ -11,18 +10,16 @@ useHead({
   meta: [
     { name: 'description', content: consigliSEODescription },
     { name: 'keywords', content: `consigli ${companyName}, strategie ${companyName}, come vincere ${companyName}, trucchi ${companyName}, guida ${companyName}, undercover, mr white, gioco società, gioco bluff` },
-    // Open Graph
     { property: 'og:title', content: consigliSEOTitle },
     { property: 'og:description', content: consigliSEODescription },
-    { property: 'og:type', content: 'article' }, // Article type for tips page
+    { property: 'og:type', content: 'article' },
     { property: 'og:url', content: consigliPageUrl },
     { property: 'og:image', content: companyLogo },
     { property: 'og:image:width', content: '900' },
     { property: 'og:image:height', content: '900' },
     { property: 'og:locale', content: 'it_IT' },
-    { property: 'article:published_time', content: new Date().toISOString() }, // Add published time
-    { property: 'article:author', content: companyName }, // Optional: Author
-    // Twitter Card
+    { property: 'article:published_time', content: new Date().toISOString() },
+    { property: 'article:author', content: companyName },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: consigliSEOTitle },
     { name: 'twitter:description', content: consigliSEODescription },
@@ -37,19 +34,17 @@ useHead({
       innerHTML: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
-          // WebPage Schema for this specific page
           {
             "@type": "WebPage",
             "@id": `${consigliPageUrl}#webpage`,
             "url": consigliPageUrl,
             "name": consigliSEOTitle,
             "description": consigliSEODescription,
-            "isPartOf": { "@id": `${companyUrl}#website` }, // Assumes a WebSite object exists at the root URL ID
-            "about": { "@id": `${companyUrl}#game` }, // Links to the Game defined on the index page
+            "isPartOf": { "@id": `${companyUrl}#website` },
+            "about": { "@id": `${companyUrl}#game` },
             "inLanguage": "it-IT",
-            "mainEntity": { "@id": `${consigliPageUrl}#article` } // Points to the Article schema below
+            "mainEntity": { "@id": `${consigliPageUrl}#article` }
           },
-          // Article Schema for the tips content
           {
             "@type": "Article",
             "@id": `${consigliPageUrl}#article`,
@@ -91,25 +86,40 @@ useHead({
               - Ruba gli indizi: Se un Civile dice una parola, prova a usarne una simile o correlata nel tuo turno.
               - Semina zizzania: Se hai un sospetto su chi potrebbe essere un altro Mr. White (se ce n'è più di uno), o se vuoi deviare l'attenzione, accusa qualcun altro con finta sicurezza.
               - Preparati alla domanda finale: Se vieni scoperto, pensa velocemente a quale potrebbe essere la parola segreta basandoti sugli indizi che hai sentito.
-            ` // Placeholder text, replace with actual tips
+            `
           },
-          // Reference the main WebApplication (optional but good for context)
-          // Ensure the @id matches the one used in index.vue
           {
             "@type": "WebApplication",
-            "@id": `${companyUrl}#webapp`, // Assuming this ID is used on index.vue for the WebApplication
-            "name": companyName,
-            "url": companyUrl
-            // Add other relevant properties if needed, mirroring index.vue's WebApplication
+            "@id": `${companyUrl}#website`,
+            "name": companySEOTitle,
+            "description": companySEODescription,
+            "url": companyUrl,
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Web Browser",
+            "browserRequirements": "Requires JavaScript",
+            "inLanguage": "it-IT",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "subjectOf": { "@id": `${companyUrl}#game` }
           },
-           // Reference the main Game (optional but good for context)
-           // Ensure the @id matches the one used in index.vue
           {
             "@type": "Game",
-            "@id": `${companyUrl}#game`, // Assuming this ID is used on index.vue for the Game
+            "@id": `${companyUrl}#game`,
             "name": companyName,
-            "url": companyUrl
-             // Add other relevant properties if needed, mirroring index.vue's Game
+            "description": "Un party game di bluff in cui i giocatori ricevono una parola segreta, tranne uno (o più) 'infiltrati' che ne ricevono una simile ma diversa. L'obiettivo è scoprire gli infiltrati (o sopravvivere come infiltrato) descrivendo la propria parola senza essere troppo ovvi.",
+            "url": companyUrl,
+            "inLanguage": "it-IT",
+            "genre": ["Party game", "Word game", "Bluffing game", "Gioco di società"],
+            "keywords": "undercover, infiltrato, mr white, gioco parole, gioco bluff, party game, gioco società, un telefono",
+            "numberOfPlayers": {
+              "@type": "QuantitativeValue",
+              "minValue": 3
+            },
+            "playMode": "MultiPlayer",
+            "gamePlatform": "Browser"
           }
         ]
       }),
@@ -127,7 +137,7 @@ const play = async () => {
 
 <template>
   <UContainer class="py-12">
-    <div class="prose dark:prose-invert max-w-none"> <!-- Using prose for nice article formatting -->
+    <div class="prose dark:prose-invert max-w-none">
       <h1>{{ consigliSEOTitle }}</h1>
       <p class="lead">{{ consigliSEODescription }}</p>
 

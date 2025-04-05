@@ -41,7 +41,8 @@ const play = async () => {
           <BaseLogo
             :small="true"
           />
-          <p>{{ companyName }}</p>
+          <p class="hidden sm:block">{{ companyName }}</p>
+          <p class="block sm:hidden">Mr. White</p>
         </NuxtLink>
         <UButton
           size="sm"
