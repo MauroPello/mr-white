@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { companyName, companyUrl, companyLogo } from '~/constants/company';
+import { companyName, companyUrl, companyLogo, companySEOTitle, companySEODescription } from '~/constants/company';
 
 const consigliSEOTitle = `Consigli e Strategie per Vincere a ${companyName}`;
 const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White. Impara a bluffare e a scoprire l'infiltrato!`;
