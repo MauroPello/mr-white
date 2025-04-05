@@ -135,21 +135,21 @@ const play = async () => {
 
       <h2>Consigli Generali</h2>
       <ul>
-        <li><strong>Ascolta attentamente:</strong> Le parole dette dagli altri giocatori sono la tua fonte principale di informazioni, sia che tu sia un Civile o Mr. White. Cerca pattern, esitazioni o parole fuori contesto.</li>
+        <li><strong>Ascolta attentamente:</strong> Le parole dette dagli altri giocatori sono la tua fonte principale di informazioni, sia che tu sia un Civile o l'infiltrato Mr. White. Cerca pattern, esitazioni o parole fuori contesto.</li>
         <li><strong>Gestisci il tempo:</strong> Non prendere troppo tempo per pensare alla tua parola, potrebbe insospettire gli altri.</li>
         <li><strong>Osserva il linguaggio del corpo:</strong> A volte, il nervosismo o la troppa sicurezza possono tradire un giocatore.</li>
       </ul>
 
       <h2>Consigli per i Civili</h2>
-      <p>Il tuo obiettivo è duplice: identificare Mr. White e dimostrare la tua innocenza.</p>
+      <p>Il tuo obiettivo è duplice: identificare l'infiltrato Mr. White e dimostrare la tua innocenza.</p>
       <ul>
-        <li><strong>Sii specifico, ma non troppo:</strong> La tua parola deve essere chiaramente collegata alla parola segreta, ma non così ovvia da renderla facile da indovinare per Mr. White se dovesse essere scoperto. Esempio: se la parola è "Spiaggia", "Castello di sabbia" è meglio di "Mare".</li>
+        <li><strong>Sii specifico, ma non troppo:</strong> La tua parola deve essere chiaramente collegata alla parola segreta, ma non così ovvia da renderla facile da indovinare per l'infiltrato Mr. White se dovesse essere scoperto. Esempio: se la parola è "Spiaggia", "Castello di sabbia" è meglio di "Mare".</li>
         <li><strong>Varia gli indizi:</strong> Non dare solo sinonimi o parole della stessa categoria. Pensa ad azioni, luoghi associati, caratteristiche.</li>
         <li><strong>Metti alla prova i sospettati:</strong> Se sospetti di qualcuno, prova a dare un indizio leggermente più difficile o ambiguo per vedere come reagisce.</li>
         <li><strong>Non accusare a caso:</strong> Basa i tuoi sospetti su prove concrete (parole strane, esitazioni).</li>
       </ul>
 
-      <h2>Consigli per Mr. White</h2>
+      <h2>Consigli per l'infiltrato Mr. White</h2>
       <p>Il tuo obiettivo è sopravvivere senza farti scoprire e, se possibile, indovinare la parola segreta.</p>
       <ul>
         <li><strong>Mimetizzati:</strong> Ascolta le prime parole dette dai Civili per capire l'argomento generale. Usa parole generiche o che potrebbero adattarsi a più contesti all'inizio.</li>

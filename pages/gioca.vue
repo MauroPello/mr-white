@@ -354,7 +354,7 @@ onMounted(async () => {
 
           <div class="space-y-4 text-gray-700 dark:text-gray-300">
               <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
-              <p>Mettete giù il telefono e discutete! Cercate di trovare Mr. White.</p>
+              <p>Mettete giù il telefono e discutete! Cercate di trovare l'infiltrato Mr. White.</p>
               <p>Quando siete pronti, iniziate a votare.</p>
           </div>
 
@@ -433,7 +433,7 @@ onMounted(async () => {
                       <p class="mt-1">
                           Era
                            <span class="font-semibold" :class="{'text-red-600 dark:text-red-400': lastEliminatedState.isUndercover, 'text-green-600 dark:text-green-400': !lastEliminatedState.isUndercover}">
-                              {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Cittadino" }}!
+                              {{ lastEliminatedState.isUndercover ? "un Infiltrato" : "un Civile" }}!
                            </span>
                       </p>
                   </template>
@@ -477,7 +477,7 @@ class="text-xl font-semibold mb-4"
 
           <p v-if="gameWordPairState" class="text-gray-600 dark:text-gray-400 mb-4">
               Le parole erano:
-              <UBadge variant="soft" color="gray" size="md">{{ gameWordPairState.civilian }}</UBadge> (Cittadino) e
+              <UBadge variant="soft" color="gray" size="md">{{ gameWordPairState.civilian }}</UBadge> (Civile) e
               <UBadge variant="soft" color="red" size="md">{{ gameWordPairState.undercover }}</UBadge> (Infiltrato)
           </p>
 

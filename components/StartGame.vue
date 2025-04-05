@@ -134,7 +134,7 @@ function startNewGame() {
   wasVoteTied.value = false;
 
   saveCurrentGameState();
-  router.push('/play');
+  router.push('/gioca');
 }
 
 function resumeGame() {
@@ -157,7 +157,7 @@ function resumeGame() {
     finalRoleReveal.value = savedGameState.value.finalRoleReveal;
 
     savedGameState.value = null;
-    router.push('/play');
+    router.push('/gioca');
 }
 
 function discardSavedGame() {
@@ -199,7 +199,7 @@ function saveCurrentGameState() {
       </template>
 
       <p class="text-gray-700 dark:text-gray-300 mb-4">
-        Trovato stato partita del {{ formatTimestamp(savedGameState.timestamp) }}.
+        Trovato partita salvata il {{ formatTimestamp(savedGameState.timestamp) }}.
       </p>
 
       <div class="flex justify-center gap-4">
@@ -216,7 +216,7 @@ function saveCurrentGameState() {
     <UCard v-if="!savedGameState">
         <template #header>
              <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">
-                Impostazione Nuova Partita
+                Nuova Partita
             </h2>
         </template>
 
