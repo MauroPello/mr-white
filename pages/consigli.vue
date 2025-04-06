@@ -25,9 +25,6 @@ useHead({
     { name: 'twitter:description', content: consigliSEODescription },
     { name: 'twitter:image', content: companyLogo },
   ],
-  link: [
-    { rel: 'canonical', href: consigliPageUrl }
-  ],
   script: [
     {
       type: 'application/ld+json',

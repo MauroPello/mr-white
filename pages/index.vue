@@ -1,72 +1,8 @@
 <script setup lang="ts">
-import { companyLogo, companyName, companySEODescription, companySEOTitle, companyUrl } from '~/constants/company';
+import { companyName, companyMainStructuredData } from '~/constants/company';
 import { loadGameStateFromLocalStorage } from '~/utils/gameStateStorage';
 
-useHead({
-  title: companySEOTitle,
-  meta: [
-    { name: 'description', content: companySEODescription },
-    { name: 'keywords', content: "undercover, mr white, mr white gioco, gioco società, gioco di gruppo, party game, gioco parole, gioco bluff, undercover game, giocare online, un telefono, italiano" },
-    { property: 'og:title', content: companySEOTitle },
-    { property: 'og:description', content: companySEODescription },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: companyUrl },
-    { property: 'og:image', content: companyLogo },
-    { property: 'og:image:width', content: '900' },
-    { property: 'og:image:height', content: '900' },
-    { property: 'og:locale', content: 'it_IT' },
-    { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: companySEOTitle },
-    { name: 'twitter:description', content: companySEODescription },
-    { name: 'twitter:image', content: companyLogo },
-  ],
-  link: [
-    { rel: 'canonical', href: companyUrl }
-  ],
-  script: [
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify({
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebApplication",
-            "@id": `${companyUrl}#website`,
-            "name": companySEOTitle,
-            "description": companySEODescription,
-            "url": companyUrl,
-            "applicationCategory": "GameApplication",
-            "operatingSystem": "Web Browser",
-            "browserRequirements": "Requires JavaScript",
-            "inLanguage": "it-IT",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "subjectOf": { "@id": `${companyUrl}#game` }
-          },
-          {
-            "@type": "Game",
-            "@id": `${companyUrl}#game`,
-            "name": companyName,
-            "description": "Un party game di bluff in cui i giocatori ricevono una parola segreta, tranne uno (o più) 'infiltrati' che ne ricevono una simile ma diversa. L'obiettivo è scoprire gli infiltrati (o sopravvivere come infiltrato) descrivendo la propria parola senza essere troppo ovvi.",
-            "url": companyUrl,
-            "inLanguage": "it-IT",
-            "genre": ["Party game", "Word game", "Bluffing game", "Gioco di società"],
-            "keywords": "undercover, infiltrato, mr white, gioco parole, gioco bluff, party game, gioco società, un telefono",
-            "numberOfPlayers": {
-              "@type": "QuantitativeValue",
-              "minValue": 3
-            },
-            "playMode": "MultiPlayer",
-            "gamePlatform": "Browser"
-          }
-        ]
-      }),
-    }
-  ]
-});
+useHead(companyMainStructuredData);
 
 const router = useRouter();
 
@@ -79,22 +15,6 @@ onMounted(() => {
 
 <template>
   <UContainer class="py-12">
-    <Link
-      v-for="type in ['png', 'x-icon']"
-      :key="type"
-      rel="icon"
-      :href="companyLogo"
-      :type="`image/${type}`"
-    />
-
-    <Link
-      v-for="size in [16, 32, 180]"
-      :key="size"
-      :rel="size === 180 ? 'apple-touch-icon' : 'icon'"
-      :href="companyLogo"
-      :sizes="`${size}x${size}`"
-    />
-
     <div class="text-center mb-16">
       <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl mb-4">
         {{ companyName }}

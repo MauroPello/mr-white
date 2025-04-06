@@ -1,5 +1,6 @@
 
 <script setup lang="ts">
+import { companyMainStructuredData } from '~/constants/company';
 import { saveGameStateToLocalStorage, clearSavedGameState } from '~/utils/gameStateStorage';
 import {
   useGamePhase, useActivePlayers, useCurrentRound, useGameWordPair,
@@ -11,6 +12,8 @@ import {
 } from '~/composables/useGameState';
 
 const router = useRouter();
+
+useHead(companyMainStructuredData);
 
 // Global State Refs
 const gamePhase = useGamePhase();
