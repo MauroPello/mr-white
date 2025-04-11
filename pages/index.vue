@@ -131,7 +131,7 @@ onMounted(() => {
       <UButton
         icon="i-heroicons-banknotes"
         size="xl"
-        to="https://paypal.me/MrWhiteGioco"
+        to="https://www.paypal.com/donate/?hosted_button_id=Q4WCV4C5FS4YE"
         target="_blank"
         rel="noopener noreferrer"
         variant="soft"
