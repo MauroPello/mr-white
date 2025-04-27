@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getRandomWordPair } from '~/utils/wordPairs';
+import { wordPairs } from '~/constants/wordPairs'; // Import predefined word pairs
 import { saveGameStateToLocalStorage, loadGameStateFromLocalStorage, clearSavedGameState } from '~/utils/gameStateStorage';
+import type { WordPair } from '~/types/wordPairs';
 import {
   usePlayers, useGameWordPair, useAssignments, useActivePlayers,
   useCurrentRound, useGamePhase, useCurrentVotes, useVotingPlayerIndex,
@@ -13,7 +15,35 @@ import {
 const router = useRouter();
 const newPlayerName = ref('');
 const selectedUndercovers = ref(1);
+const useCustomWords = ref(false); // Added state for custom words toggle
+const customCivilianWord = ref('');
+const customUndercoverWord = ref('');
 const savedGameState = ref<ReturnType<typeof loadGameStateFromLocalStorage>>(null);
+
+// Word Selection Mode
+type WordSelectionMode = 'random' | 'custom' | 'select';
+const wordSelectionMode = ref<WordSelectionMode>('random');
+const selectedPredefinedPairIndex = ref<number | undefined>(undefined); // Use undefined instead of null
+
+const wordSelectionOptions = [
+    { value: 'random', label: 'Casuali' },
+    { value: 'select', label: 'Scelte dalla nostra lista' },
+    { value: 'custom', label: 'Personalizzate' }
+];
+
+// Options for the Select Menu
+const predefinedPairOptions = computed(() =>
+    wordPairs.map((pair, index) => ({
+        label: `${pair.civilian} / ${pair.undercover}`,
+        value: index
+    }))
+);
+
+// Accordion items definition (Settings removed)
+const accordionItems = [
+    { label: 'Giocatori e Infiltrati', slot: 'players', defaultOpen: true },
+    { label: 'Parole', slot: 'words' }
+];
 
 const playersState = usePlayers();
 const gameWordPair = useGameWordPair();
@@ -58,6 +88,11 @@ watch(playersState, (newPlayers) => {
 function resetLocalSetupState() {
     selectedUndercovers.value = 1;
     newPlayerName.value = '';
+    useCustomWords.value = false;
+    customCivilianWord.value = '';
+    customUndercoverWord.value = '';
+    wordSelectionMode.value = 'random';
+    selectedPredefinedPairIndex.value = undefined; // Reset to undefined
 }
 
 function resetGlobalGameState() {
@@ -103,8 +138,41 @@ function startNewGame() {
        return;
    }
 
-  const selectedPair = getRandomWordPair();
-  if (!selectedPair) { alert("Errore: Impossibile caricare le coppie di parole."); return; }
+   let selectedPair: WordPair | null = null; // Explicitly use imported WordPair type
+
+   if (wordSelectionMode.value === 'custom') {
+      const civilianWord = customCivilianWord.value.trim();
+      const undercoverWord = customUndercoverWord.value.trim();
+      if (!civilianWord || !undercoverWord) {
+          alert("Per favore, inserisci entrambe le parole personalizzate.");
+          return;
+      }
+      if (civilianWord.toLowerCase() === undercoverWord.toLowerCase()) {
+           alert("Le parole personalizzate non possono essere uguali.");
+           return;
+       }
+      selectedPair = { civilian: civilianWord, undercover: undercoverWord };
+  } else if (wordSelectionMode.value === 'select') {
+      // Check against undefined
+      if (selectedPredefinedPairIndex.value === undefined || selectedPredefinedPairIndex.value < 0 || selectedPredefinedPairIndex.value >= wordPairs.length) {
+          alert("Per favore, seleziona una coppia di parole dalla lista.");
+          return;
+      }
+      // Use non-null assertion as index is validated
+      selectedPair = wordPairs[selectedPredefinedPairIndex.value]!;
+  } else { // 'random' mode
+      selectedPair = getRandomWordPair();
+      if (!selectedPair) {
+          alert("Errore: Impossibile caricare una coppia di parole casuale.");
+          return;
+      }
+  }
+
+  // Add null check before destructuring
+  if (!selectedPair) {
+      alert("Errore interno: la coppia di parole selezionata non è valida.");
+      return;
+  }
 
   const { civilian, undercover } = selectedPair;
   const playerIndices = Array.from({ length: numPlayers }, (_, i) => i);
@@ -220,95 +288,177 @@ function saveCurrentGameState() {
             </h2>
         </template>
 
-        <!-- Add Player Section -->
-        <UFormGroup label="Aggiungi Giocatore" class="mb-6">
-            <div class="flex items-center gap-2">
-                <UInput
-                    v-model.trim="newPlayerName"
-                    placeholder="Nome giocatore..."
-                    aria-label="Inserisci nome giocatore"
-                    class="flex-grow"
-                    size="lg"
-                    icon="i-heroicons-user-plus"
-                    @keyup.enter="addPlayer"
-                />
-                <UButton
-                    :disabled="!newPlayerName"
-                    icon="i-heroicons-plus-circle"
-                    size="lg"
-                    aria-label="Aggiungi Giocatore"
-                    @click="addPlayer"
-                />
-            </div>
-        </UFormGroup>
-
-        <!-- Player List -->
-        <div v-if="playersState.length > 0" class="mb-6">
-            <h3 class="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
-                Giocatori ({{ playersState.length }}):
-            </h3>
-            <ul class="space-y-2">
-                <li
-                    v-for="(player, index) in playersState"
-                    :key="player"
-                    class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
-                >
-                    <span class="text-gray-800 dark:text-gray-100">{{ player }}</span>
-                    <UButton
-                        icon="i-heroicons-x-circle-20-solid"
-                        color="red"
-                        variant="ghost"
-                        size="sm"
-                        aria-label="Rimuovi giocatore"
-                        @click="removePlayer(index)"
+        <UAccordion :items="accordionItems" size="xl" multiple> <!-- Added multiple prop -->
+             <template #players>
+                 <!-- Add Player Section -->
+                <UFormGroup label="Aggiungi Giocatore" class="mb-4 px-2">
+                    <div class="flex items-center gap-2">
+                        <UInput
+                            v-model.trim="newPlayerName"
+                            placeholder="Nome giocatore..."
+                            aria-label="Inserisci nome giocatore"
+                            class="flex-grow"
+                            size="lg"
+                            icon="i-heroicons-user-plus"
+                            @keyup.enter="addPlayer"
                         />
-                </li>
-            </ul>
-        </div>
+                        <UButton
+                            :disabled="!newPlayerName"
+                            icon="i-heroicons-plus-circle"
+                            size="lg"
+                            aria-label="Aggiungi Giocatore"
+                            @click="addPlayer"
+                        />
+                    </div>
+                </UFormGroup>
 
-        <!-- Number of Undercovers Selection -->
-         <UFormGroup v-if="playersState.length >= 3" label="Numero di Infiltrati" class="mb-6">
-            <div class="flex items-center justify-center gap-2 flex-wrap">
-                 <UInput
-                    id="undercover-count"
-                    v-model.number="selectedUndercovers"
-                    type="number"
-                    :min="1"
-                    :max="maxPossibleUndercovers"
-                    aria-label="Numero di Infiltrati"
-                    class="w-20 text-center"
-                    size="md"
-                />
-                 <span class="text-sm text-gray-500 dark:text-gray-400">
-                    (Min: 1, Max: {{ maxPossibleUndercovers }})
-                 </span>
-            </div>
-         </UFormGroup>
+                <!-- Player List -->
+                <div v-if="playersState.length > 0" class="mb-4">
+                    <ul class="space-y-2">
+                        <li
+                            v-for="(player, index) in playersState"
+                            :key="player"
+                            class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
+                        >
+                            <span class="text-gray-800 dark:text-gray-100">{{ player }}</span>
+                            <UButton
+                                icon="i-heroicons-x-circle-20-solid"
+                                color="red"
+                                variant="ghost"
+                                size="sm"
+                                aria-label="Rimuovi giocatore"
+                                @click="removePlayer(index)"
+                                />
+                        </li>
+                    </ul>
+                </div>
 
+                 <!-- Player Count Validation -->
+                 <UAlert
+                    v-if="playersState.length < 3"
+                    icon="i-heroicons-exclamation-triangle"
+                    color="orange"
+                    variant="soft"
+                    title="Attenzione"
+                    description="Servono almeno 3 giocatori per iniziare."
+                    class="mb-4"
+                 />
 
-        <!-- Validation Messages -->
-         <UAlert
-            v-if="playersState.length < 3"
-            icon="i-heroicons-exclamation-triangle"
-            color="orange"
-            variant="soft"
-            title="Attenzione"
-            description="Servono almeno 3 giocatori per iniziare."
-            class="mb-4"
-         />
-         <UAlert
-            v-if="playersState.length >= 3 && (selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers)"
-            icon="i-heroicons-exclamation-circle"
-            color="red"
-            variant="soft"
-            title="Errore"
-            :description="`Numero di Infiltrati non valido (Min: 1, Max: ${maxPossibleUndercovers}).`"
-            class="mb-4"
-         />
+                 <!-- Number of Undercovers Selection (Moved here) -->
+                 <UFormGroup v-if="playersState.length >= 3" label="Numero di Infiltrati" class="mb-4">
+                    <div class="flex items-center justify-center gap-2 flex-wrap">
+                         <UInput
+                            id="undercover-count"
+                            v-model.number="selectedUndercovers"
+                            type="number"
+                            :min="1"
+                            :max="maxPossibleUndercovers"
+                            aria-label="Numero di Infiltrati"
+                            class="w-20 text-center"
+                            size="md"
+                        />
+                         <span class="text-sm text-gray-500 dark:text-gray-400">
+                            (Min: 1, Max: {{ maxPossibleUndercovers }})
+                         </span>
+                    </div>
+                 </UFormGroup>
+
+                 <!-- Undercover Count Validation (Moved here) -->
+                 <UAlert
+                    v-if="playersState.length >= 3 && (selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers)"
+                    icon="i-heroicons-exclamation-circle"
+                    color="red"
+                    variant="soft"
+                    title="Errore"
+                    :description="`Numero di Infiltrati non valido (Min: 1, Max: ${maxPossibleUndercovers}).`"
+                    class="mb-4"
+                 />
+            </template>
+
+            <template #words>
+                 <!-- Word Selection Mode -->
+                 <UFormGroup label="Con quali parole vuoi giocare?" class="mb-4 px-2">
+                     <URadioGroup
+                        v-model="wordSelectionMode"
+                        :options="wordSelectionOptions"
+                     />
+                 </UFormGroup>
+
+                <!-- Custom Word Inputs (Conditional) -->
+                <div v-if="wordSelectionMode === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                     <UFormGroup label="Parola Cittadino">
+                         <UInput
+                            v-model.trim="customCivilianWord"
+                            placeholder="Es: Cane"
+                            aria-label="Parola Cittadino"
+                            size="lg"
+                         />
+                     </UFormGroup>
+                     <UFormGroup label="Parola Infiltrato">
+                         <UInput
+                            v-model.trim="customUndercoverWord"
+                            placeholder="Es: Gatto"
+                            aria-label="Parola Infiltrato"
+                            size="lg"
+                         />
+                     </UFormGroup>
+                </div>
+
+                <!-- Predefined Word Selection (Conditional) -->
+                 <UFormGroup v-if="wordSelectionMode === 'select'" label="Scegli Coppia Predefinita" class="mb-4">
+                     <USelectMenu
+                        v-model="selectedPredefinedPairIndex"
+                        :options="predefinedPairOptions"
+                        placeholder="Seleziona una coppia..."
+                        value-attribute="value"
+                        option-attribute="label"
+                        searchable
+                        searchable-placeholder="Cerca coppia..."
+                        aria-label="Seleziona coppia di parole predefinita"
+                     />
+                 </UFormGroup>
+
+                 <!-- Validation for Custom Words -->
+                 <UAlert
+                    v-if="wordSelectionMode === 'custom' && (!customCivilianWord || !customUndercoverWord)"
+                    icon="i-heroicons-exclamation-circle"
+                    color="orange"
+                    variant="soft"
+                    title="Parole Mancanti"
+                    description="Inserisci entrambe le parole personalizzate per iniziare."
+                    class="mb-4"
+                 />
+                 <UAlert
+                     v-if="wordSelectionMode === 'custom' && customCivilianWord && customUndercoverWord && customCivilianWord.toLowerCase() === customUndercoverWord.toLowerCase()"
+                     icon="i-heroicons-exclamation-circle"
+                     color="red"
+                     variant="soft"
+                     title="Parole Uguali"
+                     description="Le parole personalizzate non possono essere uguali."
+                     class="mb-4"
+                 />
+                 <!-- Validation for Selected Predefined Word -->
+                 <UAlert
+                    v-if="wordSelectionMode === 'select' && selectedPredefinedPairIndex === undefined"
+                    icon="i-heroicons-exclamation-circle"
+                    color="orange"
+                    variant="soft"
+                    title="Selezione Mancante"
+                    description="Per favore, scegli una coppia di parole dalla lista."
+                    class="mb-4"
+                 />
+            </template>
+        </UAccordion>
 
         <!-- Start Button -->
         <UButton
-            :disabled="playersState.length < 3 || selectedUndercovers < 1 || selectedUndercovers > maxPossibleUndercovers"
+            :disabled="
+                playersState.length < 3 ||
+                selectedUndercovers < 1 ||
+                selectedUndercovers > maxPossibleUndercovers ||
+                (wordSelectionMode === 'custom' && (!customCivilianWord || !customUndercoverWord || customCivilianWord.toLowerCase() === customUndercoverWord.toLowerCase())) ||
+                (wordSelectionMode === 'select' && selectedPredefinedPairIndex === undefined) // Check against undefined
+            "
             size="xl"
             block
             color="primary"
