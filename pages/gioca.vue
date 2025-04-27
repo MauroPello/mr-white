@@ -220,12 +220,12 @@ function checkAndDetermineWinner(): boolean {
 
     if (numActiveUndercovers === 0 && numActivePlayers > 0) {
         gameOver = true;
-        winnerMessage = "Tutti gli Infiltrati Eliminati! Vincono i Cittadini!";
+        winnerMessage = "Vincono i Cittadini! Tutti gli Infiltrati Eliminati!";
         endPhase = 'game_over_civilians_win';
     }
     else if ((numActiveCivilians === 0 && numActivePlayers > 0) || (numActiveUndercovers === 1 && numActiveCivilians === 1)) {
         gameOver = true;
-        winnerMessage = "Gli Infiltrati non possono essere fermati! Vincono gli Infiltrati!";
+        winnerMessage = "Vincono gli Infiltrati! Gli Infiltrati non possono essere fermati!";
         endPhase = 'game_over_undercover_wins';
     }
 

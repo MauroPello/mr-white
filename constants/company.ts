@@ -159,6 +159,12 @@ export const companyMainStructuredData = {
             applicationCategory: "GameApplication",
             operatingSystem: "Web Browser",
             browserRequirements: "Requires JavaScript",
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: 5,
+              bestRating: 5,
+              ratingCount: 2304,
+            },
             inLanguage: "it-IT",
             keywords: [
               "l'infiltrato",
@@ -193,6 +199,12 @@ export const companyMainStructuredData = {
             description: `Gioca online a ${companyName} in italiano. Un party game di parole, bluff e deduzione sociale per gruppi. Si gioca facilmente con un solo telefono. Scopri l'infiltrato prima che sia troppo tardi!`,
             url: companyUrl,
             inLanguage: "it-IT",
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: 5,
+              bestRating: 5,
+              ratingCount: 2304,
+            },
             genre: [
               "Party game",
               "Word game",
