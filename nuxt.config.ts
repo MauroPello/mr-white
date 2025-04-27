@@ -31,7 +31,6 @@ export default defineNuxtConfig({
     fallback: "light",
   },
   sitemap: {
-    autoLastmod: true,
     credits: false,
   },
   sourcemap: {
