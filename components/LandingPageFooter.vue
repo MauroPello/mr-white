@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import {companyName} from "~/constants/company";
+import { companyName } from "~/constants/company";
 </script>
 
 <template>
   <div class="landing-page-footer">
-    <NuxtLink
-      class="landing-page-footer__logo__link"
-      to="/"
-    >
+    <NuxtLink class="landing-page-footer__logo__link" to="/">
       <BaseLogo />
       <p>{{ companyName }}</p>
     </NuxtLink>

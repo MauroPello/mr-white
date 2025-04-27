@@ -1,27 +1,20 @@
 <script setup lang="ts">
 import { SpeedInsights } from "@vercel/speed-insights/nuxt";
-import { Analytics } from '@vercel/analytics/nuxt';
+import { Analytics } from "@vercel/analytics/nuxt";
 import { companyLogo, companyUrl } from "~/constants/company";
 
 const router = useRouter();
 
 const fullPath = computed(
-  () => companyUrl + router.currentRoute.value.fullPath,
+  () => companyUrl + router.currentRoute.value.fullPath
 );
 </script>
 
 <template>
   <div class="landing-page-base">
-    <Link
-      rel="canonical"
-      :href="fullPath"
-    />
+    <Link rel="canonical" :href="fullPath" />
 
-    <Link
-      rel="alternate"
-      :href="fullPath"
-      hreflang="x-default"
-    />
+    <Link rel="alternate" :href="fullPath" hreflang="x-default" />
 
     <Link
       v-for="type in ['png', 'x-icon']"
@@ -44,8 +37,8 @@ const fullPath = computed(
       <slot />
     </div>
     <LandingPageFooter />
-    <SpeedInsights/>
-    <Analytics/>
+    <SpeedInsights />
+    <Analytics />
   </div>
 </template>
 

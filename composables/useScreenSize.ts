@@ -13,7 +13,7 @@ export const useScreenSize = () => {
   const isLandscape = computed(() => width.value > height.value);
 
   const currentBreakpoint = computed(
-    () => viewport.breakpoint.value as TailwindBreakpoint,
+    () => viewport.breakpoint.value as TailwindBreakpoint
   );
 
   return {

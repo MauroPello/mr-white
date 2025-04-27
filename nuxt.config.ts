@@ -1,17 +1,22 @@
-import { companyLogo, companySEODescription, companySEOTitle, companyUrl } from "./constants/company";
+import {
+  companyLogo,
+  companySEODescription,
+  companySEOTitle,
+  companyUrl,
+} from "./constants/company";
 import robotsConfig from "./robots.config";
 import viewportConfig from "./viewport.config";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   modules: [
-    '@nuxtjs/sitemap',
+    "@nuxtjs/sitemap",
     "@nuxt/image",
     "@nuxtjs/robots",
     ["nuxt-viewport", viewportConfig],
-    '@nuxt/ui',
+    "@nuxt/ui",
     "@nuxt/eslint",
     "@nuxtjs/color-mode",
   ],
@@ -62,4 +67,4 @@ export default defineNuxtConfig({
       ],
     },
   },
-})
+});

@@ -1,5 +1,5 @@
-import type { PlayerAssignment, GamePhase } from '~/composables/useGameState';
-import type { WordPair } from '~/types/wordPairs';
+import type { PlayerAssignment, GamePhase } from "~/composables/useGameState";
+import type { WordPair } from "~/types/wordPairs";
 
 // Define the structure of the saved state
 interface SavedGameState {
@@ -21,17 +21,27 @@ interface SavedGameState {
   finalRoleReveal: PlayerAssignment[];
 }
 
-const STORAGE_KEY = 'undercoverGameState';
+const STORAGE_KEY = "undercoverGameState";
 
 /**
  * Saves the current game state to localStorage.
  */
-export function saveGameStateToLocalStorage(state: Omit<SavedGameState, 'timestamp'>): void {
+export function saveGameStateToLocalStorage(
+  state: Omit<SavedGameState, "timestamp">
+): void {
   try {
     // Ensure essential parts are not null before saving
-    if (!state.players || !state.gameWordPair || !state.assignments || !state.activePlayers) {
-        console.warn("Aborting save: Essential game state parts are missing.", state);
-        return;
+    if (
+      !state.players ||
+      !state.gameWordPair ||
+      !state.assignments ||
+      !state.activePlayers
+    ) {
+      console.warn(
+        "Aborting save: Essential game state parts are missing.",
+        state
+      );
+      return;
     }
     const stateToSave: SavedGameState = {
       ...state,
@@ -57,21 +67,21 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
 
     // Add default value for wordShowingPlayerIndex if loading old state
     if (savedState.wordShowingPlayerIndex === undefined) {
-        savedState.wordShowingPlayerIndex = 0;
+      savedState.wordShowingPlayerIndex = 0;
     }
 
     // Basic validation (check if essential keys exist)
     if (
-        !savedState.players ||
-        !savedState.assignments ||
-        !savedState.activePlayers ||
-        savedState.numberOfUndercovers === undefined ||
-        savedState.currentRound === undefined ||
-        !savedState.gamePhase
+      !savedState.players ||
+      !savedState.assignments ||
+      !savedState.activePlayers ||
+      savedState.numberOfUndercovers === undefined ||
+      savedState.currentRound === undefined ||
+      !savedState.gamePhase
     ) {
-         console.warn("Loaded state is missing essential keys. Discarding.");
-         clearSavedGameState();
-         return null;
+      console.warn("Loaded state is missing essential keys. Discarding.");
+      clearSavedGameState();
+      return null;
     }
 
     return savedState;
@@ -89,6 +99,6 @@ export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-     console.error("Error clearing saved game state:", error);
+    console.error("Error clearing saved game state:", error);
   }
 }

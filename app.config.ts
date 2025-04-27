@@ -11,6 +11,6 @@ export default defineAppConfig({
         base: "h-full",
       },
       ring: "ring-0",
-    }
+    },
   },
 });

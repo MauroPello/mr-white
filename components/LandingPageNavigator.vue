@@ -7,8 +7,8 @@ const router = useRouter();
 
 const play = async () => {
   const originPath = router.currentRoute.value.path;
-  await router.push('/#gioca');
-  if (originPath !== '/') {
+  await router.push("/#gioca");
+  if (originPath !== "/") {
     router.go(0);
   }
 };
@@ -22,11 +22,7 @@ const play = async () => {
     >
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">
-          <span
-            v-for="i in [0, 1, 2, 3, 4, 5]"
-            :key="i"
-            class="marquee-text"
-          >
+          <span v-for="i in [0, 1, 2, 3, 4, 5]" :key="i" class="marquee-text">
             {{ companyName }} è gratuito per tutti! Gioca ora! 🚀
           </span>
         </div>
@@ -34,13 +30,8 @@ const play = async () => {
     </div>
     <div class="landing-page-navigator">
       <div class="landing-page-navigator__group">
-        <NuxtLink
-          class="landing-page-navigator__logo__link"
-          to="/"
-        >
-          <BaseLogo
-            :small="true"
-          />
+        <NuxtLink class="landing-page-navigator__logo__link" to="/">
+          <BaseLogo :small="true" />
           <p class="hidden sm:block">{{ companyName }}</p>
           <p class="block sm:hidden">Mr. White</p>
         </NuxtLink>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 withDefaults(defineProps<{ error?: object }>(), {
-  error: () => ({}) as object,
+  error: () => ({} as object),
 });
 </script>
 

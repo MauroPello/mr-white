@@ -19,6 +19,6 @@ useHead({
     src="logo.png"
     alt="Logo"
     class="size-12 md:size-14 object-contain"
-    :class="{'size-10 md:size-12': small}"
+    :class="{ 'size-10 md:size-12': small }"
   />
 </template>

@@ -6,7 +6,7 @@ const isPageNotFound = computed(
   () =>
     error.value instanceof Object &&
     "message" in error.value &&
-    String(error.value.message).includes("Page not found"),
+    String(error.value.message).includes("Page not found")
 );
 
 const router = useRouter();
@@ -19,11 +19,7 @@ const router = useRouter();
       {{ isPageNotFound ? "Pagina non trovata" : error }}
     </p>
     <div class="flex flex-row gap-4">
-      <UButton
-        size="xl"
-        class="text-lg"
-        @click="router.go(0)"
-      >
+      <UButton size="xl" class="text-lg" @click="router.go(0)">
         Ricarica la pagina
       </UButton>
       <UButton
