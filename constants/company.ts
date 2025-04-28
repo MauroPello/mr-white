@@ -1,10 +1,10 @@
 export const mediaFolder = "/_vercel/image?url=%2F";
 
 export const companyName = "Undercover Mr. White";
-export const companyUrl = "https://mrwhite.fun";
+export const companyUrl = "https://undercovergioco.it";
 export const companySEOTitle = `${companyName} - Gioco Online di Parole`;
 export const companySEODescription = `Scopri chi ha la parola diversa in questo divertente party game di bluff italiano. Gioca ora con i tuoi amici!`;
-export const companyLogo = `${companyUrl}${mediaFolder}logo.png&w=1536&q=100`;
+export const companyLogo = `${companyUrl}${mediaFolder}logo.png&w=1536&q=100`; // This will now use the new companyUrl
 export const companyMainStructuredData = {
   title: companySEOTitle,
   meta: [
