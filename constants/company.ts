@@ -156,6 +156,11 @@ export const companyMainStructuredData = {
             name: companySEOTitle, // Includes Undercover
             description: companySEODescription, // Includes Undercover
             url: companyUrl,
+            sameAs: [
+              "https://www.mrwhitegioco.it",
+              "https://www.mrwhite.fun",
+              "https://www.undercover.website"
+            ],
             applicationCategory: "GameApplication",
             operatingSystem: "Web Browser",
             browserRequirements: "Requires JavaScript",
@@ -192,8 +197,10 @@ export const companyMainStructuredData = {
               "MrWhite",
               "Gioco della Spia",
               "Spia Gioco",
-              "Undercover Game Italiano",
               "Undercover Gioco",
+              "Undercover Gioco Online",
+              "Mr White Gioco Online",
+              "Mr White Gioco",
               "L'Infiltrato Gioco Online", // Added Undercover variations
             ],
             description: `Gioca online a ${companyName} in italiano. Un party game di parole, bluff e deduzione sociale per gruppi. Si gioca facilmente con un solo telefono. Scopri l'infiltrato prima che sia troppo tardi!`,

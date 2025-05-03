@@ -144,7 +144,6 @@ function saveCurrentGameState() {
     !assignmentsState.value ||
     !activePlayersState.value
   ) {
-    console.warn("Attempted to save, but essential state missing.");
     return;
   }
   saveGameStateToLocalStorage({
@@ -195,7 +194,10 @@ function startVotingPhase() {
   });
 }
 
-function castVote(votedForPlayerName: string) {
+function castVote(votedForPlayerName: string, event?: MouseEvent) {
+  if (event && event.target instanceof HTMLElement) {
+    event.target.blur();
+  }
   if (currentVotes.value[votedForPlayerName] === undefined) {
     currentVotes.value[votedForPlayerName] = 0;
   }
@@ -246,7 +248,6 @@ function processVotes() {
     ); // Triggers watcher
     gamePhase.value = "elimination";
   } else {
-    console.log("Votazione in parità o inconcludente. Nessuna eliminazione.");
     wasVoteTiedState.value = true;
     lastEliminatedState.value = null;
     goToDiscussion(); // Skips elimination phase display
@@ -304,7 +305,6 @@ function checkAndDetermineWinner(): boolean {
   }
 
   if (gameOver && endPhase) {
-    console.log("Condizione Fine Partita Raggiunta:", winnerMessage);
     if (!gamePhase.value.startsWith("game_over")) {
       gamePhase.value = endPhase;
       gameOverMessageState.value = winnerMessage;
@@ -347,7 +347,6 @@ onMounted(async () => {
     (activePlayersState.value.length === 0 && !isGameOver) ||
     !gameWordPairState.value
   ) {
-    console.warn("Play page loaded with invalid/missing state, redirecting.");
     await router.push("/#gioca");
     router.go(0);
     return;
@@ -357,7 +356,6 @@ onMounted(async () => {
     isGameOver &&
     (!finalRoleRevealState.value || finalRoleRevealState.value.length === 0)
   ) {
-    console.log("Re-populating final roles on game over screen load.");
     finalRoleRevealState.value = getOriginalAssignmentsInOrder();
   }
 
@@ -367,9 +365,6 @@ onMounted(async () => {
   } else {
     // Ensure index is 0 if starting fresh
     if (wordShowingPlayerIndex.value !== 0) {
-      console.warn(
-        `Play page mounted in 'showing_words' phase but index is ${wordShowingPlayerIndex.value}. Resetting to 0.`
-      );
       wordShowingPlayerIndex.value = 0;
     }
   }
@@ -389,7 +384,7 @@ onMounted(async () => {
       <div v-if="currentPlayerForWord" class="space-y-4">
         <h2 class="text-lg">
           Passa il telefono a
-          <UBadge color="primary" variant="subtle" size="lg">
+          <UBadge color="primary" variant="subtle" size="lg" class="text-lg">
             {{ currentPlayerForWord.name }}
           </UBadge>
         </h2>
@@ -490,7 +485,7 @@ onMounted(async () => {
 
       <div v-if="currentPlayerForVote" class="space-y-4">
         <h2 class="text-lg">
-          <UBadge color="primary" variant="subtle" size="lg">
+          <UBadge color="primary" variant="subtle" size="lg" class="text-lg">
             {{ currentPlayerForVote.name }} </UBadge
           >, per favore vota!
         </h2>
@@ -502,11 +497,14 @@ onMounted(async () => {
           <UButton
             v-for="option in votingOptions"
             :key="option.name"
-            :disabled="option.name === currentPlayerForVote.name"
             size="lg"
             color="blue"
             class="w-full max-w-xs"
-            @click="castVote(option.name)"
+            :class="{
+              'hidden':
+                option.name === currentPlayerForVote.name,
+            }"
+            @click="castVote(option.name, $event)"
           >
             Vota per {{ option.name }}
           </UButton>
@@ -543,7 +541,7 @@ onMounted(async () => {
           </template>
           <template #description>
             In base ai voti,
-            <UBadge color="red" variant="solid">{{
+            <UBadge color="red" variant="solid" class="text-base">{{
               lastEliminatedState.name
             }}</UBadge>
             è stato/a eliminato/a!
@@ -612,11 +610,11 @@ onMounted(async () => {
 
       <p v-if="gameWordPairState" class="text-gray-600 dark:text-gray-400 mb-4">
         Le parole erano:
-        <UBadge variant="soft" color="gray" size="md">{{
+        <UBadge variant="soft" color="gray" size="md" class="text-base">{{
           gameWordPairState.civilian
         }}</UBadge>
         (Civile) e
-        <UBadge variant="soft" color="red" size="md">{{
+        <UBadge variant="soft" color="red" size="md" class="text-base">{{
           gameWordPairState.undercover
         }}</UBadge>
         (Infiltrato)

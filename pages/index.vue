@@ -44,6 +44,19 @@ onMounted(() => {
       </div>
     </div>
 
+    <div id="gioca" class="py-16">
+      <h2
+        class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-2"
+      >
+        Pronto a Giocare?
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 text-center mb-8">
+        Imposta qui sotto la tua partita e inizia subito a scoprire chi è
+        l'infiltrato!
+      </p>
+      <StartGame class="max-w-2xl mx-auto" />
+    </div>
+
     <div class="py-16">
       <h2
         class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-2"
@@ -204,19 +217,6 @@ onMounted(() => {
           </div>
         </div>
       </div>
-    </div>
-
-    <div id="gioca" class="py-16">
-      <h2
-        class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-2"
-      >
-        Pronto a Giocare?
-      </h2>
-      <p class="text-lg text-gray-600 dark:text-gray-300 text-center mb-8">
-        Imposta qui sotto la tua partita e inizia subito a scoprire chi è
-        l'infiltrato!
-      </p>
-      <StartGame class="max-w-2xl mx-auto" />
     </div>
 
     <div class="py-16 text-center dark:border-gray-800 mt-16">

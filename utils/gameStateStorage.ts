@@ -37,10 +37,6 @@ export function saveGameStateToLocalStorage(
       !state.assignments ||
       !state.activePlayers
     ) {
-      console.warn(
-        "Aborting save: Essential game state parts are missing.",
-        state
-      );
       return;
     }
     const stateToSave: SavedGameState = {
@@ -48,8 +44,8 @@ export function saveGameStateToLocalStorage(
       timestamp: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
-  } catch (error) {
-    console.error("Error saving game state to localStorage:", error);
+  } catch {
+   (() => {})()
   }
 }
 
@@ -79,14 +75,12 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
       savedState.currentRound === undefined ||
       !savedState.gamePhase
     ) {
-      console.warn("Loaded state is missing essential keys. Discarding.");
       clearSavedGameState();
       return null;
     }
 
     return savedState;
-  } catch (error) {
-    console.error("Error loading game state from localStorage:", error);
+  } catch {
     clearSavedGameState(); // Clear potentially corrupted data
     return null;
   }
@@ -98,7 +92,7 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
 export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.error("Error clearing saved game state:", error);
+  } catch {
+   (() => {})()
   }
 }

@@ -293,7 +293,6 @@ function saveCurrentGameState() {
     !assignments.value ||
     !activePlayers.value
   ) {
-    console.warn("Attempted to save, but essential state missing.");
     return;
   }
   saveGameStateToLocalStorage({
