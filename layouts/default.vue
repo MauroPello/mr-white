@@ -38,7 +38,7 @@ const fullPath = computed(
     </div>
     <LandingPageFooter />
     <SpeedInsights />
-    <Analytics />
+    <!-- <Analytics /> -->
   </div>
 </template>
 

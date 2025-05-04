@@ -2,34 +2,16 @@
 import { getRandomWordPair } from "~/utils/wordPairs";
 import { wordPairs } from "~/constants/wordPairs"; // Import predefined word pairs
 import {
-  saveGameStateToLocalStorage,
   loadGameStateFromLocalStorage,
   clearSavedGameState,
 } from "~/utils/gameStateStorage";
 import type { WordPair } from "~/types/wordPairs";
-import {
-  usePlayers,
-  useGameWordPair,
-  useAssignments,
-  useActivePlayers,
-  useCurrentRound,
-  useGamePhase,
-  useCurrentVotes,
-  useVotingPlayerIndex,
-  useLastEliminated,
-  useGameOverMessage,
-  useFinalRoleReveal,
-  useEliminatedPlayersHistory,
-  useWasVoteTied,
-  useNumberOfUndercovers,
-  useWordShowingPlayerIndex,
-  type PlayerAssignment,
-} from "~/composables/useGameState";
 
 const router = useRouter();
 const newPlayerName = ref("");
 const selectedUndercovers = ref(1);
-const useCustomWords = ref(false); // Added state for custom words toggle
+const selectedMrWhites = ref(0);
+const useCustomWords = ref(false);
 const customCivilianWord = ref("");
 const customUndercoverWord = ref("");
 const savedGameState =
@@ -56,25 +38,35 @@ const predefinedPairOptions = computed(() =>
 
 // Accordion items definition (Settings removed)
 const accordionItems = [
-  { label: "Giocatori e Infiltrati", slot: "players", defaultOpen: true },
+  {
+    label: "Civili, Undercover e Mr. White",
+    slot: "players",
+    defaultOpen: true,
+  },
   { label: "Parole", slot: "words" },
 ];
 
-const playersState = usePlayers();
-const gameWordPair = useGameWordPair();
-const assignments = useAssignments();
-const activePlayers = useActivePlayers();
-const currentRound = useCurrentRound();
-const gamePhase = useGamePhase();
-const currentVotes = useCurrentVotes();
-const votingPlayerIndex = useVotingPlayerIndex();
-const lastEliminated = useLastEliminated();
-const gameOverMessage = useGameOverMessage();
-const finalRoleReveal = useFinalRoleReveal();
-const eliminatedHistory = useEliminatedPlayersHistory();
-const wasVoteTied = useWasVoteTied();
-const numberOfUndercoversState = useNumberOfUndercovers();
-const wordShowingPlayerIndex = useWordShowingPlayerIndex();
+const {
+  players: playersState,
+  gameWordPair,
+  assignments,
+  activePlayers,
+  currentRound,
+  gamePhase,
+  currentVotes,
+  votingPlayerIndex,
+  lastEliminated,
+  gameOverMessage,
+  finalRoleReveal,
+  eliminatedHistory,
+  wasVoteTied,
+  numberOfUndercovers: numberOfUndercoversState,
+  numberOfMrWhites: numberOfMrWhitesState,
+  wordShowingPlayerIndex,
+  saveCurrentGameState,
+  pendingMrWhiteGuess,
+  mrWhiteWinners,
+} = useGameState();
 
 onMounted(() => {
   savedGameState.value = loadGameStateFromLocalStorage();
@@ -84,28 +76,42 @@ onMounted(() => {
   }
 });
 
-const maxPossibleUndercovers = computed(() => {
+// Max total special roles (Undercover + Mr. White)
+const maxPossibleSpecialRoles = computed(() => {
   const len = playersState.value?.length ?? 0;
-  return Math.max(1, Math.floor(len / 2));
+  // Ensure at least 1 special role if possible, and less than total players
+  return len >= 3 ? Math.max(1, Math.floor(len / 2)) : 0;
 });
 
-watch(
-  playersState,
-  (newPlayers) => {
-    const len = newPlayers?.length ?? 0;
-    const maxAllowed = Math.max(1, Math.floor(len / 2));
-    if (selectedUndercovers.value > maxAllowed) {
-      selectedUndercovers.value = maxAllowed;
+const maxPossibleUndercovers = computed(() => {
+  const maxTotal = maxPossibleSpecialRoles.value;
+  const currentMrWhites = selectedMrWhites.value;
+  return Math.max(0, maxTotal - currentMrWhites);
+});
+
+const maxPossibleMrWhites = computed(() => {
+  const maxTotal = maxPossibleSpecialRoles.value;
+  const currentUndercovers = selectedUndercovers.value;
+  return Math.max(0, maxTotal - currentUndercovers);
+});
+
+watch(maxPossibleSpecialRoles, (newMaxSpecial) => {
+  if (selectedUndercovers.value + selectedMrWhites.value > newMaxSpecial) {
+    selectedUndercovers.value = Math.min(1, newMaxSpecial);
+    selectedMrWhites.value = 0;
+  } else {
+    if (selectedUndercovers.value > maxPossibleUndercovers.value) {
+      selectedUndercovers.value = maxPossibleUndercovers.value;
     }
-    if (selectedUndercovers.value < 1 && len >= 3) {
-      selectedUndercovers.value = 1;
+    if (selectedMrWhites.value > maxPossibleMrWhites.value) {
+      selectedMrWhites.value = maxPossibleMrWhites.value;
     }
-  },
-  { deep: true }
-);
+  }
+});
 
 function resetLocalSetupState() {
   selectedUndercovers.value = 1;
+  selectedMrWhites.value = 0;
   newPlayerName.value = "";
   useCustomWords.value = false;
   customCivilianWord.value = "";
@@ -130,16 +136,16 @@ function resetGlobalGameState() {
   eliminatedHistory.value = [];
   wasVoteTied.value = false;
   numberOfUndercoversState.value = 1;
+  numberOfMrWhitesState.value = 0;
+  pendingMrWhiteGuess.value = false;
+  mrWhiteWinners.value = [];
 }
 
 function addPlayer() {
   const nameToAdd = newPlayerName.value.trim();
-  if (nameToAdd && !playersState.value.includes(nameToAdd)) {
+  if (addPlayerError.value === "") {
     playersState.value.push(nameToAdd);
     newPlayerName.value = "";
-  } else if (playersState.value.includes(nameToAdd)) {
-    // Consider using UToast for non-blocking notifications instead of alert
-    alert(`${nameToAdd} è già in gioco!`);
   }
 }
 
@@ -147,60 +153,63 @@ function removePlayer(index: number) {
   playersState.value.splice(index, 1);
 }
 
+const errorMessage = ref("");
+const addPlayerError = computed(() => {
+  if (newPlayerName.value.trim() === "") return "";
+  if (playersState.value.includes(newPlayerName.value.trim())) {
+    return `${newPlayerName.value} è già in gioco!`;
+  }
+  return "";
+});
+
 function startNewGame() {
+  errorMessage.value = ""; // Reset error before starting
+
   clearSavedGameState();
 
   const numPlayers = playersState.value.length;
   const numUndercovers = selectedUndercovers.value;
-  if (
-    numPlayers < 3 ||
-    numUndercovers < 1 ||
-    numUndercovers > maxPossibleUndercovers.value
-  ) {
-    alert(
-      `Impostazione non valida. Assicurati che ci siano almeno 3 giocatori e un numero valido di Infiltrati (1-${maxPossibleUndercovers.value}).`
-    );
-    return;
-  }
+  const numMrWhites = selectedMrWhites.value;
 
-  let selectedPair: WordPair | null = null; // Explicitly use imported WordPair type
+  let selectedPair: WordPair | null = null;
 
   if (wordSelectionMode.value === "custom") {
     const civilianWord = customCivilianWord.value.trim();
     const undercoverWord = customUndercoverWord.value.trim();
     if (!civilianWord || !undercoverWord) {
-      alert("Per favore, inserisci entrambe le parole personalizzate.");
+      errorMessage.value =
+        "Per favore, inserisci entrambe le parole personalizzate.";
       return;
     }
     if (civilianWord.toLowerCase() === undercoverWord.toLowerCase()) {
-      alert("Le parole personalizzate non possono essere uguali.");
+      errorMessage.value =
+        "Le parole personalizzate non possono essere uguali.";
       return;
     }
     selectedPair = { civilian: civilianWord, undercover: undercoverWord };
   } else if (wordSelectionMode.value === "select") {
-    // Check against undefined
     if (
       selectedPredefinedPairIndex.value === undefined ||
       selectedPredefinedPairIndex.value < 0 ||
       selectedPredefinedPairIndex.value >= wordPairs.length
     ) {
-      alert("Per favore, seleziona una coppia di parole dalla lista.");
+      errorMessage.value =
+        "Per favore, seleziona una coppia di parole dalla lista.";
       return;
     }
-    // Use non-null assertion as index is validated
     selectedPair = wordPairs[selectedPredefinedPairIndex.value]!;
   } else {
-    // 'random' mode
     selectedPair = getRandomWordPair();
     if (!selectedPair) {
-      alert("Errore: Impossibile caricare una coppia di parole casuale.");
+      errorMessage.value =
+        "Errore: Impossibile caricare una coppia di parole casuale.";
       return;
     }
   }
 
-  // Add null check before destructuring
   if (!selectedPair) {
-    alert("Errore interno: la coppia di parole selezionata non è valida.");
+    errorMessage.value =
+      "Errore interno: la coppia di parole selezionata non è valida.";
     return;
   }
 
@@ -213,14 +222,30 @@ function startNewGame() {
       playerIndices[i]!,
     ];
   }
+  // Assign roles based on shuffled indices
   const undercoverIndices = new Set(playerIndices.slice(0, numUndercovers));
+  const mrWhiteIndices = new Set(
+    playerIndices.slice(numUndercovers, numUndercovers + numMrWhites)
+  );
 
   const initialAssignments: PlayerAssignment[] = playersState.value.map(
-    (name, index) => ({
-      name: name,
-      word: undercoverIndices.has(index) ? undercover : civilian,
-      isUndercover: undercoverIndices.has(index),
-    })
+    (name, index): PlayerAssignment => {
+      let role: PlayerRole;
+      let word: string | null;
+
+      if (undercoverIndices.has(index)) {
+        role = "Undercover";
+        word = undercover;
+      } else if (mrWhiteIndices.has(index)) {
+        role = "MrWhite";
+        word = null;
+      } else {
+        role = "Civilian";
+        word = civilian;
+      }
+
+      return { name, word, role };
+    }
   );
 
   const shuffledAssignments = [...initialAssignments];
@@ -235,6 +260,7 @@ function startNewGame() {
   gameWordPair.value = selectedPair;
   assignments.value = initialAssignments;
   numberOfUndercoversState.value = numUndercovers;
+  numberOfMrWhitesState.value = numMrWhites;
   activePlayers.value = shuffledAssignments;
   currentRound.value = 1;
   gamePhase.value = "showing_words";
@@ -246,6 +272,8 @@ function startNewGame() {
   finalRoleReveal.value = [];
   eliminatedHistory.value = [];
   wasVoteTied.value = false;
+  pendingMrWhiteGuess.value = false;
+  mrWhiteWinners.value = [];
 
   saveCurrentGameState();
   router.push("/gioca");
@@ -258,6 +286,7 @@ function resumeGame() {
   gameWordPair.value = savedGameState.value.gameWordPair;
   assignments.value = savedGameState.value.assignments;
   numberOfUndercoversState.value = savedGameState.value.numberOfUndercovers;
+  numberOfMrWhitesState.value = savedGameState.value.numberOfMrWhites ?? 0;
   activePlayers.value = savedGameState.value.activePlayers;
   currentRound.value = savedGameState.value.currentRound;
   gamePhase.value = savedGameState.value.gamePhase;
@@ -284,34 +313,6 @@ function discardSavedGame() {
 function formatTimestamp(timestamp: number): string {
   if (!timestamp) return "ora sconosciuta";
   return new Date(timestamp).toLocaleString("it-IT");
-}
-
-function saveCurrentGameState() {
-  if (
-    !playersState.value ||
-    !gameWordPair.value ||
-    !assignments.value ||
-    !activePlayers.value
-  ) {
-    return;
-  }
-  saveGameStateToLocalStorage({
-    players: playersState.value,
-    gameWordPair: gameWordPair.value,
-    assignments: assignments.value,
-    numberOfUndercovers: numberOfUndercoversState.value,
-    activePlayers: activePlayers.value,
-    currentRound: currentRound.value,
-    wordShowingPlayerIndex: wordShowingPlayerIndex.value,
-    gamePhase: gamePhase.value,
-    currentVotes: currentVotes.value,
-    votingPlayerIndex: votingPlayerIndex.value,
-    wasVoteTied: wasVoteTied.value,
-    lastEliminated: lastEliminated.value,
-    eliminatedHistory: eliminatedHistory.value,
-    gameOverMessage: gameOverMessage.value,
-    finalRoleReveal: finalRoleReveal.value,
-  });
 }
 </script>
 
@@ -354,9 +355,8 @@ function saveCurrentGameState() {
       </template>
 
       <UAccordion :items="accordionItems" size="xl" multiple>
-        <!-- Added multiple prop -->
         <template #players>
-          <div class="px-2">
+          <div class="px-2 space-y-4">
             <!-- Add Player Section -->
             <UFormGroup label="Aggiungi Giocatore" class="mb-4">
               <div class="flex items-center gap-2">
@@ -370,12 +370,15 @@ function saveCurrentGameState() {
                   @keyup.enter="addPlayer"
                 />
                 <UButton
-                  :disabled="!newPlayerName"
+                  :disabled="!newPlayerName || !!addPlayerError"
                   icon="i-heroicons-plus-circle"
                   size="lg"
                   aria-label="Aggiungi Giocatore"
                   @click="addPlayer"
                 />
+              </div>
+              <div v-if="addPlayerError" class="text-xs text-red-600 mt-1">
+                {{ addPlayerError }}
               </div>
             </UFormGroup>
 
@@ -413,47 +416,163 @@ function saveCurrentGameState() {
               class="mb-4"
             />
 
-            <!-- Number of Undercovers Selection (Moved here) -->
-            <UFormGroup
-              v-if="playersState.length >= 3 && maxPossibleUndercovers > 1"
-              class="mb-4"
-            >
-              <div
-                class="flex items-center justify-start gap-2 flex-wrap font-medium text-gray-700 dark:text-gray-200"
-              >
-                <p>Numero di Infiltrati:</p>
-                <div class="flex items-center gap-2">
-                  <p>{{ selectedUndercovers }}</p>
-                  <URange
-                    id="undercover-count"
-                    v-model="selectedUndercovers"
-                    :min="1"
-                    :max="maxPossibleUndercovers"
-                    aria-label="Numero di Infiltrati"
-                    class="w-32 text-center"
-                    size="md"
-                  />
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    (Max: {{ maxPossibleUndercovers }})
-                  </span>
-                </div>
-              </div>
-            </UFormGroup>
+            <div v-if="playersState.length >= 3" class="space-y-3">
+              <p class="font-medium text-gray-700 dark:text-gray-200">
+                Seleziona Ruoli Speciali (max totale:
+                {{ maxPossibleSpecialRoles }}):
+              </p>
 
-            <!-- Undercover Count Validation (Moved here) -->
-            <UAlert
-              v-if="
-                playersState.length >= 3 &&
-                (selectedUndercovers < 1 ||
-                  selectedUndercovers > maxPossibleUndercovers)
-              "
-              icon="i-heroicons-exclamation-circle"
-              color="red"
-              variant="soft"
-              title="Errore"
-              :description="`Numero di Infiltrati non valido (Min: 1, Max: ${maxPossibleUndercovers}).`"
-              class="mb-4"
-            />
+              <UFormGroup>
+                <div class="flex items-center justify-start gap-2 flex-wrap">
+                  <UPopover>
+                    <label
+                      for="undercover-count"
+                      class="w-28 flex items-center group"
+                    >
+                      <span
+                        class="transition-all group-hover:underline group-focus-within:underline"
+                      >
+                        Undercover
+                      </span>
+                      <UIcon
+                        name="i-heroicons-information-circle"
+                        class="ml-0.5 text-blue-500 cursor-pointer text-xl"
+                        aria-label="Info Undercover"
+                        tabindex="0"
+                      />
+                      :
+                    </label>
+                    <template #panel>
+                      <div class="p-3 text-sm max-w-xs">
+                        Conosce una parola diversa ma simile a quella dei
+                        civili.<br>Deve confondersi tra loro.
+                      </div>
+                    </template>
+                  </UPopover>
+                  <div class="flex items-center gap-2">
+                    <UButton
+                      icon="i-heroicons-minus"
+                      size="xs"
+                      class="p-1"
+                      aria-label="Diminuisci Undercover"
+                      :disabled="selectedUndercovers <= 0"
+                      @click="
+                        selectedUndercovers = Math.max(
+                          0,
+                          selectedUndercovers - 1
+                        )
+                      "
+                    />
+                    <p class="w-4 text-center text-base">
+                      {{ selectedUndercovers }}
+                    </p>
+                    <UButton
+                      icon="i-heroicons-plus"
+                      size="xs"
+                      class="p-1"
+                      aria-label="Aumenta Undercover"
+                      :disabled="selectedUndercovers >= maxPossibleUndercovers"
+                      @click="
+                        selectedUndercovers = Math.min(
+                          maxPossibleUndercovers,
+                          selectedUndercovers + 1
+                        )
+                      "
+                    />
+                    <span
+                      class="text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
+                    >
+                      (Max: {{ maxPossibleUndercovers }})
+                    </span>
+                  </div>
+                </div>
+              </UFormGroup>
+
+              <UFormGroup>
+                <div class="flex items-center justify-start gap-2 flex-wrap">
+                  <UPopover>
+                    <label
+                      for="mrwhite-count"
+                      class="w-28 flex items-center group"
+                    >
+                      <span
+                        class="transition-all group-hover:underline group-focus-within:underline"
+                      >
+                        Mr. White
+                      </span>
+                      <UIcon
+                        name="i-heroicons-information-circle"
+                        class="ml-0.5 text-blue-500 cursor-pointer text-xl"
+                        aria-label="Info Mr. White"
+                        tabindex="0"
+                      />
+                      :
+                    </label>
+                    <template #panel>
+                      <div class="p-3 text-sm max-w-xs">
+                        Non conosce nessuna parola.<br>Deve indovinare quella
+                        dei civili.
+                      </div>
+                    </template>
+                  </UPopover>
+                  <div class="flex items-center gap-2">
+                    <UButton
+                      icon="i-heroicons-minus"
+                      size="xs"
+                      class="p-1"
+                      aria-label="Diminuisci Mr. White"
+                      :disabled="selectedMrWhites <= 0"
+                      @click="
+                        selectedMrWhites = Math.max(0, selectedMrWhites - 1)
+                      "
+                    />
+                    <p class="w-4 text-center text-base">
+                      {{ selectedMrWhites }}
+                    </p>
+                    <UButton
+                      icon="i-heroicons-plus"
+                      size="xs"
+                      class="p-1"
+                      aria-label="Aumenta Mr. White"
+                      :disabled="selectedMrWhites >= maxPossibleMrWhites"
+                      @click="
+                        selectedMrWhites = Math.min(
+                          maxPossibleMrWhites,
+                          selectedMrWhites + 1
+                        )
+                      "
+                    />
+                    <span
+                      class="text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
+                    >
+                      (Max: {{ maxPossibleMrWhites }})
+                    </span>
+                  </div>
+                </div>
+              </UFormGroup>
+
+              <UAlert
+                v-if="selectedUndercovers + selectedMrWhites < 1"
+                icon="i-heroicons-exclamation-circle"
+                color="orange"
+                variant="soft"
+                title="Attenzione"
+                description="Seleziona almeno un Undercover o un Mr. White."
+                class="mt-2"
+              />
+              <UAlert
+                v-if="
+                  selectedUndercovers + selectedMrWhites >
+                  maxPossibleSpecialRoles
+                "
+                icon="i-heroicons-exclamation-circle"
+                color="red"
+                variant="soft"
+                title="Errore"
+                :description="`Troppi ruoli speciali. Massimo consentito: ${maxPossibleSpecialRoles}.`"
+                class="mt-2"
+              />
+            </div>
           </div>
         </template>
 
@@ -483,11 +602,11 @@ function saveCurrentGameState() {
                   size="lg"
                 />
               </UFormGroup>
-              <UFormGroup label="Parola Infiltrato">
+              <UFormGroup label="Parola Undercover">
                 <UInput
                   v-model.trim="customUndercoverWord"
                   placeholder="Es: Gatto"
-                  aria-label="Parola Infiltrato"
+                  aria-label="Parola Undercover"
                   size="lg"
                 />
               </UFormGroup>
@@ -556,12 +675,24 @@ function saveCurrentGameState() {
         </template>
       </UAccordion>
 
+      <!-- Error Message Display -->
+      <UAlert
+        v-if="errorMessage"
+        icon="i-heroicons-exclamation-circle"
+        color="red"
+        variant="soft"
+        title="Errore"
+        :description="errorMessage"
+        class="mb-4"
+      />
+
       <!-- Start Button -->
       <UButton
         :disabled="
           playersState.length < 3 ||
-          selectedUndercovers < 1 ||
+          selectedUndercovers + selectedMrWhites < 1 ||
           selectedUndercovers > maxPossibleUndercovers ||
+          selectedMrWhites > maxPossibleMrWhites ||
           (wordSelectionMode === 'custom' &&
             (!customCivilianWord ||
               !customUndercoverWord ||

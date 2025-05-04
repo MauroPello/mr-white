@@ -8,7 +8,7 @@ import {
 } from "~/constants/company";
 
 const consigliSEOTitle = `Consigli e Strategie per Vincere a ${companyName}`;
-const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White. Impara a bluffare e a scoprire l'infiltrato!`;
+const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White. Impara a bluffare e a scoprire gli Undercover e Mr. White!`;
 const consigliPageUrl = `${companyUrl}/consigli`;
 
 useHead({
@@ -161,8 +161,8 @@ const play = async () => {
         <li>
           <strong>Ascolta attentamente:</strong> Le parole dette dagli altri
           giocatori sono la tua fonte principale di informazioni, sia che tu sia
-          un Civile o l'infiltrato Mr. White. Cerca pattern, esitazioni o parole
-          fuori contesto.
+          un Civile, un Undercover o Mr. White. Cerca pattern, esitazioni o
+          parole fuori contesto.
         </li>
         <li>
           <strong>Gestisci il tempo:</strong> Non prendere troppo tempo per
@@ -176,16 +176,16 @@ const play = async () => {
 
       <h2>Consigli per i Civili</h2>
       <p>
-        Il tuo obiettivo è duplice: identificare l'infiltrato Mr. White e
+        Il tuo obiettivo è duplice: identificare gli Undercover o Mr. White e
         dimostrare la tua innocenza.
       </p>
       <ul>
         <li>
           <strong>Sii specifico, ma non troppo:</strong> La tua parola deve
           essere chiaramente collegata alla parola segreta, ma non così ovvia da
-          renderla facile da indovinare per l'infiltrato Mr. White se dovesse
-          essere scoperto. Esempio: se la parola è "Spiaggia", "Castello di
-          sabbia" è meglio di "Mare".
+          renderla facile da indovinare per gli Undercover e Mr. White se
+          dovesse essere scoperto. Esempio: se la parola è "Spiaggia", "Castello
+          di sabbia" è meglio di "Mare".
         </li>
         <li>
           <strong>Varia gli indizi:</strong> Non dare solo sinonimi o parole
@@ -203,7 +203,7 @@ const play = async () => {
         </li>
       </ul>
 
-      <h2>Consigli per l'infiltrato Mr. White</h2>
+      <h2>Consigli per gli Undercover e Mr. White</h2>
       <p>
         Il tuo obiettivo è sopravvivere senza farti scoprire e, se possibile,
         indovinare la parola segreta.

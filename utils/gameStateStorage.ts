@@ -8,9 +8,10 @@ interface SavedGameState {
   gameWordPair: WordPair | null;
   assignments: PlayerAssignment[];
   numberOfUndercovers: number;
+  numberOfMrWhites?: number;
   activePlayers: PlayerAssignment[];
   currentRound: number;
-  wordShowingPlayerIndex: number; // Included
+  wordShowingPlayerIndex: number;
   gamePhase: GamePhase;
   currentVotes: Record<string, number>;
   votingPlayerIndex: number;
@@ -19,6 +20,8 @@ interface SavedGameState {
   eliminatedHistory: PlayerAssignment[];
   gameOverMessage: string;
   finalRoleReveal: PlayerAssignment[];
+  pendingMrWhiteGuess: boolean;
+  mrWhiteWinners: PlayerAssignment[];
 }
 
 const STORAGE_KEY = "undercoverGameState";
@@ -45,7 +48,7 @@ export function saveGameStateToLocalStorage(
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
   } catch {
-   (() => {})()
+    (() => {})();
   }
 }
 
@@ -64,6 +67,10 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
     // Add default value for wordShowingPlayerIndex if loading old state
     if (savedState.wordShowingPlayerIndex === undefined) {
       savedState.wordShowingPlayerIndex = 0;
+    }
+    // Add default value for numberOfMrWhites if loading old state
+    if (savedState.numberOfMrWhites === undefined) {
+      savedState.numberOfMrWhites = 0;
     }
 
     // Basic validation (check if essential keys exist)
@@ -93,6 +100,6 @@ export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
-   (() => {})()
+    (() => {})();
   }
 }

@@ -1,372 +1,71 @@
 <script setup lang="ts">
 import { companyMainStructuredData } from "~/constants/company";
-import {
-  saveGameStateToLocalStorage,
-  clearSavedGameState,
-} from "~/utils/gameStateStorage";
-import {
-  useGamePhase,
-  useActivePlayers,
-  useCurrentRound,
-  useGameWordPair,
-  useAssignments,
-  usePlayers,
-  useCurrentVotes,
-  useVotingPlayerIndex,
-  useLastEliminated,
-  useGameOverMessage,
-  useFinalRoleReveal,
-  useEliminatedPlayersHistory,
-  useWasVoteTied,
-  useNumberOfUndercovers,
-  useWordShowingPlayerIndex,
-  type PlayerAssignment,
-  type GamePhase,
-} from "~/composables/useGameState";
+import { useGameState } from "~/composables/useGameState";
 
 const router = useRouter();
 
 useHead(companyMainStructuredData);
 
-// Global State Refs
-const gamePhase = useGamePhase();
-const activePlayersState = useActivePlayers();
-const currentRound = useCurrentRound();
-const gameWordPairState = useGameWordPair();
-const assignmentsState = useAssignments();
-const playersListState = usePlayers();
-const numberOfUndercoversState = useNumberOfUndercovers();
-const currentVotes = useCurrentVotes();
-const votingPlayerIndex = useVotingPlayerIndex();
-const lastEliminatedState = useLastEliminated();
-const gameOverMessageState = useGameOverMessage();
-const finalRoleRevealState = useFinalRoleReveal();
-const eliminatedHistory = useEliminatedPlayersHistory();
-const wasVoteTiedState = useWasVoteTied();
-const wordShowingPlayerIndex = useWordShowingPlayerIndex();
+// --- Call the composable and destructure needed refs and actions ---
+const {
+  // State Refs
+  activePlayers,
+  gamePhase,
+  gameWordPair, // Needed for Mr White guess check
+  currentRound,
+  numberOfUndercovers,
+  lastEliminated: lastEliminatedState, // Rename if preferred locally
+  gameOverMessage: gameOverMessageState, // Rename if preferred locally
+  finalRoleReveal: finalRoleRevealState, // Rename if preferred locally
+  wasVoteTied: wasVoteTiedState, // Rename if preferred locally
+  showingWord,
+  mrWhiteGuessResult, // <-- Add this state from composable
+  mrWhiteWinners, // <-- Add this from composable
 
-// Local State
-const showingWord = ref(false);
+  // Computed Refs
+  currentPlayerForWord,
+  isLastWordToShow,
+  currentPlayerForVote,
+  votingOptions,
+  mrWhiteGuessingPlayer, // <-- Add this computed from composable
 
-// Computed Properties
-const currentPlayerForWord = computed<PlayerAssignment | undefined>(() => {
-  const phase = gamePhase.value;
-  const players = activePlayersState.value;
-  const index = wordShowingPlayerIndex.value;
-  if (
-    phase === "showing_words" &&
-    players &&
-    players.length > index &&
-    index >= 0
-  ) {
-    return players[index];
-  }
-  return undefined;
-});
+  // Actions
+  initializeGame,
+  clearGameState,
+  showWord,
+  hideWordAndProceed,
+  startVotingPhase,
+  castVote,
+  goToDiscussion,
+  isPlayerEliminated,
+  mrWhiteGuess, // <-- Add this action from composable
+} = useGameState();
 
-const isLastWordToShow = computed(() => {
-  if (!activePlayersState.value) return false;
-  const index = wordShowingPlayerIndex.value;
-  return index >= 0 && index >= activePlayersState.value.length - 1;
-});
+// --- Local Component Logic ---
 
-const currentPlayerForVote = computed<PlayerAssignment | undefined>(() => {
-  const phase = gamePhase.value;
-  const players = activePlayersState.value;
-  const index = votingPlayerIndex.value;
-  if (phase === "voting" && players && players.length > index && index >= 0) {
-    return players[index];
-  }
-  return undefined;
-});
-
-const votingOptions = computed(() => activePlayersState.value || []);
-
-const isLastVoter = computed(() => {
-  if (!activePlayersState.value) return false;
-  return (
-    votingPlayerIndex.value >= 0 &&
-    votingPlayerIndex.value >= activePlayersState.value.length - 1
-  );
-});
-
-const eliminatedPlayerNames = computed(
-  () => new Set((eliminatedHistory.value || []).map((p) => p.name))
-);
-
-const isPlayerEliminated = (playerName: string): boolean =>
-  eliminatedPlayerNames.value.has(playerName);
-
-// Watcher for Auto-Saving
-watchEffect(() => {
-  if (
-    gamePhase.value &&
-    gamePhase.value !== "error" &&
-    activePlayersState.value &&
-    assignmentsState.value &&
-    gameWordPairState.value
-  ) {
-    // Avoid saving right at the start before any interaction
-    if (
-      gamePhase.value !== "showing_words" ||
-      wordShowingPlayerIndex.value > 0 ||
-      showingWord.value
-    ) {
-      saveCurrentGameState();
-    }
-  }
-});
-
-// Watcher for Win Condition Check
-watch(
-  activePlayersState,
-  (newActivePlayers, _) => {
-    // Check only after the showing words phase and if not already game over
-    if (
-      newActivePlayers &&
-      gamePhase.value !== "showing_words" &&
-      !gamePhase.value.startsWith("game_over")
-    ) {
-      nextTick(() => {
-        checkAndDetermineWinner();
-      });
-    }
-  },
-  { deep: true }
-);
-
-// --- Methods ---
-
-function saveCurrentGameState() {
-  if (
-    !playersListState.value ||
-    !gameWordPairState.value ||
-    !assignmentsState.value ||
-    !activePlayersState.value
-  ) {
-    return;
-  }
-  saveGameStateToLocalStorage({
-    players: playersListState.value,
-    gameWordPair: gameWordPairState.value,
-    assignments: assignmentsState.value,
-    numberOfUndercovers: numberOfUndercoversState.value,
-    activePlayers: activePlayersState.value,
-    currentRound: currentRound.value,
-    wordShowingPlayerIndex: wordShowingPlayerIndex.value,
-    gamePhase: gamePhase.value,
-    currentVotes: currentVotes.value,
-    votingPlayerIndex: votingPlayerIndex.value,
-    wasVoteTied: wasVoteTiedState.value,
-    lastEliminated: lastEliminatedState.value,
-    eliminatedHistory: eliminatedHistory.value,
-    gameOverMessage: gameOverMessageState.value,
-    finalRoleReveal: finalRoleRevealState.value,
-  });
-}
-
-function showWord() {
-  showingWord.value = true;
-}
-
-function hideWordAndProceed() {
-  showingWord.value = false;
-  const currentMaxIndex = (activePlayersState.value?.length ?? 0) - 1;
-  if (
-    isLastWordToShow.value ||
-    wordShowingPlayerIndex.value >= currentMaxIndex
-  ) {
-    goToDiscussion();
-  } else {
-    wordShowingPlayerIndex.value++;
-  }
-}
-
-function startVotingPhase() {
-  wasVoteTiedState.value = false;
-  gamePhase.value = "voting";
-  votingPlayerIndex.value = 0;
-  currentVotes.value = {};
-  (activePlayersState.value || []).forEach((player) => {
-    if (player?.name) {
-      currentVotes.value[player.name] = 0;
-    }
-  });
-}
-
-function castVote(votedForPlayerName: string, event?: MouseEvent) {
-  if (event && event.target instanceof HTMLElement) {
-    event.target.blur();
-  }
-  if (currentVotes.value[votedForPlayerName] === undefined) {
-    currentVotes.value[votedForPlayerName] = 0;
-  }
-  currentVotes.value[votedForPlayerName]++;
-
-  const currentMaxVoterIndex = (activePlayersState.value?.length ?? 0) - 1;
-  if (isLastVoter.value || votingPlayerIndex.value >= currentMaxVoterIndex) {
-    processVotes();
-  } else {
-    votingPlayerIndex.value++;
-  }
-}
-
-function processVotes() {
-  const votes = currentVotes.value;
-  let maxVotes = -1;
-  let playersWithMaxVotes: string[] = [];
-  const activeNames = (activePlayersState.value || []).map((p) => p.name);
-
-  activeNames.forEach((playerName) => {
-    const voteCount = votes[playerName] || 0;
-    if (voteCount > maxVotes) {
-      maxVotes = voteCount;
-      playersWithMaxVotes = [playerName];
-    } else if (voteCount === maxVotes && voteCount > 0) {
-      playersWithMaxVotes.push(playerName);
-    }
-  });
-
-  if (playersWithMaxVotes.length === 1 && maxVotes > 0) {
-    const eliminatedPlayerName = playersWithMaxVotes[0];
-    const eliminatedPlayer = activePlayersState.value.find(
-      (p) => p.name === eliminatedPlayerName
-    );
-    if (!eliminatedPlayer) {
-      gamePhase.value = "error";
-      return;
-    }
-
-    wasVoteTiedState.value = false;
-    lastEliminatedState.value = { ...eliminatedPlayer };
-    eliminatedHistory.value = [
-      ...eliminatedHistory.value,
-      { ...eliminatedPlayer },
-    ];
-    activePlayersState.value = activePlayersState.value.filter(
-      (p) => p.name !== eliminatedPlayerName
-    ); // Triggers watcher
-    gamePhase.value = "elimination";
-  } else {
-    wasVoteTiedState.value = true;
-    lastEliminatedState.value = null;
-    goToDiscussion(); // Skips elimination phase display
-  }
-}
-
-function goToDiscussion() {
-  if (checkAndDetermineWinner()) {
-    return;
-  } // Check if game ends immediately
-
-  if (gamePhase.value === "elimination" || wasVoteTiedState.value) {
-    currentRound.value++;
-  }
-  gamePhase.value = "discussing";
-  votingPlayerIndex.value = 0;
-  currentVotes.value = {};
-  wordShowingPlayerIndex.value = 0; // Reset for safety
-  if (!wasVoteTiedState.value) {
-    lastEliminatedState.value = null;
-  }
-}
-
-function checkAndDetermineWinner(): boolean {
-  if (gamePhase.value.startsWith("game_over") || !activePlayersState.value) {
-    return gamePhase.value.startsWith("game_over");
-  }
-
-  const currentActivePlayers = activePlayersState.value;
-  const numActivePlayers = currentActivePlayers.length;
-  if (numActivePlayers === 0 && !gamePhase.value.startsWith("game_over")) {
-    return false;
-  }
-  const numActiveUndercovers = currentActivePlayers.filter(
-    (p) => p.isUndercover
-  ).length;
-  const numActiveCivilians = numActivePlayers - numActiveUndercovers;
-
-  let gameOver = false;
-  let winnerMessage = "";
-  let endPhase: GamePhase | null = null;
-
-  if (numActiveUndercovers === 0 && numActivePlayers > 0) {
-    gameOver = true;
-    winnerMessage = "Vincono i Cittadini! Tutti gli Infiltrati Eliminati!";
-    endPhase = "game_over_civilians_win";
-  } else if (
-    (numActiveCivilians === 0 && numActivePlayers > 0) ||
-    (numActiveUndercovers === 1 && numActiveCivilians === 1)
-  ) {
-    gameOver = true;
-    winnerMessage =
-      "Vincono gli Infiltrati! Gli Infiltrati non possono essere fermati!";
-    endPhase = "game_over_undercover_wins";
-  }
-
-  if (gameOver && endPhase) {
-    if (!gamePhase.value.startsWith("game_over")) {
-      gamePhase.value = endPhase;
-      gameOverMessageState.value = winnerMessage;
-      finalRoleRevealState.value = getOriginalAssignmentsInOrder();
-    }
-    return true;
-  }
-  return false;
-}
-
-function getOriginalAssignmentsInOrder(): PlayerAssignment[] {
-  const originalPlayerNames = playersListState.value || [];
-  const assignmentMap = new Map(
-    (assignmentsState.value || []).map((a) => [a.name, a])
-  );
-  return originalPlayerNames.map((name) => {
-    return (
-      assignmentMap.get(name) || {
-        name: name,
-        word: "Errore",
-        isUndercover: false,
-      }
-    );
-  });
-}
-
+// Simplified Play Again
 async function playAgain() {
-  clearSavedGameState();
+  clearGameState(); // Use destructured action
   await router.push("/#gioca");
-  router.go(0);
+  router.go(0); // Optional reload
 }
 
+const mrWhiteGuessInput = ref("");
+const mrWhiteGuessSubmitted = ref(false);
+
+function submitMrWhiteGuess() {
+  if (!mrWhiteGuessInput.value.trim()) return;
+  mrWhiteGuess(mrWhiteGuessInput.value.trim());
+  mrWhiteGuessSubmitted.value = true;
+}
+
+// --- Lifecycle Hooks ---
 onMounted(async () => {
-  const isGameOver = gamePhase.value.startsWith("game_over");
-  // Robust check for valid state on load
-  if (
-    !assignmentsState.value ||
-    assignmentsState.value.length === 0 ||
-    !activePlayersState.value ||
-    (activePlayersState.value.length === 0 && !isGameOver) ||
-    !gameWordPairState.value
-  ) {
+  const success = initializeGame(); // Use destructured action
+  if (!success) {
+    console.warn("Game initialization failed, redirecting to setup.");
     await router.push("/#gioca");
-    router.go(0);
-    return;
-  }
-
-  if (
-    isGameOver &&
-    (!finalRoleRevealState.value || finalRoleRevealState.value.length === 0)
-  ) {
-    finalRoleRevealState.value = getOriginalAssignmentsInOrder();
-  }
-
-  // Check win condition on mount only if not starting fresh
-  if (gamePhase.value !== "showing_words") {
-    checkAndDetermineWinner();
-  } else {
-    // Ensure index is 0 if starting fresh
-    if (wordShowingPlayerIndex.value !== 0) {
-      wordShowingPlayerIndex.value = 0;
-    }
+    router.go(0); // Optional reload
   }
 });
 </script>
@@ -410,7 +109,14 @@ onMounted(async () => {
           <p
             class="text-3xl font-bold text-red-600 dark:text-red-400 my-4 p-4 border border-dashed border-gray-300 dark:border-gray-600 rounded break-words bg-gray-50 dark:bg-gray-700/50"
           >
-            {{ currentPlayerForWord.word }}
+            <template v-if="currentPlayerForWord.role === 'MrWhite'">
+              <span class="italic text-gray-600"
+                >Nessuna parola! Sei Mr. White.</span
+              >
+            </template>
+            <template v-else>
+              {{ currentPlayerForWord.word }}
+            </template>
           </p>
           <UButton
             color="amber"
@@ -501,8 +207,7 @@ onMounted(async () => {
             color="blue"
             class="w-full max-w-xs"
             :class="{
-              'hidden':
-                option.name === currentPlayerForVote.name,
+              hidden: option.name === currentPlayerForVote.name,
             }"
             @click="castVote(option.name, $event)"
           >
@@ -540,34 +245,50 @@ onMounted(async () => {
             <span class="font-semibold">Eliminato/a!</span>
           </template>
           <template #description>
-            In base ai voti,
-            <UBadge color="red" variant="solid" class="text-base">{{
-              lastEliminatedState.name
-            }}</UBadge>
-            è stato/a eliminato/a!
-            <p class="mt-1">
-              Era
-              <span
-                class="font-semibold"
-                :class="{
-                  'text-red-600 dark:text-red-400':
-                    lastEliminatedState.isUndercover,
-                  'text-green-600 dark:text-green-400':
-                    !lastEliminatedState.isUndercover,
-                }"
-              >
-                {{
-                  lastEliminatedState.isUndercover
-                    ? "un Infiltrato"
-                    : "un Civile"
-                }}!
-              </span>
-            </p>
+            <template v-if="lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name)">
+              In base ai voti,
+              <UBadge color="red" variant="solid" class="text-base">
+                {{ lastEliminatedState.name }}
+              </UBadge>
+              è stato/a eliminato/a!
+              <p class="mt-1">
+                Era <span class="font-semibold text-red-600 dark:text-red-400">Mr. White</span> e ha indovinato la parola dei Civili!
+              </p>
+            </template>
+            <template v-else>
+              In base ai voti,
+              <UBadge color="red" variant="solid" class="text-base">
+                {{ lastEliminatedState.name }}
+              </UBadge>
+              è stato/a eliminato/a!
+              <p class="mt-1">
+                Era
+                <span
+                  class="font-semibold"
+                  :class="{
+                    'text-orange-600 dark:text-orange-400':
+                      lastEliminatedState.role === 'Undercover',
+                    'text-red-600 dark:text-red-400':
+                      lastEliminatedState.role === 'MrWhite',
+                    'text-green-600 dark:text-green-400':
+                      lastEliminatedState.role === 'Civilian',
+                  }"
+                >
+                  {{
+                    lastEliminatedState.role === "Undercover"
+                      ? "un Infiltrato"
+                      : lastEliminatedState.role === "MrWhite"
+                      ? "Mr. White"
+                      : "un Civile"
+                  }}!
+                </span>
+              </p>
+            </template>
           </template>
         </UAlert>
 
         <p class="text-gray-600 dark:text-gray-400 my-4">
-          Ci sono {{ activePlayersState.length }} giocatori rimasti.
+          Ci sono {{ activePlayers.length }} giocatori rimasti.
         </p>
 
         <UButton
@@ -590,6 +311,86 @@ onMounted(async () => {
       />
     </UCard>
 
+    <!-- Phase: Mr White Guessing -->
+    <UCard v-else-if="gamePhase === 'mr_white_guessing'" class="text-center">
+      <template #header>
+        <h1 class="text-xl font-semibold">
+          Mr. White: Prova a Indovinare la Parola!
+        </h1>
+      </template>
+      <div v-if="mrWhiteGuessResult === null">
+        <div v-if="mrWhiteGuessingPlayer" class="flex flex-col items-center">
+          <p class="mb-4">
+            <UBadge color="red" variant="solid" class="text-base">
+              {{ mrWhiteGuessingPlayer.name }}
+            </UBadge>
+            , sei stato eliminato come Mr. White! Ora puoi provare a indovinare
+            la parola segreta dei Civili.
+          </p>
+          <UInput
+            v-model="mrWhiteGuessInput"
+            placeholder="Scrivi la parola dei Civili"
+            size="lg"
+            icon="i-heroicons-pencil"
+            class="mb-4 w-full max-w-128"
+            :disabled="mrWhiteGuessSubmitted"
+            @keyup.enter="submitMrWhiteGuess"
+          />
+          <UButton
+            size="lg"
+            icon="i-heroicons-light-bulb"
+            :disabled="mrWhiteGuessSubmitted || !mrWhiteGuessInput"
+            @click="submitMrWhiteGuess"
+          >
+            Indovina!
+          </UButton>
+        </div>
+        <div v-else>
+          <UAlert
+            icon="i-heroicons-exclamation-circle"
+            color="red"
+            variant="soft"
+            title="Errore Interno"
+            description="Non è stato trovato il giocatore Mr. White per il turno di indovinare."
+          />
+        </div>
+      </div>
+      <div v-else>
+        <UAlert
+          :icon="
+            mrWhiteGuessResult.correct
+              ? 'i-heroicons-trophy'
+              : 'i-heroicons-x-circle'
+          "
+          :color="mrWhiteGuessResult.correct ? 'green' : 'red'"
+          variant="subtle"
+          class="mb-4"
+        >
+          <template #title>
+            <span class="font-semibold">
+              {{ mrWhiteGuessResult.correct ? "Indovinato!" : "Sbagliato!" }}
+            </span>
+          </template>
+          <template #description>
+            <span v-if="mrWhiteGuessResult.correct">
+              Mr. White ha indovinato la parola dei Civili e vince la partita!
+            </span>
+            <span v-else>
+              Mr. White non ha indovinato la parola. La partita continua!
+            </span>
+          </template>
+        </UAlert>
+        <UButton
+          color="violet"
+          size="lg"
+          icon="i-heroicons-forward-20-solid"
+          @click="goToDiscussion"
+        >
+          Continua
+        </UButton>
+      </div>
+    </UCard>
+
     <!-- Phase: Game Over -->
     <UCard v-else-if="gamePhase.startsWith('game_over')" class="text-center">
       <template #header>
@@ -600,7 +401,7 @@ onMounted(async () => {
         class="text-xl font-semibold mb-4"
         :class="{
           'text-red-600 dark:text-red-400':
-            gamePhase === 'game_over_undercover_wins',
+            gamePhase === 'game_over_undercovers_win',
           'text-green-600 dark:text-green-400':
             gamePhase === 'game_over_civilians_win',
         }"
@@ -608,16 +409,52 @@ onMounted(async () => {
         {{ gameOverMessageState }}
       </h2>
 
-      <p v-if="gameWordPairState" class="text-gray-600 dark:text-gray-400 mb-4">
+      <!-- Show Mr. White winners if any -->
+      <div v-if="mrWhiteWinners.length > 0" class="mb-4">
+        <p>
+          <span v-for="(winner, idx) in mrWhiteWinners" :key="winner.name">
+            <UBadge color="red" variant="solid" class="text-base">
+              {{ winner.name }}
+            </UBadge>
+            <span v-if="idx < mrWhiteWinners.length - 1">, </span>
+          </span>
+          ha indovinato la parola dei Civili!
+        </p>
+      </div>
+
+      <!-- Civilians win and there were Mr. Whites, but none won -->
+      <div
+        v-if="
+          gamePhase === 'game_over_civilians_win' &&
+          finalRoleRevealState.some(p => p.role === 'MrWhite') &&
+          mrWhiteWinners.length === 0
+        "
+        class="mb-4"
+      >
+        <p class="text-gray-700 dark:text-gray-300 italic">
+          Tutti i Mr. White sono stati eliminati senza indovinare la parola dei Civili!
+        </p>
+      </div>
+
+      <p
+        v-if="gameWordPair && numberOfUndercovers > 0"
+        class="text-gray-600 dark:text-gray-400 mb-4"
+      >
         Le parole erano:
         <UBadge variant="soft" color="gray" size="md" class="text-base">{{
-          gameWordPairState.civilian
+          gameWordPair.civilian
         }}</UBadge>
         (Civile) e
         <UBadge variant="soft" color="red" size="md" class="text-base">{{
-          gameWordPairState.undercover
+          gameWordPair.undercover
         }}</UBadge>
         (Infiltrato)
+      </p>
+      <p v-else-if="gameWordPair" class="text-gray-600 dark:text-gray-400 mb-4">
+        La parola dei Civili era:
+        <UBadge variant="soft" color="gray" size="md" class="text-base">{{
+          gameWordPair.civilian
+        }}</UBadge>
       </p>
 
       <UDivider label="Stato Finale" class="my-6" />
@@ -630,24 +467,41 @@ onMounted(async () => {
         >
           <span
             :class="{
-              'font-bold text-red-600 dark:text-red-400': player.isUndercover,
+              'font-bold text-orange-600 dark:text-orange-400':
+                player.role === 'Undercover',
+              'font-bold text-red-600 dark:text-red-400':
+                player.role === 'MrWhite',
             }"
           >
             {{ player.name }}: {{ player.word }}
             <UBadge
-              v-if="player.isUndercover"
-              color="red"
+              v-if="player.role === 'Undercover'"
+              color="orange"
               variant="subtle"
               size="xs"
               class="ml-1"
               >Infiltrato!</UBadge
             >
+            <UBadge
+              v-else-if="player.role === 'MrWhite'"
+              color="red"
+              variant="subtle"
+              size="xs"
+              class="ml-1"
+              >Mr. White!</UBadge
+            >
             <span
-              v-if="isPlayerEliminated(player.name)"
+              v-if="player.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === player.name)"
+              class="italic text-green-600 dark:text-green-400 text-sm ml-1"
+            >
+              (Vincitore)
+            </span>
+            <span
+              v-else-if="isPlayerEliminated(player.name)"
               class="italic text-gray-500 dark:text-gray-400 text-sm ml-1"
             >
-              (Eliminato/a)</span
-            >
+              (Eliminato/a)
+            </span>
           </span>
         </li>
       </ul>

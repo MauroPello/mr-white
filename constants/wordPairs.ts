@@ -1,214 +1,184 @@
-import type { WordPair } from "~/types/wordPairs"; // Assuming types/wordPairs.ts exists
+import type { WordPair } from "~/types/wordPairs";
 
 export const wordPairs: WordPair[] = [
-  { civilian: "Mela", undercover: "Pera" },
-  { civilian: "Cane", undercover: "Gatto" }, // Cane/Lupo è ok, Cane/Gatto è più comune
-  { civilian: "Sole", undercover: "Luna" },
-  { civilian: "Sedia", undercover: "Poltrona" }, // Poltrona invece di sgabello
-  { civilian: "Caffè", undercover: "Cappuccino" }, // Tè è ok, cappuccino è più vicino
-  { civilian: "Auto", undercover: "Moto" }, // Moto invece di bici
-  { civilian: "Libro", undercover: "Fumetto" }, // Fumetto invece di rivista
-  { civilian: "Pizza", undercover: "Focaccia" }, // Focaccia invece di hamburger
-  { civilian: "Oceano", undercover: "Mare" }, // Mare invece di lago
-  { civilian: "Chitarra", undercover: "Basso" }, // Basso invece di violino
-  { civilian: "Estate", undercover: "Primavera" }, // Primavera invece di inverno
-  { civilian: "Dottore", undercover: "Dentista" }, // Dentista invece di infermiere
-  { civilian: "Film", undercover: "Cartone animato" }, // Cartone invece di Serie TV
-  { civilian: "Password", undercover: "PIN" }, // PIN invece di username
-  { civilian: "Latte", undercover: "Yogurt" }, // Yogurt invece di acqua
-  { civilian: "Spiaggia", undercover: "Scogliera" }, // Scogliera invece di deserto
-  { civilian: "Letto", undercover: "Amaca" }, // Amaca invece di divano
-  { civilian: "Calcio", undercover: "Rugby" }, // Rugby invece di basket
-  { civilian: "Pioggia", undercover: "Grandine" }, // Grandine invece di neve
-  { civilian: "Pasta", undercover: "Gnocchi" }, // Gnocchi invece di riso
-  { civilian: "Telefono", undercover: "Tablet" }, // Tablet invece di computer
-  { civilian: "Forchetta", undercover: "Coltello" }, // Coltello invece di cucchiaio
-  { civilian: "Nave", undercover: "Traghetto" }, // Traghetto invece di barca
-  { civilian: "Aereo", undercover: "Jet privato" }, // Jet invece di elicottero
-  { civilian: "Treno", undercover: "Metropolitana" }, // Metro invece di autobus
-  { civilian: "Scarpa", undercover: "Ciabatta" }, // Ciabatta invece di stivale
-  { civilian: "Maglietta", undercover: "Canottiera" }, // Canottiera invece di camicia
-  { civilian: "Pantaloni", undercover: "Jeans" }, // Jeans invece di gonna
-  { civilian: "Cappello", undercover: "Casco" }, // Casco invece di berretto
-  { civilian: "Guanti", undercover: "Muffole" }, // Muffole invece di sciarpa
-  { civilian: "Occhiali da sole", undercover: "Occhiali da vista" }, // Da sole vs vista
-  { civilian: "Orologio da polso", undercover: "Orologio da tasca" }, // Polso vs tasca
-  { civilian: "Porta", undercover: "Cancello" }, // Cancello invece di finestra
-  { civilian: "Muro", undercover: "Recinzione" }, // Recinzione invece di soffitto
-  { civilian: "Pavimento", undercover: "Moquette" }, // Moquette invece di tappeto
-  { civilian: "Lampadina", undercover: "Neon" }, // Neon invece di candela
-  { civilian: "Fuoco", undercover: "Brace" }, // Brace invece di ghiaccio
-  { civilian: "Montagna", undercover: "Vulcano" }, // Vulcano invece di collina
-  { civilian: "Fiume", undercover: "Torrente" }, // Torrente invece di cascata
-  { civilian: "Albero", undercover: "Arbusto" }, // Arbusto invece di fiore
-  { civilian: "Erba", undercover: "Muschio" }, // Muschio invece di foglia
-  { civilian: "Nuvola", undercover: "Fumo" }, // Fumo invece di nebbia
-  { civilian: "Stella", undercover: "Cometa" }, // Cometa invece di pianeta
-  { civilian: "Scuola elementare", undercover: "Asilo nido" }, // Elementare vs Nido
-  { civilian: "Ospedale", undercover: "Pronto soccorso" }, // Pronto soccorso vs clinica
-  { civilian: "Supermercato", undercover: "Mercato" }, // Mercato vs negozio
-  { civilian: "Ristorante", undercover: "Trattoria" }, // Trattoria vs bar
-  { civilian: "Cinema", undercover: "Drive-in" }, // Drive-in vs teatro
-  { civilian: "Museo", undercover: "Biblioteca" }, // Biblioteca vs galleria
-  { civilian: "Zaino", undercover: "Valigia" }, // Valigia vs borsa
-  { civilian: "Penna", undercover: "Pennarello" }, // Pennarello vs matita
-  { civilian: "Quaderno", undercover: "Blocco note" }, // Blocco note vs agenda
-  { civilian: "Forbici", undercover: "Taglierino" }, // Taglierino vs coltello
-  { civilian: "Colla", undercover: "Vinavil" }, // Vinavil vs nastro adesivo
-  { civilian: "Moneta", undercover: "Banconota" }, // Moneta vs carta di credito
-  { civilian: "Chiave", undercover: "Password" }, // Password vs lucchetto (più astratto)
-  { civilian: "Martello", undercover: "Mazza" }, // Mazza vs cacciavite
-  { civilian: "Chiodo", undercover: "Tassello" }, // Tassello vs vite
-  { civilian: "Dipinto", undercover: "Affresco" }, // Affresco vs disegno
-  { civilian: "Musica Classica", undercover: "Musica Jazz" }, // Classica vs Jazz
-  { civilian: "Ballo Liscio", undercover: "Tango" }, // Liscio vs Tango
-  { civilian: "Fotografia digitale", undercover: "Fotografia analogica" }, // Digitale vs Analogica
-  { civilian: "Notizia", undercover: "Articolo di opinione" }, // Opinione vs Gossip
-  { civilian: "Storia", undercover: "Biografia" }, // Biografia vs Leggenda
-  { civilian: "Algebra", undercover: "Geometria" }, // Algebra vs Fisica
-  { civilian: "Chimica", undercover: "Biologia" }, // Chimica vs Magia
-  { civilian: "Mito", undercover: "Favola" }, // Favola vs Filosofia
-  { civilian: "Re", undercover: "Regina" }, // Regina vs Economia
+  // Basics & Common Objects
+  { civilian: "Mela", undercover: "Pera" }, // Good classic
+  { civilian: "Cane", undercover: "Gatto" }, // Good classic
+  { civilian: "Sole", undercover: "Luna" }, // Good classic
+  { civilian: "Sedia", undercover: "Poltrona" }, // Good, subtle difference
+  { civilian: "Auto", undercover: "Moto" }, // Good
+  { civilian: "Libro", undercover: "Fumetto" }, // Good
+  { civilian: "Letto", undercover: "Amaca" }, // Good contrast
+  { civilian: "Forchetta", undercover: "Coltello" }, // Good, same context
+  { civilian: "Scarpa", undercover: "Ciabatta" }, // Good, footwear
+  { civilian: "Maglietta", undercover: "Canottiera" }, // Good, clothing layers
+  { civilian: "Pantaloni", undercover: "Jeans" }, // Excellent, specific type
+  { civilian: "Cappello", undercover: "Berretto" }, // Changed Casco to Berretto for closer type
+  { civilian: "Guanti", undercover: "Muffole" }, // Good specific type
+  { civilian: "Occhiali da sole", undercover: "Occhiali da vista" }, // Excellent
+  { civilian: "Orologio da polso", undercover: "Sveglia" }, // Changed da tasca (less common) to Sveglia (time-telling device)
+  { civilian: "Porta", undercover: "Finestra" }, // Changed Cancello to Finestra (openings in a wall)
+  { civilian: "Muro", undercover: "Recinzione" }, // Good
+  { civilian: "Pavimento", undercover: "Soffitto" }, // Changed Moquette to Soffitto (parts of a room)
+  { civilian: "Lampadina", undercover: "Candela" }, // Changed Neon (less common?) to Candela (light source)
+  { civilian: "Zaino", undercover: "Valigia" }, // Good
+  { civilian: "Penna", undercover: "Matita" }, // Changed Pennarello to Matita (more common writing tool pair)
+  { civilian: "Quaderno", undercover: "Agenda" }, // Changed Blocco note to Agenda (more distinct purpose)
+  { civilian: "Forbici", undercover: "Taglierino" }, // Good
+  { civilian: "Colla", undercover: "Nastro adesivo" }, // Replaced Vinavil (brand) with common alternative
+  { civilian: "Moneta", undercover: "Banconota" }, // Good
+  { civilian: "Chiave", undercover: "Lucchetto" }, // Changed Password to Lucchetto (physical security)
+  { civilian: "Martello", undercover: "Cacciavite" }, // Changed Mazza to Cacciavite (common tools)
+  { civilian: "Chiodo", undercover: "Vite" }, // Changed Tassello to Vite (common fasteners)
+  { civilian: "Tastiera", undercover: "Mouse" }, // Good tech pair
+  { civilian: "Telefono", undercover: "Tablet" }, // Good tech pair
+  { civilian: "Password", undercover: "PIN" }, // Excellent digital security pair
 
-  // Cibo e Bevande (Più Varietà)
-  { civilian: "Pane", undercover: "Pizza bianca" }, // Pizza bianca vs Grissino
-  { civilian: "Formaggio", undercover: "Ricotta" }, // Ricotta vs Burro
-  { civilian: "Bistecca", undercover: "Salsiccia" }, // Salsiccia vs Pesce
-  { civilian: "Salmone", undercover: "Tonno" }, // Tonno vs Tacchino
-  { civilian: "Uovo sodo", undercover: "Uovo strapazzato" }, // Strapazzato vs Frittata
-  { civilian: "Pomodoro", undercover: "Peperone" }, // Peperone vs Patata
-  { civilian: "Carota", undercover: "Zucchina" }, // Zucchina vs Aglio
-  { civilian: "Insalata", undercover: "Rucola" }, // Rucola vs Spinaci
-  { civilian: "Mandarino", undercover: "Pompelmo" }, // Pompelmo vs Limone
-  { civilian: "Anguria", undercover: "Melone" }, // Melone vs Kiwi
-  { civilian: "Mirtillo", undercover: "Mora" }, // Mora vs Lampone
-  { civilian: "Zucchero", undercover: "Miele" }, // Miele vs Sale
-  { civilian: "Olio d'oliva", undercover: "Olio di semi" }, // Semi vs Aceto
-  { civilian: "Vino rosso", undercover: "Vino bianco" }, // Bianco vs Birra
-  { civilian: "Succo di frutta", undercover: "Centrifuga" }, // Centrifuga vs Frullato
-  { civilian: "Torta", undercover: "Croissant" }, // Croissant vs Biscotto
-  { civilian: "Gelato", undercover: "Granita" }, // Granita vs Sorbetto
-  { civilian: "Cioccolato fondente", undercover: "Cioccolato al latte" }, // Latte vs Caramella
-  { civilian: "Caffè espresso", undercover: "Caffè americano" },
-  { civilian: "Tisana", undercover: "Camomilla" },
-  { civilian: "Lasagna", undercover: "Cannelloni" },
-  { civilian: "Minestra", undercover: "Zuppa" },
-  { civilian: "Patatine fritte", undercover: "Patatine in busta" },
-  { civilian: "Popcorn", undercover: "Nachos" },
-  { civilian: "Ketchup", undercover: "Maionese" },
-  { civilian: "Senape", undercover: "Salsa barbecue" },
+  // Food & Drinks
+  { civilian: "Caffè", undercover: "Cappuccino" }, // Good
+  { civilian: "Pizza", undercover: "Focaccia" }, // Excellent
+  { civilian: "Latte", undercover: "Yogurt" }, // Good
+  { civilian: "Pasta", undercover: "Riso" }, // Changed Gnocchi to Riso (common staples)
+  { civilian: "Pane", undercover: "Grissino" }, // Changed Pizza bianca to Grissino (baked goods)
+  { civilian: "Formaggio", undercover: "Burro" }, // Changed Ricotta to Burro (dairy products)
+  { civilian: "Bistecca", undercover: "Salsiccia" }, // Good
+  { civilian: "Salmone", undercover: "Tonno" }, // Good
+  { civilian: "Uovo fritto", undercover: "Uovo sodo" }, // Changed strapazzato to fritto for clearer contrast
+  { civilian: "Pomodoro", undercover: "Patata" }, // Changed Peperone to Patata (very common vegetables)
+  { civilian: "Carota", undercover: "Zucchina" }, // Good
+  { civilian: "Insalata", undercover: "Spinaci" }, // Changed Rucola to Spinaci (leafy greens)
+  { civilian: "Arancia", undercover: "Limone" }, // Changed Mandarino/Pompelmo to classic citrus pair
+  { civilian: "Anguria", undercover: "Melone" }, // Good
+  { civilian: "Fragola", undercover: "Lampone" }, // Changed Mirtillo/Mora to more common berries
+  { civilian: "Zucchero", undercover: "Sale" }, // Changed Miele to Sale (fundamental seasonings)
+  { civilian: "Olio", undercover: "Aceto" }, // Simplified Olio pair, common condiments
+  { civilian: "Vino rosso", undercover: "Vino bianco" }, // Good
+  { civilian: "Acqua", undercover: "Succo di frutta" }, // Changed Tisana/Camomilla, Yogurt/Acqua to this basic pair
+  { civilian: "Torta", undercover: "Biscotto" }, // Changed Croissant to Biscotto (common sweets)
+  { civilian: "Gelato", undercover: "Granita" }, // Good
+  { civilian: "Cioccolato fondente", undercover: "Cioccolato al latte" }, // Excellent
+  { civilian: "Caffè espresso", undercover: "Caffè americano" }, // Good
+  { civilian: "Minestra", undercover: "Zuppa" }, // Good subtle difference
+  { civilian: "Patatine fritte", undercover: "Patatine in busta" }, // Excellent
+  { civilian: "Popcorn", undercover: "Nachos" }, // Good snack pair
+  { civilian: "Ketchup", undercover: "Maionese" }, // Good condiment pair
 
-  // Animali (Più Varietà)
-  { civilian: "Cavallo", undercover: "Zebra" }, // Zebra vs Asino
-  { civilian: "Mucca", undercover: "Bufala" }, // Bufala vs Pecora
-  { civilian: "Maiale", undercover: "Capra" }, // Capra vs Cinghiale
-  { civilian: "Leone", undercover: "Puma" }, // Puma vs Tigre
-  { civilian: "Elefante", undercover: "Ippopotamo" }, // Ippopotamo vs Rinoceronte
-  { civilian: "Scimmia", undercover: "Lemure" }, // Lemure vs Gorilla
-  { civilian: "Pappagallo", undercover: "Corvo" }, // Corvo vs Pipistrello
-  { civilian: "Gufo", undercover: "Civetta" }, // Civetta vs Falco
-  { civilian: "Pinguino", undercover: "Pulcinella di mare" }, // Pulcinella vs Foca
-  { civilian: "Cobra", undercover: "Vipera" }, // Vipera vs Lucertola
-  { civilian: "Ragno", undercover: "Tarantola" }, // Tarantola vs Scorpione
-  { civilian: "Ape", undercover: "Bombo" }, // Bombo vs Vespa
-  { civilian: "Farfalla", undercover: "Libellula" }, // Libellula vs Falena
-  { civilian: "Formica", undercover: "Scarabeo" }, // Scarabeo vs Termite
-  { civilian: "Delfino", undercover: "Balena" },
-  { civilian: "Squalo", undercover: "Orca" },
-  { civilian: "Granchio", undercover: "Aragosta" },
-  { civilian: "Polpo", undercover: "Calamaro" },
-  { civilian: "Stella marina", undercover: "Riccio di mare" },
-  { civilian: "Coniglio", undercover: "Lepre" },
-  { civilian: "Criceto", undercover: "Porcellino d'India" },
-  { civilian: "Coccodrillo", undercover: "Alligatore" },
-  { civilian: "Tartaruga", undercover: "Testuggine" },
-  { civilian: "Rana", undercover: "Rospo" },
+  // Nature & Environment
+  { civilian: "Oceano", undercover: "Mare" }, // Good
+  { civilian: "Spiaggia", undercover: "Scogliera" }, // Good
+  { civilian: "Pioggia", undercover: "Neve" }, // Changed Grandine to Neve (more common weather contrast)
+  { civilian: "Fuoco", undercover: "Ghiaccio" }, // Changed Brace to Ghiaccio (classic elements)
+  { civilian: "Montagna", undercover: "Collina" }, // Changed Vulcano to Collina (difference in scale)
+  { civilian: "Fiume", undercover: "Lago" }, // Changed Torrente to Lago (different bodies of water)
+  { civilian: "Albero", undercover: "Fiore" }, // Changed Arbusto to Fiore (common plants)
+  { civilian: "Erba", undercover: "Foglia" }, // Changed Muschio to Foglia (parts of plants)
+  { civilian: "Nuvola", undercover: "Nebbia" }, // Changed Fumo to Nebbia (weather phenomena)
+  { civilian: "Stella", undercover: "Pianeta" }, // Changed Cometa to Pianeta (common celestial bodies)
+  { civilian: "Alba", undercover: "Tramonto" }, // New: Dawn/Sunset, very common and evocative
 
-  // Corpo Umano e Sensazioni (Più Varietà)
-  { civilian: "Mano", undercover: "Braccio" }, // Braccio vs Piede
-  { civilian: "Occhio", undercover: "Sopracciglio" }, // Sopracciglio vs Orecchio
-  { civilian: "Naso", undercover: "Guancia" }, // Guancia vs Bocca
-  { civilian: "Capelli", undercover: "Ciglia" }, // Ciglia vs Barba
-  { civilian: "Dito", undercover: "Pollice" }, // Pollice vs Unghia
-  { civilian: "Cuore", undercover: "Polmone" }, // Polmone vs Cervello
-  { civilian: "Stomaco", undercover: "Intestino" }, // Intestino vs Linfa
-  { civilian: "Ginocchio", undercover: "Gomito" }, // Gomito vs Muscolo
-  { civilian: "Pelle", undercover: "Cicatrice" }, // Cicatrice vs Pelliccia
-  { civilian: "Voce", undercover: "Sussurro" }, // Sussurro vs Freddo
-  { civilian: "Risata", undercover: "Sbadiglio" }, // Sbadiglio vs Tristezza
-  { civilian: "Dolore", undercover: "Prurito" }, // Prurito vs Coraggio
-  { civilian: "Piacere", undercover: "Sollievo" }, // Sollievo vs Calma
-  { civilian: "Nostalgia", undercover: "Rimpianto" }, // Rimpianto vs Noia
-  { civilian: "Ansia", undercover: "Stress" }, // Stress vs Odio
-  { civilian: "Curiosità", undercover: "Dubbio" }, // Dubbio vs Sete
-  { civilian: "Orgoglio", undercover: "Vanità" }, // Vanità vs Stanchezza
+  // Animals
+  { civilian: "Cavallo", undercover: "Asino" }, // Changed Zebra to Asino (more common relative)
+  { civilian: "Mucca", undercover: "Pecora" }, // Changed Bufala to Pecora (common farm animals)
+  { civilian: "Maiale", undercover: "Gallina" }, // Changed Capra to Gallina (common farm animals)
+  { civilian: "Leone", undercover: "Tigre" }, // Changed Puma to Tigre (classic big cat pair)
+  { civilian: "Elefante", undercover: "Giraffa" }, // Changed Ippopotamo to Giraffa (iconic large animals)
+  { civilian: "Scimmia", undercover: "Gorilla" }, // Good specific type
+  { civilian: "Pappagallo", undercover: "Canarino" }, // Changed Corvo to Canarino (common pet birds)
+  { civilian: "Gufo", undercover: "Civetta" }, // Good
+  { civilian: "Pinguino", undercover: "Foca" }, // Changed Pulcinella (obscure) to Foca (common marine animal)
+  { civilian: "Serpente", undercover: "Lucertola" }, // Changed Cobra/Vipera to general Serpente/Lucertola (common reptiles)
+  { civilian: "Ragno", undercover: "Scorpione" }, // Changed Tarantola to Scorpione (common creepy crawlies)
+  { civilian: "Ape", undercover: "Vespa" }, // Changed Bombo to Vespa (common stinging insects)
+  { civilian: "Farfalla", undercover: "Libellula" }, // Good
+  { civilian: "Formica", undercover: "Coccinella" }, // Changed Scarabeo to Coccinella (common small insects)
+  { civilian: "Delfino", undercover: "Balena" }, // Good
+  { civilian: "Squalo", undercover: "Orca" }, // Good
+  { civilian: "Granchio", undercover: "Gambero" }, // Changed Aragosta to Gambero (more common crustacean)
+  { civilian: "Polpo", undercover: "Calamaro" }, // Good
+  { civilian: "Coniglio", undercover: "Lepre" }, // Good
+  { civilian: "Topo", undercover: "Ratto" }, // Changed Criceto/Porcellino to common rodents
+  { civilian: "Coccodrillo", undercover: "Alligatore" }, // Good
+  { civilian: "Tartaruga", undercover: "Testuggine" }, // Excellent
+  { civilian: "Rana", undercover: "Rospo" }, // Good
 
-  // Fantasy, Fiction & Fun (Più Varietà)
-  { civilian: "Fantasma", undercover: "Spirito" }, // Spirito vs Alieno
-  { civilian: "Vampiro", undercover: "Licantropo" }, // Licantropo vs Zombie
-  { civilian: "Mago", undercover: "Strega" }, // Strega vs Cattivo
-  { civilian: "Elfo", undercover: "Nano" }, // Nano vs Unicorno
-  { civilian: "Spada", undercover: "Ascia" }, // Ascia vs Scudo
-  { civilian: "Castello", undercover: "Fortezza" }, // Fortezza vs Caverna
-  { civilian: "Tesoro", undercover: "Reliquia" }, // Reliquia vs Mappa
-  { civilian: "Pirata", undercover: "Corsaro" }, // Corsaro vs Ninja
-  { civilian: "Robot", undercover: "Droide" }, // Droide vs Cyborg
-  { civilian: "Viaggio nel tempo", undercover: "Teletrasporto" }, // Teletrasporto vs Tempo
-  { civilian: "Sogno", undercover: "Visione" }, // Visione vs Incubo
-  { civilian: "Indovinello", undercover: "Proverbio" }, // Proverbio vs Verità
-  { civilian: "Codice segreto", undercover: "Messaggio cifrato" }, // Cifrato vs Indizio
-  { civilian: "Regalo", undercover: "Donazione" }, // Donazione vs Sorpresa
-  { civilian: "Festa di compleanno", undercover: "Matrimonio" }, // Matrimonio vs Riunione
-  { civilian: "Hobby", undercover: "Passione" }, // Passione vs Lavoro
-  { civilian: "Obiettivo", undercover: "Missione" }, // Missione vs Sfortuna
-  { civilian: "Coincidenza", undercover: "Deja-vu" }, // Deja-vu vs Caso
-  { civilian: "Silenzio", undercover: "Eco" }, // Eco vs Rumore
-  { civilian: "Luce", undercover: "Riflesso" }, // Riflesso vs Ombra
-  { civilian: "Specchio", undercover: "Lente" }, // Lente vs Ritratto
-  { civilian: "Maschera", undercover: "Casco" }, // Casco vs Travestimento
-  { civilian: "Puzzle", undercover: "Labirinto" }, // Labirinto vs Enigma
-  { civilian: "Tastiera", undercover: "Mouse" }, // Mouse vs Schermo
-  { civilian: "Internet", undercover: "Intranet" }, // Intranet vs Illusione
-  { civilian: "Notte", undercover: "Giorno" }, // Giorno vs Fatto
-  { civilian: "Parola", undercover: "Lettera" }, // Lettera vs Fine
-  { civilian: "Numero", undercover: "Simbolo" }, // Simbolo vs Risposta
-  { civilian: "Errore", undercover: "Bug" }, // Bug vs Soluzione
-  { civilian: "Regola", undercover: "Legge" }, // Legge vs Eccezione
-  { civilian: "Astronauta", undercover: "Cosmonauta" },
-  { civilian: "Pilota", undercover: "Capitano" },
-  { civilian: "Cuoco", undercover: "Pasticcere" },
-  { civilian: "Attore", undercover: "Comico" },
-  { civilian: "Cantante", undercover: "Rapper" },
-  { civilian: "Scrittore", undercover: "Poeta" },
-  { civilian: "Professore", undercover: "Maestro" },
-  { civilian: "Poliziotto", undercover: "Carabiniere" },
-  { civilian: "Pompiere", undercover: "Paramedico" }, // O "Vigile del fuoco"
-  { civilian: "Giardiniere", undercover: "Fioraio" },
-  { civilian: "Barbiere", undercover: "Parrucchiere" },
+  // Places & Transport
+  { civilian: "Nave", undercover: "Traghetto" }, // Good
+  { civilian: "Aereo", undercover: "Elicottero" }, // Changed Jet privato to Elicottero (more common aircraft contrast)
+  { civilian: "Treno", undercover: "Metropolitana" }, // Good
+  { civilian: "Scuola", undercover: "Università" }, // Simplified elementare/asilo to broader terms
+  { civilian: "Ospedale", undercover: "Clinica" }, // Changed Pronto soccorso to Clinica (types of medical facilities)
+  { civilian: "Supermercato", undercover: "Negozio" }, // Changed Mercato to Negozio (general store)
+  { civilian: "Ristorante", undercover: "Bar" }, // Changed Trattoria to Bar (common eateries)
+  { civilian: "Cinema", undercover: "Teatro" }, // Changed Drive-in to Teatro (performance venues)
+  { civilian: "Museo", undercover: "Galleria d'arte" }, // Changed Biblioteca to Galleria (places for viewing art/artifacts)
+  { civilian: "Piscina", undercover: "Vasca da bagno" }, // Changed idromassaggio to basic Vasca da bagno
+  { civilian: "Ponte", undercover: "Tunnel" }, // Good
+  { civilian: "Strada", undercover: "Autostrada" }, // Changed Sentiero to Autostrada (types of roads)
+  { civilian: "Piazza", undercover: "Parco" }, // Changed Rotonda to Parco (public spaces)
+  { civilian: "Giardino", undercover: "Orto" }, // Changed Parco to Orto (cultivated spaces)
 
-  // Altre Coppie Varie
-  { civilian: "Piscina", undercover: "Vasca idromassaggio" },
-  { civilian: "Tenda da campeggio", undercover: "Sacco a pelo" },
-  { civilian: "Bussola", undercover: "GPS" },
-  { civilian: "Mappa", undercover: "Globo" },
-  { civilian: "Termometro", undercover: "Barometro" },
-  { civilian: "Microscopio", undercover: "Telescopio" },
-  { civilian: "Batteria", undercover: "Caricabatterie" },
-  { civilian: "Cavo", undercover: "Adattatore" },
-  { civilian: "Presa elettrica", undercover: "Interruttore" },
-  { civilian: "Scala", undercover: "Ascensore" },
-  { civilian: "Ponte", undercover: "Tunnel" },
-  { civilian: "Strada", undercover: "Sentiero" },
-  { civilian: "Piazza", undercover: "Rotonda" },
-  { civilian: "Parco", undercover: "Giardino" },
-  { civilian: "Semaforo", undercover: "Stop" },
-  { civilian: "Biglietto del treno", undercover: "Abbonamento" },
-  { civilian: "Francobollo", undercover: "Busta" },
-  { civilian: "Monopoli", undercover: "Risiko" },
-  { civilian: "Scacchi", undercover: "Dama" },
-  { civilian: "Carte da gioco", undercover: "Tarocchi" },
-  { civilian: "Dado", undercover: "Trottola" },
-  { civilian: "Pallone", undercover: "Palla" },
-  { civilian: "Corda per saltare", undercover: "Hula hoop" },
-  { civilian: "Altalena", undercover: "Scivolo" },
+  // Abstract & Concepts
+  { civilian: "Estate", undercover: "Inverno" }, // Changed Primavera to Inverno (stronger contrast)
+  { civilian: "Film", undercover: "Serie TV" }, // Changed Cartone to Serie TV (very common media formats)
+  { civilian: "Musica", undercover: "Silenzio" }, // Changed Classica/Jazz to broader Musica/Silenzio
+  { civilian: "Fotografia", undercover: "Video" }, // Simplified digital/analogica to Fotografia/Video
+  { civilian: "Notizia", undercover: "Gossip" }, // Changed Articolo opinione to Gossip (accessible info types)
+  { civilian: "Storia", undercover: "Leggenda" }, // Changed Biografia to Leggenda (types of narratives)
+  { civilian: "Matematica", undercover: "Scienze" }, // Broadened Algebra/Geo, Chimica/Bio
+  { civilian: "Mito", undercover: "Favola" }, // Good
+  { civilian: "Re", undercover: "Regina" }, // Good
+  { civilian: "Lavoro", undercover: "Hobby" }, // Changed Passione, good contrast
+  { civilian: "Sogno", undercover: "Incubo" }, // Changed Visione to Incubo (common dream types)
+  { civilian: "Domanda", undercover: "Risposta" }, // Changed Indovinello/Proverbio to basic pair
+  { civilian: "Bugia", undercover: "Verità" }, // Changed Codice segreto etc. to this fundamental pair
+  { civilian: "Regalo", undercover: "Sorpresa" }, // Changed Donazione to Sorpresa
+  { civilian: "Festa", undercover: "Riunione" }, // Simplified compleanno/matrimonio
+  { civilian: "Obiettivo", undercover: "Missione" }, // Good
+  { civilian: "Fortuna", undercover: "Sfortuna" }, // Changed Coincidenza/Deja-vu to basic luck
+  { civilian: "Luce", undercover: "Ombra" }, // Changed Riflesso to Ombra (classic contrast)
+  { civilian: "Specchio", undercover: "Vetro" }, // Changed Lente to Vetro (reflective/transparent)
+  { civilian: "Maschera", undercover: "Travestimento" }, // Good, as suggested
+  { civilian: "Puzzle", undercover: "Indovinello" }, // Changed Labirinto to Indovinello (mental challenges)
+  { civilian: "Internet", undercover: "Televisione" }, // Changed Intranet to Televisione (mass media)
+  { civilian: "Parola", undercover: "Numero" }, // Changed Lettera to Numero (basic symbols)
+  { civilian: "Errore", undercover: "Soluzione" }, // Changed Bug to Soluzione (problem/answer)
+  { civilian: "Regola", undercover: "Eccezione" }, // Changed Legge to Eccezione (rule/breaking it)
+
+  // Professions
+  { civilian: "Dottore", undercover: "Infermiere" }, // Changed Dentista to Infermiere (common medical roles)
+  { civilian: "Insegnante", undercover: "Studente" }, // Changed Professore/Maestro to general roles
+  { civilian: "Poliziotto", undercover: "Pompiere" }, // Changed Carabiniere to Pompiere (emergency services)
+  { civilian: "Cuoco", undercover: "Cameriere" }, // Changed Pasticcere to Cameriere (restaurant roles)
+  { civilian: "Attore", undercover: "Regista" }, // Changed Comico to Regista (film roles)
+  { civilian: "Cantante", undercover: "Musicista" }, // Changed Rapper to Musicista (broader music role)
+  { civilian: "Scrittore", undercover: "Giornalista" }, // Changed Poeta to Giornalista (writing professions)
+  { civilian: "Pilota", undercover: "Autista" }, // Changed Capitano to Autista (driving roles)
+  { civilian: "Barbiere", undercover: "Parrucchiere" }, // Good
+
+  // Body & Sensations
+  { civilian: "Mano", undercover: "Piede" }, // Changed Braccio to Piede (extremities)
+  { civilian: "Occhio", undercover: "Orecchio" }, // Changed Sopracciglio to Orecchio (sensory organs)
+  { civilian: "Naso", undercover: "Bocca" }, // Changed Guancia to Bocca (facial features)
+  { civilian: "Capelli", undercover: "Barba" }, // Changed Ciglia to Barba (types of hair)
+  { civilian: "Dito", undercover: "Unghia" }, // Changed Pollice to Unghia (part of finger)
+  { civilian: "Cuore", undercover: "Cervello" }, // Changed Polmone to Cervello (vital organs)
+  { civilian: "Caldo", undercover: "Freddo" }, // Changed Stomaco/Intestino to basic temperatures
+  { civilian: "Fame", undercover: "Sete" }, // Changed Ginocchio/Gomito to basic needs
+  { civilian: "Risata", undercover: "Pianto" }, // Changed Sbadiglio to Pianto (emotional expressions)
+  { civilian: "Dolore", undercover: "Piacere" }, // Changed Prurito to Piacere (opposite sensations)
+  { civilian: "Paura", undercover: "Coraggio" }, // Changed Nostalgia/Rimpianto etc. to basic emotions
+  { civilian: "Felicità", undercover: "Tristezza" }, // Basic emotion pair
+  { civilian: "Rabbia", undercover: "Calma" }, // Basic emotion pair
+
+  // Fantasy & Fun (Simplified)
+  { civilian: "Fantasma", undercover: "Zombie" }, // Changed Spirito to Zombie (common monsters)
+  { civilian: "Vampiro", undercover: "Licantropo" }, // Good
+  { civilian: "Mago", undercover: "Strega" }, // Good
+  { civilian: "Fata", undercover: "Elfo" }, // Changed Nano to Fata (mythical beings)
+  { civilian: "Spada", undercover: "Scudo" }, // Changed Ascia to Scudo (attack/defense)
+  { civilian: "Castello", undercover: "Caverna" }, // Changed Fortezza to Caverna (dwellings)
+  { civilian: "Tesoro", undercover: "Mappa" }, // Good, replacing Reliquia
+  { civilian: "Pirata", undercover: "Ninja" }, // Changed Corsaro/Esploratore to Ninja (popular archetypes)
+  { civilian: "Robot", undercover: "Alieno" }, // Changed Cyborg to Alieno (sci-fi beings)
+  { civilian: "Supereroe", undercover: "Cattivo" }, // New: Classic comic book roles (Villain)
 ];

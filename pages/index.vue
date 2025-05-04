@@ -22,9 +22,9 @@ onMounted(() => {
         {{ companyName }}
       </h1>
       <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-        Il gioco di società dove tutti conoscono la parola segreta... tranne
-        l'infiltrato Mr. White! Scopri chi è l'infiltrato o confondi gli altri
-        in questo divertente gioco da fare insieme con un solo telefono!
+        Il gioco di società dove tutti conoscono la parola segreta... tranne gli
+        Undercover e Mr. White! Scopri chi sono o confondi gli altri in questo
+        divertente gioco da fare insieme con un solo telefono!
       </p>
       <div
         class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6"
@@ -51,8 +51,8 @@ onMounted(() => {
         Pronto a Giocare?
       </h2>
       <p class="text-lg text-gray-600 dark:text-gray-300 text-center mb-8">
-        Imposta qui sotto la tua partita e inizia subito a scoprire chi è
-        l'infiltrato!
+        Imposta qui sotto la tua partita e inizia subito a scoprire chi sono gli
+        Undercover e Mr. White!
       </p>
       <StartGame class="max-w-2xl mx-auto" />
     </div>
@@ -76,7 +76,7 @@ onMounted(() => {
             1. Prepara la Partita
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            Scegli quanti siete e quanti infiltrati ci saranno.
+            Scegli quanti siete e quanti Undercover e Mr. White ci saranno.
           </p>
         </div>
         <div class="flex flex-col items-center text-center">
@@ -89,7 +89,8 @@ onMounted(() => {
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             Ogni giocatore guarda in segreto la propria parola senza sapere se è
-            l'infiltrato Mr. White.
+            un Undercover o Mr. White. Nel caso di Mr. White, non riceverà
+            nessuna parola!
           </p>
         </div>
         <div class="flex flex-col items-center text-center">
@@ -114,9 +115,9 @@ onMounted(() => {
             4. Votate!
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            Parlate e votate chi pensate sia Mr. White. Chi prende più voti esce
-            dal gioco. Continuate a giocare finché tutti gli infiltrati o tutti
-            i civili sono eliminati.
+            Parlate e votate chi pensate sia Mr. White o un Undercover. Chi
+            prende più voti esce dal gioco. Continuate a giocare finché tutti
+            gli Undercover, Mr. White o civili sono eliminati.
           </p>
         </div>
         <div class="flex flex-col items-center text-center">
@@ -128,8 +129,9 @@ onMounted(() => {
             5. Chi Vince?
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            Se eliminate tutti gli infiltrati Mr. White, vincono i civili.
-            Altrimenti, vincono gli infiltrati!
+            Se eliminate tutti gli Undercover e Mr. White, vincono i civili.
+            Altrimenti, vincono gli Undercover o Mr. White se riesce ad
+            indovinare la parola segreta!
           </p>
         </div>
       </div>
