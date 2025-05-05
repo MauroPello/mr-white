@@ -317,7 +317,7 @@ function formatTimestamp(timestamp: number): string {
 </script>
 
 <template>
-  <UContainer class="py-8">
+  <UContainer class="py-8" :ui="{ padding: 'px-0 sm:px-6 lg:px-8' }">
     <!-- Resume Option -->
     <UCard
       v-if="savedGameState"
@@ -427,7 +427,7 @@ function formatTimestamp(timestamp: number): string {
                   <UPopover>
                     <label
                       for="undercover-count"
-                      class="w-28 flex items-center group"
+                      class="w-[105px] flex items-center group"
                     >
                       <span
                         class="transition-all group-hover:underline group-focus-within:underline"
@@ -480,7 +480,7 @@ function formatTimestamp(timestamp: number): string {
                       "
                     />
                     <span
-                      class="text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
+                      class="hidden sm:block text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
                     >
                       (Max: {{ maxPossibleUndercovers }})
                     </span>
@@ -493,7 +493,7 @@ function formatTimestamp(timestamp: number): string {
                   <UPopover>
                     <label
                       for="mrwhite-count"
-                      class="w-28 flex items-center group"
+                      class="w-[105px] flex items-center group"
                     >
                       <span
                         class="transition-all group-hover:underline group-focus-within:underline"
@@ -543,7 +543,7 @@ function formatTimestamp(timestamp: number): string {
                       "
                     />
                     <span
-                      class="text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
+                      class="hidden sm:block text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
                     >
                       (Max: {{ maxPossibleMrWhites }})
                     </span>
