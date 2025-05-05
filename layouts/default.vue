@@ -12,6 +12,8 @@ const fullPath = computed(
 
 <template>
   <div class="landing-page-base">
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="8FjwW8v3+ZZpWnrjaNP5Gg" async/>
+
     <Link rel="canonical" :href="fullPath" />
 
     <Link rel="alternate" :href="fullPath" hreflang="x-default" />
