@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { SpeedInsights } from "@vercel/speed-insights/nuxt";
-import { Analytics } from "@vercel/analytics/nuxt";
+// import { Analytics } from "@vercel/analytics/nuxt";
 import { companyLogo, companyUrl } from "~/constants/company";
 
 const router = useRouter();
@@ -12,7 +11,11 @@ const fullPath = computed(
 
 <template>
   <div class="landing-page-base">
-    <script src="https://analytics.ahrefs.com/analytics.js" data-key="8FjwW8v3+ZZpWnrjaNP5Gg" async/>
+    <script
+      src="https://analytics.ahrefs.com/analytics.js"
+      data-key="8FjwW8v3+ZZpWnrjaNP5Gg"
+      async
+    />
 
     <Link rel="canonical" :href="fullPath" />
 
@@ -39,8 +42,7 @@ const fullPath = computed(
       <slot />
     </div>
     <LandingPageFooter />
-    <SpeedInsights />
-    <Analytics />
+    <!-- <Analytics /> -->
   </div>
 </template>
 
