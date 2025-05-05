@@ -51,12 +51,11 @@ async function playAgain() {
 }
 
 const mrWhiteGuessInput = ref("");
-const mrWhiteGuessSubmitted = ref(false);
 
 function submitMrWhiteGuess() {
   if (!mrWhiteGuessInput.value.trim()) return;
   mrWhiteGuess(mrWhiteGuessInput.value.trim());
-  mrWhiteGuessSubmitted.value = true;
+  mrWhiteGuessInput.value = ""; // Clear input after submission
 }
 
 // --- Lifecycle Hooks ---
@@ -237,12 +236,12 @@ onMounted(async () => {
       <div v-if="lastEliminatedState">
         <UAlert
           icon="i-heroicons-user-minus-20-solid"
-          color="red"
+          :color="lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name) ? 'green' : 'red'"
           variant="subtle"
-          class="mb-4"
+          class="mb-4 text-green-800"
         >
           <template #title>
-            <span class="font-semibold">Eliminato/a!</span>
+            <span v-if="!(lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name))" class="font-semibold">Eliminato/a!</span>
           </template>
           <template #description>
             <template v-if="lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name)">
@@ -252,7 +251,7 @@ onMounted(async () => {
               </UBadge>
               è stato/a eliminato/a!
               <p class="mt-1">
-                Era <span class="font-semibold text-red-600 dark:text-red-400">Mr. White</span> e ha indovinato la parola dei Civili!
+                Ma era <span class="font-semibold text-red-600 dark:text-red-400">Mr. White</span> e ha indovinato la parola dei Civili!
               </p>
             </template>
             <template v-else>
@@ -333,13 +332,12 @@ onMounted(async () => {
             size="lg"
             icon="i-heroicons-pencil"
             class="mb-4 w-full max-w-128"
-            :disabled="mrWhiteGuessSubmitted"
             @keyup.enter="submitMrWhiteGuess"
           />
           <UButton
             size="lg"
             icon="i-heroicons-light-bulb"
-            :disabled="mrWhiteGuessSubmitted || !mrWhiteGuessInput"
+            :disabled="!mrWhiteGuessInput"
             @click="submitMrWhiteGuess"
           >
             Indovina!
@@ -418,7 +416,7 @@ onMounted(async () => {
             </UBadge>
             <span v-if="idx < mrWhiteWinners.length - 1">, </span>
           </span>
-          ha indovinato la parola dei Civili!
+          {{ mrWhiteWinners.length > 1 ? 'hanno' : 'ha'}} indovinato la parola dei Civili!
         </p>
       </div>
 
@@ -494,7 +492,7 @@ onMounted(async () => {
               v-if="player.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === player.name)"
               class="italic text-green-600 dark:text-green-400 text-sm ml-1"
             >
-              (Vincitore)
+              (Risposta Corretta)
             </span>
             <span
               v-else-if="isPlayerEliminated(player.name)"

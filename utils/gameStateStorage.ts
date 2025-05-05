@@ -48,7 +48,7 @@ export function saveGameStateToLocalStorage(
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
   } catch {
-    (() => {})();
+    console.error("Failed to save game state to localStorage");
   }
 }
 
@@ -100,6 +100,6 @@ export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
-    (() => {})();
+    console.error("Failed to clear game state from localStorage");
   }
 }

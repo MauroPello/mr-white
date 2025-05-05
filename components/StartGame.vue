@@ -418,7 +418,7 @@ function formatTimestamp(timestamp: number): string {
 
             <div v-if="playersState.length >= 3" class="space-y-3">
               <p class="font-medium text-gray-700 dark:text-gray-200">
-                Seleziona Ruoli Speciali (max totale:
+                Seleziona Ruoli Speciali (in totale max:
                 {{ maxPossibleSpecialRoles }}):
               </p>
 

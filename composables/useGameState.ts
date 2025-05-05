@@ -229,8 +229,6 @@ export function useGameState() {
     let winnerMessage = "";
     let endPhase: GamePhase | null = null;
 
-    console.log(numActiveUndercovers, numActiveMrWhites, numActiveCivilians, numMrWhiteWinners);
-
     if (
       numActiveUndercovers === 0 &&
       numActiveMrWhites === 0 &&
@@ -239,7 +237,7 @@ export function useGameState() {
       gameOver = true;
       if (numMrWhiteWinners === 0) {
         winnerMessage =
-        "Vincono i Cittadini! Tutti gli Undercover e Mr. White eliminati!";
+        "Vincono i Cittadini!";
         endPhase = "game_over_civilians_win";
       } else {
         winnerMessage = "Vincono i Mr. White!";
@@ -248,7 +246,7 @@ export function useGameState() {
     } else if (numActiveCivilians <= 1) {
       if (numActiveUndercovers > 0 && (numActiveMrWhites > 0 || numMrWhiteWinners > 0)) {
         gameOver = true;
-        winnerMessage = "Vincono gli Undercover e Mr. White!";
+        winnerMessage = "Vincono gli Undercover e i Mr. White!";
         endPhase = "game_over_undercovers_mr_white_win";
       } else if (numActiveUndercovers > 0 && numActiveMrWhites === 0 && numMrWhiteWinners === 0) {
         gameOver = true;
@@ -501,7 +499,6 @@ export function useGameState() {
         checkAndDetermineWinner();
       }
     } else {
-      console.log("No saved game state found or state is invalid.");
       // If no saved state, we probably shouldn't be on the 'gioca' page.
       // Setting phase to error might be okay, or maybe redirecting is better handled by the calling page.
       gamePhase.value = "error";
