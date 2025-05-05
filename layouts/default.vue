@@ -11,11 +11,11 @@ const fullPath = computed(
 
 <template>
   <div class="landing-page-base">
-    <script
+    <NuxtScript
       src="https://analytics.ahrefs.com/analytics.js"
       data-key="8FjwW8v3+ZZpWnrjaNP5Gg"
       async
-    ></script>
+    />
 
     <Link rel="canonical" :href="fullPath" />
 
