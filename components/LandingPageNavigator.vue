@@ -22,8 +22,13 @@ const play = async () => {
     >
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">
-          <span v-for="i in [0, 1, 2, 3, 4, 5]" :key="i" class="marquee-text">
-            {{ companyName }} è gratuito per tutti! Gioca ora! 🚀
+          <span v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]" :key="i" class="marquee-text">
+            <template v-if="i % 2 === 0">
+              {{ companyName }} è gratuito! Gioca ora! 🚀
+            </template>
+            <template v-else>
+              Prova ora il nuovo ruolo Mr. White! 🎲
+            </template>
           </span>
         </div>
       </div>
@@ -91,7 +96,7 @@ const play = async () => {
 .marquee-wrapper {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 15s linear infinite;
+  animation: marquee 20s linear infinite;
   animation-delay: 0.5s;
 }
 
