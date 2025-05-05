@@ -15,7 +15,7 @@ const fullPath = computed(
       src="https://analytics.ahrefs.com/analytics.js"
       data-key="8FjwW8v3+ZZpWnrjaNP5Gg"
       async
-    />
+    ></script>
 
     <Link rel="canonical" :href="fullPath" />
 
