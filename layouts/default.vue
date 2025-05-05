@@ -7,16 +7,20 @@ const router = useRouter();
 const fullPath = computed(
   () => companyUrl + router.currentRoute.value.fullPath
 );
+
+useHead({
+  script: [
+    {
+      src: "https://analytics.ahrefs.com/analytics.js",
+      async: true,
+      'data-key': "8FjwW8v3+ZZpWnrjaNP5Gg"
+    }
+  ]
+});
 </script>
 
 <template>
   <div class="landing-page-base">
-    <NuxtScript
-      src="https://analytics.ahrefs.com/analytics.js"
-      data-key="8FjwW8v3+ZZpWnrjaNP5Gg"
-      async
-    />
-
     <Link rel="canonical" :href="fullPath" />
 
     <Link rel="alternate" :href="fullPath" hreflang="x-default" />
