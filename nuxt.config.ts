@@ -37,6 +37,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     credits: false,
+    exclude: ['/gioca'],
   },
   sourcemap: {
     client: "hidden",
