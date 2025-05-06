@@ -8,7 +8,7 @@ import {
 } from "~/constants/company";
 
 const consigliSEOTitle = `Consigli e Strategie per Vincere a ${companyName}`;
-const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White. Impara a bluffare e a scoprire gli Undercover e Mr. White!`;
+const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White e Undercover!`;
 const consigliPageUrl = `${companyUrl}/consigli`;
 
 useHead({
