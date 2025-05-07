@@ -63,7 +63,7 @@ const play = async () => {
 
 <style lang="postcss" scoped>
 .landing-page-navigator {
-  @apply flex items-center justify-between h-20 bg-primary-100 px-4 sm:px-6;
+  @apply flex items-center justify-between h-16 md:h-20 bg-primary-100 px-4 sm:px-6;
 
   &__container {
     @apply fixed top-0 left-0 right-0 z-50;

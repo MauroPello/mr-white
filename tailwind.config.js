@@ -87,15 +87,22 @@ module.exports = {
         appear: {
           "0%": {
             opacity: "0",
+            transform: "translateY(10px)",
           },
           "100%": {
             opacity: "1",
+            transform: "translateY(0)",
           },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-15px)" },
         },
       },
       animation: {
-        appear: "appear 1s ease-in-out",
+        appear: "appear 0.5s ease-out",
         pulseAppear: "appear 1s ease-in-out, pulse 2s infinite",
+        float: "float 3s ease-in-out infinite",
       },
       colors: {
         woodsmoke: {

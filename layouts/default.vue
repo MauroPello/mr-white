@@ -55,7 +55,7 @@ useHead({
   @apply w-full h-screen flex flex-col;
 
   &__main {
-    @apply w-full pt-28 flex-1;
+    @apply w-full pt-16 md:pt-20 flex-1;
   }
 }
 </style>
