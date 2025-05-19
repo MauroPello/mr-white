@@ -4,6 +4,8 @@ import { wordPairs } from "~/constants/wordPairs"; // Import predefined word pai
 import {
   loadGameStateFromLocalStorage,
   clearSavedGameState,
+  loadPlayerSettingsFromLocalStorage,
+  clearPlayerSettingsFromLocalStorage,
 } from "~/utils/gameStateStorage";
 import type { WordPair } from "~/types/wordPairs";
 
@@ -72,7 +74,15 @@ onMounted(() => {
   savedGameState.value = loadGameStateFromLocalStorage();
   resetGlobalGameState();
   if (!savedGameState.value) {
-    resetLocalSetupState();
+    // Prefill from last player settings if available
+    const lastSettings = loadPlayerSettingsFromLocalStorage();
+    if (lastSettings) {
+      playersState.value = [...lastSettings.players];
+      selectedUndercovers.value = lastSettings.numberOfUndercovers;
+      selectedMrWhites.value = lastSettings.numberOfMrWhites;
+    } else {
+      resetLocalSetupState();
+    }
   }
 });
 
@@ -166,6 +176,7 @@ function startNewGame() {
   errorMessage.value = ""; // Reset error before starting
 
   clearSavedGameState();
+  clearPlayerSettingsFromLocalStorage();
 
   const numPlayers = playersState.value.length;
   const numUndercovers = selectedUndercovers.value;

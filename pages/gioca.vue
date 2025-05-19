@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { companyMainStructuredData } from "~/constants/company";
 import { useGameState } from "~/composables/useGameState";
+import { savePlayerSettingsToLocalStorage } from "~/utils/gameStateStorage";
 
 const router = useRouter();
 
@@ -10,10 +11,12 @@ useHead(companyMainStructuredData);
 const {
   // State Refs
   activePlayers,
+  players,
   gamePhase,
   gameWordPair, // Needed for Mr White guess check
   currentRound,
   numberOfUndercovers,
+  numberOfMrWhites,
   lastEliminated: lastEliminatedState, // Rename if preferred locally
   gameOverMessage: gameOverMessageState, // Rename if preferred locally
   finalRoleReveal: finalRoleRevealState, // Rename if preferred locally
@@ -45,6 +48,13 @@ const {
 
 // Simplified Play Again
 async function playAgain() {
+  // Save player settings before clearing state
+  savePlayerSettingsToLocalStorage({
+    players: players.value,
+    numberOfUndercovers: numberOfUndercovers.value,
+    numberOfMrWhites: numberOfMrWhites.value,
+  });
+
   clearGameState(); // Use destructured action
   await router.push("/#gioca");
   router.go(0); // Optional reload

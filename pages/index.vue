@@ -61,7 +61,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div id="gioca" class="py-16">
+      <div class="py-16">
         <h2
           class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-3"
         >
@@ -73,7 +73,7 @@ onMounted(() => {
           Imposta qui sotto la tua partita e inizia subito a scoprire chi sono
           gli Undercover e Mr. White!
         </p>
-        <StartGame class="max-w-2xl mx-auto" />
+        <StartGame id="gioca" class="max-w-2xl mx-auto" />
       </div>
 
       <div class="py-16">

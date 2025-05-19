@@ -25,6 +25,7 @@ interface SavedGameState {
 }
 
 const STORAGE_KEY = "undercoverGameState";
+const PLAYER_SETTINGS_KEY = "undercoverPlayerSettings";
 
 /**
  * Saves the current game state to localStorage.
@@ -101,5 +102,37 @@ export function clearSavedGameState(): void {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
     console.error("Failed to clear game state from localStorage");
+  }
+}
+
+export interface PlayerSettings {
+  players: string[];
+  numberOfUndercovers: number;
+  numberOfMrWhites: number;
+}
+
+export function savePlayerSettingsToLocalStorage(settings: PlayerSettings): void {
+  try {
+    localStorage.setItem(PLAYER_SETTINGS_KEY, JSON.stringify(settings));
+  } catch {
+    console.error("Failed to save player settings to localStorage");
+  }
+}
+
+export function loadPlayerSettingsFromLocalStorage(): PlayerSettings | null {
+  try {
+    const json = localStorage.getItem(PLAYER_SETTINGS_KEY);
+    if (!json) return null;
+    return JSON.parse(json) as PlayerSettings;
+  } catch {
+    return null;
+  }
+}
+
+export function clearPlayerSettingsFromLocalStorage(): void {
+  try {
+    localStorage.removeItem(PLAYER_SETTINGS_KEY);
+  } catch {
+    console.error("Failed to clear player settings from localStorage");
   }
 }
