@@ -14,6 +14,11 @@ useHead({
       src: "https://analytics.ahrefs.com/analytics.js",
       async: true,
       'data-key': "8FjwW8v3+ZZpWnrjaNP5Gg"
+    },
+    {
+      src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4157139235391603",
+      async: true,
+      crossorigin: "anonymous"
     }
   ]
 });
