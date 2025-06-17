@@ -190,4 +190,18 @@ export const wordPairs: WordPair[] = [
   { civilian: "Festa", undercover: "Natale" },
   { civilian: "Padel", undercover: "Tennis" },
   { civilian: "Facebook", undercover: "Instagram" },
+
+  { civilian: "Calcio", undercover: "Rugby" },
+  { civilian: "Carabinieri", undercover: "Polizia" },
+  { civilian: "Motorino", undercover: "Bicicletta" },
+  { civilian: "Prosecco", undercover: "Champagne" },
+  { civilian: "Birra", undercover: "Vino" },
+  { civilian: "Tiramisù", undercover: "Panna cotta" },
+  { civilian: "Lasagna", undercover: "Cannelloni" },
+  { civilian: "Spaghetti", undercover: "Rigatoni" },
+  { civilian: "Limoncello", undercover: "Grappa" },
+  { civilian: "Netflix", undercover: "Prime Video" },
+  { civilian: "Harry Potter", undercover: "Signore degli Anelli" },
+  { civilian: "Paradiso", undercover: "Inferno" },
+  { civilian: "Aperitivo", undercover: "Apericena" },
 ];
