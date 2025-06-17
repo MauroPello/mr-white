@@ -176,4 +176,18 @@ export const wordPairs: WordPair[] = [
   { civilian: "Pirata", undercover: "Ninja" },
   { civilian: "Robot", undercover: "Alieno" },
   { civilian: "Supereroe", undercover: "Cattivo" },
+
+  { civilian: "Formaggio", undercover: "Parmigiano" },
+  { civilian: "Aperitivo", undercover: "Spritz" },
+  { civilian: "Carne", undercover: "Fiorentina" },
+  { civilian: "Pesce", undercover: "Salmone" },
+  { civilian: "Verdura", undercover: "Pomodoro" },
+  { civilian: "Frutta", undercover: "Mela" },
+  { civilian: "Isola", undercover: "Sicilia" },
+  { civilian: "Vulcano", undercover: "Vesuvio" },
+  { civilian: "Fiume", undercover: "Tevere" },
+  { civilian: "Montagna", undercover: "Alpi" },
+  { civilian: "Festa", undercover: "Natale" },
+  { civilian: "Padel", undercover: "Tennis" },
+  { civilian: "Facebook", undercover: "Instagram" },
 ];
