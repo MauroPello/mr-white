@@ -416,6 +416,8 @@ function formatTimestamp(timestamp: number): string {
               </ul>
             </div>
 
+            <p>Giocatori Totali: {{ playersState.length }}</p>
+
             <!-- Player Count Validation -->
             <UAlert
               v-if="playersState.length < 3"
