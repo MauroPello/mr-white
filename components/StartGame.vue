@@ -259,20 +259,11 @@ function startNewGame() {
     }
   );
 
-  const shuffledAssignments = [...initialAssignments];
-  for (let i = shuffledAssignments.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledAssignments[i], shuffledAssignments[j]] = [
-      shuffledAssignments[j]!,
-      shuffledAssignments[i]!,
-    ];
-  }
-
   gameWordPair.value = selectedPair;
   assignments.value = initialAssignments;
   numberOfUndercoversState.value = numUndercovers;
   numberOfMrWhitesState.value = numMrWhites;
-  activePlayers.value = shuffledAssignments;
+  activePlayers.value = initialAssignments;
   currentRound.value = 1;
   gamePhase.value = "showing_words";
   wordShowingPlayerIndex.value = 0;
