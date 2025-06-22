@@ -46,6 +46,15 @@ const {
 
 // --- Local Component Logic ---
 
+const isExitConfirmationModalOpen = ref(false);
+function askForExitConfirmation() {
+  isExitConfirmationModalOpen.value = true;
+}
+async function exitGame() {
+  isExitConfirmationModalOpen.value = false;
+  await playAgain();
+}
+
 // Simplified Play Again
 async function playAgain() {
   // Save player settings before clearing state
@@ -597,9 +606,37 @@ onMounted(async () => {
           variant="link"
           class="text-sm"
           label="Esci dalla partita e torna al menu"
-          @click="playAgain"
+          @click="askForExitConfirmation"
         />
       </p>
-  </div>
+    </div>
+
+    <UModal v-model="isExitConfirmationModalOpen">
+      <UCard>
+        <template #header>
+          <h2 class="text-lg font-semibold">Conferma Uscita</h2>
+        </template>
+
+        <p>
+          Sei sicuro di voler abbandonare la partita in corso? Tutti i progressi
+          andranno persi.
+        </p>
+
+        <template #footer>
+          <div class="flex justify-end gap-4">
+            <UButton
+              variant="ghost"
+              color="gray"
+              @click="isExitConfirmationModalOpen = false"
+            >
+              Annulla
+            </UButton>
+            <UButton color="red" @click="exitGame">
+              Esci dalla Partita
+            </UButton>
+          </div>
+        </template>
+      </UCard>
+    </UModal>
   </div>
 </template>
