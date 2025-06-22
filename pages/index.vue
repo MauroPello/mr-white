@@ -312,3 +312,9 @@ onMounted(() => {
     </UContainer>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+[id^="gioca"] {
+  scroll-margin-top: 80px; /* Must be the same height as your navbar */
+}
+</style>
