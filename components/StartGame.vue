@@ -307,9 +307,16 @@ function resumeGame() {
 
 function discardSavedGame() {
   clearSavedGameState();
-  savedGameState.value = null;
   resetLocalSetupState();
   resetGlobalGameState();
+
+  if (savedGameState.value) {
+    playersState.value = savedGameState.value.players ?? [];
+    numberOfUndercoversState.value = savedGameState.value.numberOfUndercovers ?? 1;
+    numberOfMrWhitesState.value = savedGameState.value.numberOfMrWhites ?? 0;
+  }
+
+  savedGameState.value = null;
 }
 
 function formatTimestamp(timestamp: number): string {
