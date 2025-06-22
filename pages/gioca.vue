@@ -165,6 +165,7 @@ onMounted(async () => {
         title="Votazione in Parità!"
         description="Nessuno è stato eliminato/a. Discutete di nuovo!"
         class="mb-4"
+        :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
       />
 
       <div class="space-y-4 text-gray-700 dark:text-gray-300">
@@ -249,9 +250,10 @@ onMounted(async () => {
           :color="lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name) ? 'green' : 'red'"
           variant="subtle"
           class="mb-4 text-green-800"
+          :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
         >
           <template #title>
-            <span v-if="!(lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name))" class="font-semibold">Eliminato/a!</span>
+            <span v-if="!(lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name))">Eliminato/a!</span>
           </template>
           <template #description>
             <template v-if="lastEliminatedState.role === 'MrWhite' && mrWhiteWinners.some(w => w.name === lastEliminatedState?.name)">
@@ -371,23 +373,14 @@ onMounted(async () => {
               : 'i-heroicons-x-circle'
           "
           :color="mrWhiteGuessResult.correct ? 'green' : 'red'"
+          :title = "mrWhiteGuessResult.correct ? 'Indovinato!' : 'Sbagliato!'"
+          :description="mrWhiteGuessResult.correct
+            ? 'Mr. White ha indovinato la parola dei Civili e vince la partita!'
+            : 'Mr. White non ha indovinato la parola. La partita continua!'"
           variant="subtle"
           class="mb-4"
-        >
-          <template #title>
-            <span class="font-semibold">
-              {{ mrWhiteGuessResult.correct ? "Indovinato!" : "Sbagliato!" }}
-            </span>
-          </template>
-          <template #description>
-            <span v-if="mrWhiteGuessResult.correct">
-              Mr. White ha indovinato la parola dei Civili e vince la partita!
-            </span>
-            <span v-else>
-              Mr. White non ha indovinato la parola. La partita continua!
-            </span>
-          </template>
-        </UAlert>
+          :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
+        />
         <UButton
           color="violet"
           size="lg"
