@@ -354,10 +354,7 @@ export function useGameState() {
     }
   }
 
-  function castVote(votedForPlayerName: string, event: MouseEvent) {
-    if (event && event.target instanceof HTMLElement) {
-      event.target.blur();
-    }
+  function castVote(votedForPlayerName: string) {
     if (currentVotes.value[votedForPlayerName] === undefined) {
       console.error(
         `Attempted to vote for non-existent or ineligible player: ${votedForPlayerName}`

@@ -212,14 +212,14 @@ onMounted(async () => {
         <div class="flex flex-col items-center gap-3 mt-6">
           <UButton
             v-for="option in votingOptions"
-            :key="option.name"
+            :key="option.name + currentPlayerForVote.name"
             size="lg"
             color="blue"
             class="w-full max-w-xs"
             :class="{
               hidden: option.name === currentPlayerForVote.name,
             }"
-            @click="castVote(option.name, $event)"
+            @click="castVote(option.name)"
           >
             Vota per {{ option.name }}
           </UButton>
