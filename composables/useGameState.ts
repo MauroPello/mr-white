@@ -26,6 +26,11 @@ export type GamePhase =
   | "mr_white_guessing"
   | "error";
 
+export type VoteCount = {
+  playerName: string;
+  count: number;
+}
+
 // The main composable function
 export function useGameState() {
   // --- State Definitions (moved inside) ---
@@ -65,6 +70,11 @@ export function useGameState() {
   // Track Mr. White winners (by name or full assignment)
   const mrWhiteWinners = useState<PlayerAssignment[]>(
     "mrWhiteWinners",
+    () => []
+  );
+
+  const lastVoteCount = useState<VoteCount[]>(
+    "lastVoteCount",
     () => []
   );
 
@@ -286,11 +296,21 @@ export function useGameState() {
     wordShowingPlayerIndex.value = 0;
     if (!wasVoteTied.value) {
       lastEliminated.value = null;
+      lastVoteCount.value = [];
     }
   }
 
   function processVotes() {
     const votes = currentVotes.value;
+    lastVoteCount.value = Object.entries(votes).sort(
+      ([, aVotes], [, bVotes]) => bVotes - aVotes
+    ).filter(
+      ([, count]) => count > 0 // Filter out players with 0 votes
+    ).map(([playerName, count]) => ({
+      playerName,
+      count,
+    }));
+
     let maxVotes = -1;
     let playersWithMaxVotes: string[] = [];
     const activeNames = (activePlayers.value || []).map((p) => p.name);
@@ -428,6 +448,7 @@ export function useGameState() {
       finalRoleReveal: finalRoleReveal.value,
       pendingMrWhiteGuess: pendingMrWhiteGuess.value,
       mrWhiteWinners: mrWhiteWinners.value,
+      lastVoteCount: lastVoteCount.value,
     });
   }
 
@@ -452,6 +473,7 @@ export function useGameState() {
       finalRoleReveal.value = savedState.finalRoleReveal;
       pendingMrWhiteGuess.value = !!savedState.pendingMrWhiteGuess;
       mrWhiteWinners.value = savedState.mrWhiteWinners ?? [];
+      lastVoteCount.value = savedState.lastVoteCount ?? [];
       showingWord.value = false;
       if (
         gamePhase.value.startsWith("game_over") &&
@@ -522,12 +544,13 @@ export function useGameState() {
     eliminatedHistory.value = [];
     gameOverMessage.value = "";
     finalRoleReveal.value = [];
-    pendingMrWhiteGuess.value = false;
     mrWhiteWinners.value = [];
+    pendingMrWhiteGuess.value = false;
+    lastVoteCount.value = [];
     clearStorage();
   }
 
-  // Auto-saving watcher (moved inside)
+  // --- Watchers (to persist state) ---
   watchEffect(() => {
     // Prevent saving during initial load or error states
     if (
@@ -572,6 +595,7 @@ export function useGameState() {
     gameOverMessage,
     finalRoleReveal,
     mrWhiteWinners,
+    lastVoteCount,
 
     // Computed Refs
     currentPlayerForWord,

@@ -203,7 +203,7 @@ export const companyMainStructuredData = {
               "Mr White Gioco",
               "L'Infiltrato Gioco Online", // Added Undercover variations
             ],
-            description: `Gioca online a ${companyName} in italiano. Un party game di parole, bluff e deduzione sociale per gruppi. Si gioca facilmente con un solo telefono. Scopri l'infiltrato prima che sia troppo tardi!`,
+            description: `Gioca online a ${companyName} in italiano. Un party game di parole, bluff e deduzione sociale per gruppi. Si gioca facilmente con un solo telefono. Scopri gli Undercover e i Mr. White prima che sia troppo tardi!`,
             url: companyUrl,
             inLanguage: "it-IT",
             aggregateRating: {

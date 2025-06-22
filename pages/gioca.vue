@@ -13,24 +13,24 @@ const {
   activePlayers,
   players,
   gamePhase,
-  gameWordPair, // Needed for Mr White guess check
+  gameWordPair,
   currentRound,
   numberOfUndercovers,
   numberOfMrWhites,
-  lastEliminated: lastEliminatedState, // Rename if preferred locally
-  gameOverMessage: gameOverMessageState, // Rename if preferred locally
-  finalRoleReveal: finalRoleRevealState, // Rename if preferred locally
-  wasVoteTied: wasVoteTiedState, // Rename if preferred locally
+  lastEliminated: lastEliminatedState,
+  gameOverMessage: gameOverMessageState,
+  finalRoleReveal: finalRoleRevealState,
+  wasVoteTied: wasVoteTiedState,
   showingWord,
-  mrWhiteGuessResult, // <-- Add this state from composable
-  mrWhiteWinners, // <-- Add this from composable
+  mrWhiteGuessResult,
+  mrWhiteWinners,
 
   // Computed Refs
   currentPlayerForWord,
   isLastWordToShow,
   currentPlayerForVote,
   votingOptions,
-  mrWhiteGuessingPlayer, // <-- Add this computed from composable
+  mrWhiteGuessingPlayer,
 
   // Actions
   initializeGame,
@@ -41,11 +41,15 @@ const {
   castVote,
   goToDiscussion,
   isPlayerEliminated,
-  mrWhiteGuess, // <-- Add this action from composable
+  mrWhiteGuess,
+  lastVoteCount,
 } = useGameState();
 
 // --- Local Component Logic ---
-
+const maxLastVoteCount = computed(() => {
+  if (!lastVoteCount.value) return 0;
+  return Math.max(...lastVoteCount.value.map((v) => v.count));
+});
 const isExitConfirmationModalOpen = ref(false);
 function askForExitConfirmation() {
   isExitConfirmationModalOpen.value = true;
@@ -180,11 +184,39 @@ onMounted(async () => {
           :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
         />
 
+        <!-- Vote Results on Tie -->
+        <div
+          v-if="wasVoteTiedState && lastVoteCount"
+          class="mb-6"
+        >
+          <UDivider label="Riepilogo Voti" class="my-6" />
+          <ul class="space-y-2 text-left max-w-md mx-auto">
+            <li
+              v-for="voteCount in lastVoteCount"
+              :key="voteCount.playerName"
+              class="p-3 rounded border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center"
+            >
+              <span>
+                {{ voteCount.playerName }}:
+                <span class="font-bold"
+                  >{{ voteCount.count }} vot{{ voteCount.count === 1 ? 'o' : 'i' }}</span
+                >
+              </span>
+              <UBadge
+                v-if="maxLastVoteCount === voteCount.count"
+                color="yellow"
+                variant="subtle"
+                >Pareggio</UBadge
+              >
+            </li>
+          </ul>
+        </div>
+
         <div class="space-y-4 text-gray-700 dark:text-gray-300">
           <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
           <p>
-            Mettete giù il telefono e discutete! Cercate di trovare l'infiltrato
-            Mr. White.
+            Mettete giù il telefono e discutete! Cercate di trovare gli undercover e
+            i Mr. White.
           </p>
           <p>Quando siete pronti, iniziate a votare.</p>
         </div>
@@ -335,6 +367,31 @@ onMounted(async () => {
               </template>
             </template>
           </UAlert>
+
+          <!-- Vote Results -->
+          <div v-if="lastVoteCount" class="mb-6">
+            <UDivider label="Riepilogo Voti" class="my-6" />
+            <ul class="space-y-2 text-left max-w-md mx-auto">
+              <li
+                v-for="voteCount in lastVoteCount"
+                :key="voteCount.playerName"
+                class="p-3 rounded border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center"
+              >
+                <span>
+                  {{ voteCount.playerName }}:
+                  <span class="font-bold"
+                    >{{ voteCount.count }} vot{{ voteCount.count === 1 ? 'o' : 'i' }}</span
+                  >
+                </span>
+                <UBadge
+                  v-if="isPlayerEliminated(voteCount.playerName)"
+                  color="red"
+                  variant="subtle"
+                  >Eliminato/a</UBadge
+                >
+              </li>
+            </ul>
+          </div>
 
           <p class="text-gray-600 dark:text-gray-400 my-4">
             Ci sono {{ activePlayers.length }} giocatori rimasti.

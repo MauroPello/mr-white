@@ -22,6 +22,7 @@ interface SavedGameState {
   finalRoleReveal: PlayerAssignment[];
   pendingMrWhiteGuess: boolean;
   mrWhiteWinners: PlayerAssignment[];
+  lastVoteCount?: VoteCount[];
 }
 
 const STORAGE_KEY = "undercoverGameState";
@@ -72,6 +73,10 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
     // Add default value for numberOfMrWhites if loading old state
     if (savedState.numberOfMrWhites === undefined) {
       savedState.numberOfMrWhites = 0;
+    }
+
+    if (savedState.lastVoteCount === undefined) {
+      savedState.lastVoteCount = [];
     }
 
     // Basic validation (check if essential keys exist)
