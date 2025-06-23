@@ -18,18 +18,28 @@ const play = async () => {
   <div class="landing-page-navigator__container">
     <div
       class="flex flex-row items-center justify-center text-white bg-primary-500 w-full py-0.5 cursor-pointer text-center"
-      @click="navigateTo('/#gioca')"
     >
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">
-          <span v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]" :key="i" class="marquee-text">
-            <template v-if="i % 2 === 0">
+          <template
+            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]"
+            :key="i"
+          >
+            <span
+              v-if="i % 2 === 0"
+              class="inline-block pl-4 pr-40 md:pr-80"
+              @click="navigateTo('/#gioca')"
+            >
               {{ companyName }} è gratuito! Gioca ora! 🚀
-            </template>
-            <template v-else>
-              Prova ora il nuovo ruolo Mr. White! 🎲
-            </template>
-          </span>
+            </span>
+            <span
+              v-else
+              class="inline-block pl-4 pr-40 md:pr-80"
+              @click="navigateTo('/#supporta')"
+            >
+              Supporta {{ companyName }} donando un caffè! ☕️
+            </span>
+          </template>
         </div>
       </div>
     </div>
@@ -96,7 +106,7 @@ const play = async () => {
 .marquee-wrapper {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 20s linear infinite;
+  animation: marquee 25s linear infinite;
   animation-delay: 0.5s;
 }
 

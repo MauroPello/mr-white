@@ -397,7 +397,7 @@ function formatTimestamp(timestamp: number): string {
                 <li
                   v-for="(player, index) in playersState"
                   :key="player"
-                  class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
+                  class="flex justify-between items-center bg-white dark:bg-gray-800 px-3 py-2 sm:py-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
                 >
                   <span class="text-gray-800 dark:text-gray-100">{{
                     player
@@ -413,8 +413,6 @@ function formatTimestamp(timestamp: number): string {
                 </li>
               </ul>
             </div>
-
-            <p>Giocatori Totali: {{ playersState.length }}</p>
 
             <!-- Player Count Validation -->
             <UAlert

@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { companyName, companyMainStructuredData, companyLogo } from "~/constants/company";
+import {
+  companyName,
+  companyMainStructuredData,
+  companyLogo,
+} from "~/constants/company";
 import { loadGameStateFromLocalStorage } from "~/utils/gameStateStorage";
 
 useHead(companyMainStructuredData);
@@ -26,13 +30,13 @@ onMounted(() => {
         />
         <h1
           class="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl mb-6 animate-appear opacity-0 [--appear-delay:100ms]"
-          style="animation-fill-mode: forwards;"
+          style="animation-fill-mode: forwards"
         >
           {{ companyName }}
         </h1>
         <p
           class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:300ms]"
-          style="animation-fill-mode: forwards;"
+          style="animation-fill-mode: forwards"
         >
           Il gioco di società dove tutti conoscono la parola segreta... tranne
           gli Undercover e Mr. White! Scopri chi sono o confondi gli altri in
@@ -40,13 +44,9 @@ onMounted(() => {
         </p>
         <div
           class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 animate-appear opacity-0 [--appear-delay:500ms]"
-          style="animation-fill-mode: forwards;"
+          style="animation-fill-mode: forwards"
         >
-          <UButton
-            icon="i-heroicons-play-circle"
-            size="xl"
-            to="/#gioca"
-          >
+          <UButton icon="i-heroicons-play-circle" size="xl" to="/#gioca">
             Inizia a Giocare
           </UButton>
           <UButton
@@ -67,9 +67,7 @@ onMounted(() => {
         >
           Pronto a Giocare?
         </h2>
-        <p
-          class="text-xl text-gray-600 dark:text-gray-300 text-center mb-10"
-        >
+        <p class="text-xl text-gray-600 dark:text-gray-300 text-center mb-10">
           Imposta qui sotto la tua partita e inizia subito a scoprire chi sono
           gli Undercover e Mr. White!
         </p>
@@ -82,15 +80,11 @@ onMounted(() => {
         >
           Come si Gioca?
         </h2>
-        <p
-          class="text-xl text-gray-600 dark:text-gray-300 text-center mb-12"
-        >
+        <p class="text-xl text-gray-600 dark:text-gray-300 text-center mb-12">
           Bastano pochi semplici passi per iniziare a divertirsi:
         </p>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
-          <div
-            class="flex flex-col items-center text-center p-6"
-          >
+          <div class="flex flex-col items-center text-center p-6">
             <UIcon
               name="i-heroicons-cog-6-tooth"
               class="text-5xl text-primary mb-4"
@@ -104,9 +98,7 @@ onMounted(() => {
               Scegli quanti siete e quanti Undercover e Mr. White ci saranno.
             </p>
           </div>
-          <div
-            class="flex flex-col items-center text-center p-6"
-          >
+          <div class="flex flex-col items-center text-center p-6">
             <UIcon
               name="i-heroicons-device-phone-mobile"
               class="text-5xl text-primary mb-4"
@@ -122,9 +114,7 @@ onMounted(() => {
               nessuna parola!
             </p>
           </div>
-          <div
-            class="flex flex-col items-center text-center p-6"
-          >
+          <div class="flex flex-col items-center text-center p-6">
             <UIcon
               name="i-heroicons-chat-bubble-left-right"
               class="text-5xl text-primary mb-4"
@@ -139,9 +129,7 @@ onMounted(() => {
               vedere che la conosce.
             </p>
           </div>
-          <div
-            class="flex flex-col items-center text-center p-6"
-          >
+          <div class="flex flex-col items-center text-center p-6">
             <UIcon
               name="i-heroicons-check-badge"
               class="text-5xl text-primary mb-4"
@@ -152,13 +140,12 @@ onMounted(() => {
               4. Votate!
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              Votate chi pensate sia Mr. White o un Undercover. Continuate a giocare finché tutti
-              gli Undercover, Mr. White o civili sono eliminati.
+              Votate chi pensate sia Mr. White o un Undercover. Continuate a
+              giocare finché tutti gli Undercover, Mr. White o civili sono
+              eliminati.
             </p>
           </div>
-          <div
-            class="flex flex-col items-center text-center p-6"
-          >
+          <div class="flex flex-col items-center text-center p-6">
             <UIcon
               name="i-heroicons-puzzle-piece"
               class="text-5xl text-primary mb-4"
@@ -278,12 +265,10 @@ onMounted(() => {
       </div>
 
       <div
+        id="supporta"
         class="py-16 text-center mt-16 border-t border-brandy-200 dark:border-woodsmoke-700"
       >
-        <UIcon
-          name="i-heroicons-gift"
-          class="text-5xl text-primary mb-4"
-        />
+        <UIcon name="i-heroicons-gift" class="text-5xl text-primary mb-4" />
         <h2
           class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-3"
         >
@@ -293,8 +278,8 @@ onMounted(() => {
           class="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
         >
           Se ti stai divertendo con {{ companyName }}, puoi darmi una mano a
-          mantenere il gioco gratuito offrendo un caffè virtuale. Anche il più
-          piccolo supporto è super apprezzato!
+          mantenere il gioco gratuito offrendomi un caffè. Senza il vostro
+          supporto non sarebbe possibile mantenere gratuito per tutti questo gioco!
         </p>
         <UButton
           icon="i-heroicons-banknotes"

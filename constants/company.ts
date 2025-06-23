@@ -156,11 +156,6 @@ export const companyMainStructuredData = {
             name: companySEOTitle, // Includes Undercover
             description: companySEODescription, // Includes Undercover
             url: companyUrl,
-            sameAs: [
-              "https://www.mrwhitegioco.it",
-              "https://www.mrwhite.fun",
-              "https://www.undercover.website"
-            ],
             applicationCategory: "GameApplication",
             operatingSystem: "Web Browser",
             browserRequirements: "Requires JavaScript",
