@@ -9,6 +9,7 @@ import { loadGameStateFromLocalStorage } from "~/utils/gameStateStorage";
 useHead(companyMainStructuredData);
 
 const router = useRouter();
+const { isMobile } = useScreenSize();
 
 onMounted(() => {
   if (loadGameStateFromLocalStorage()) {
@@ -38,12 +39,17 @@ onMounted(() => {
           class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:300ms]"
           style="animation-fill-mode: forwards"
         >
-          Il gioco di società dove tutti conoscono la parola segreta... tranne
-          gli Undercover e Mr. White! Scopri chi sono o confondi gli altri in
-          questo divertente gioco da fare insieme con un solo telefono!
+          {{ `Il gioco di società dove tutti conoscono la parola segreta... tranne gli Undercover e Mr. White! ${isMobile ? '' : 'Scopri chi sono o confondi gli altri in questo divertente gioco da fare insieme con un solo telefono!'}` }}
+        </p>
+        <p
+          class="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:400ms]"
+          style="animation-fill-mode: forwards"
+        >
+          Con <strong>600+ parole</strong> completamente gratuite, il
+          divertimento è assicurato!
         </p>
         <div
-          class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 animate-appear opacity-0 [--appear-delay:500ms]"
+          class="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 animate-appear opacity-0 [--appear-delay:500ms]"
           style="animation-fill-mode: forwards"
         >
           <UButton icon="i-heroicons-play-circle" size="xl" to="/#gioca">
@@ -257,7 +263,7 @@ onMounted(() => {
                 Totalmente Gratis
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                Gioca quanto vuoi, senza limiti e senza costi nascosti.
+                600+ parole completamente gratuire, gioca quanto vuoi e senza limiti.
               </p>
             </div>
           </div>

@@ -22,15 +22,21 @@ const play = async () => {
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">
           <template
-            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]"
+            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
             :key="i"
           >
             <span
-              v-if="i % 2 === 0"
+              v-if="i % 3 === 0"
               class="inline-block pl-4 pr-40 md:pr-80"
               @click="navigateTo('/#gioca')"
             >
               {{ companyName }} è gratuito! Gioca ora! 🚀
+            </span>
+            <span
+              v-else-if="i % 3 === 1"
+              class="inline-block pl-4 pr-40 md:pr-80"
+            >
+              200+ nuove parole aggiunte! 🎲
             </span>
             <span
               v-else
