@@ -3,7 +3,7 @@ export const mediaFolder = "/_vercel/image?url=%2F";
 export const companyName = "Undercover Mr. White";
 export const companyUrl = "https://www.undercovergioco.it";
 export const companySEOTitle = `${companyName} - Gioco Online di Parole`;
-export const companySEODescription = `Scopri chi ha la parola diversa in questo divertente party game di bluff italiano. Gioca ora con i tuoi amici!`;
+export const companySEODescription = "600+ parole disponibili! Scopri chi ha la parola diversa in questo divertente party game di parole e bluff. Gioca ora con i tuoi amici!";
 export const companyLogo = `${companyUrl}${mediaFolder}logo.png&w=1536&q=100`; // This will now use the new companyUrl
 export const companyMainStructuredData = {
   title: companySEOTitle,
@@ -111,12 +111,26 @@ export const companyMainStructuredData = {
         "undercover gioco online italiano società",
         "mr white gioco online italiano società",
         // General Terms
-        "gioco di gruppo",
+        "gioco di bluff",
+        "gioco di parole",
         "party game",
-        "gioco bluff",
-        "giocare online",
-        "un telefono",
+        "gioco di gruppo",
+        "gioco di società",
+        "gioco da tavolo",
+        "gioco di bluff",
+        "gioco di deduzione",
+        "social deduction game",
+
+        // Platform / Format
+        "gioco online",
+        "gioco online con amici",
+        "gioco per cellulare",
         "web app gioco",
+        "un telefono",
+
+        // Italian Language
+        "gioco in italiano",
+        "gioco di parole italiano",
       ].join(", "),
     },
 
@@ -153,8 +167,8 @@ export const companyMainStructuredData = {
           {
             "@type": "WebApplication",
             "@id": `${companyUrl}#website`,
-            name: companySEOTitle, // Includes Undercover
-            description: companySEODescription, // Includes Undercover
+            name: companySEOTitle,
+            description: companySEODescription,
             url: companyUrl,
             applicationCategory: "GameApplication",
             operatingSystem: "Web Browser",
@@ -167,15 +181,16 @@ export const companyMainStructuredData = {
             },
             inLanguage: "it-IT",
             keywords: [
-              "l'infiltrato",
               "undercover",
               "mr white",
+              "l'infiltrato",
               "spia",
-              "gioco online",
-              "gioco italiano",
-              "web app",
+              "gioco di parole",
               "party game",
-              "un telefono", // Added Undercover
+              "gioco online",
+              "gioco di gruppo",
+              "gioco in italiano",
+              "deduzione sociale",
             ],
             offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
             subjectOf: { "@id": `${companyUrl}#game` },
@@ -184,7 +199,7 @@ export const companyMainStructuredData = {
           {
             "@type": "Game",
             "@id": `${companyUrl}#game`,
-            name: companyName, // Includes Undercover
+            name: companyName,
             alternateName: [
               "Mr. White Gioco",
               "Mr White",
@@ -195,8 +210,9 @@ export const companyMainStructuredData = {
               "Undercover Gioco",
               "Undercover Gioco Online",
               "Mr White Gioco Online",
-              "Mr White Gioco",
-              "L'Infiltrato Gioco Online", // Added Undercover variations
+              "L'Infiltrato Gioco Online",
+              "Gioco di Bluff Online",
+              "Gioco di Deduzione Sociale",
             ],
             description: `Gioca online a ${companyName} in italiano. Un party game di parole, bluff e deduzione sociale per gruppi. Si gioca facilmente con un solo telefono. Scopri gli Undercover e i Mr. White prima che sia troppo tardi!`,
             url: companyUrl,
@@ -211,17 +227,16 @@ export const companyMainStructuredData = {
               "Party game",
               "Word game",
               "Bluffing game",
+              "Social deduction game",
               "Gioco di società",
               "Gioco di parole",
               "Gioco da tavolo",
-              "Social deduction game",
-              "Undercover Game", // Added genre
+              "Family-friendly game",
             ],
             keywords: [
-              // Added Undercover keywords here too
-              "l'infiltrato",
               "undercover",
               "mr white",
+              "l'infiltrato",
               "spia",
               "gioco online",
               "gioco italiano",
@@ -232,10 +247,11 @@ export const companyMainStructuredData = {
               "deduzione",
               "un telefono",
               "parole nascoste",
+              "trova la spia",
             ].join(", "),
-            numberOfPlayers: { "@type": "QuantitativeValue", minValue: 3 },
+            numberOfPlayers: { "@type": "QuantitativeValue", minValue: 3, maxValue: 50 },
             playMode: "MultiPlayer",
-            gamePlatform: ["Browser", "WebApplication"],
+            gamePlatform: ["Browser", "WebApplication", "MobileWeb"],
           },
         ],
       }),
