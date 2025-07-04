@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getRandomWordPair } from "~/utils/wordPairs";
 import { wordPairs } from "~/constants/wordPairs"; // Import predefined word pairs
+import { addPlayedWordPair } from "~/utils/playedWordPairsStorage";
 import {
   loadGameStateFromLocalStorage,
   clearSavedGameState,
@@ -218,12 +219,11 @@ function startNewGame() {
     }
   }
 
-  if (!selectedPair) {
-    errorMessage.value =
-      "Errore interno: la coppia di parole selezionata non è valida.";
-    return;
+  if (selectedPair) {
+    addPlayedWordPair(selectedPair);
   }
 
+  // Reset game state before setting new values
   const { civilian, undercover } = selectedPair;
   const playerIndices = Array.from({ length: numPlayers }, (_, i) => i);
   for (let i = playerIndices.length - 1; i > 0; i--) {
