@@ -263,7 +263,7 @@ onMounted(() => {
                 Totalmente Gratis
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                600+ parole completamente gratuire, gioca quanto vuoi e senza limiti.
+                600+ parole completamente gratuite, gioca quanto vuoi e senza limiti.
               </p>
             </div>
           </div>

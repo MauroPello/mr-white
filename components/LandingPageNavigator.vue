@@ -22,7 +22,7 @@ const play = async () => {
       <div class="overflow-hidden w-full">
         <div class="marquee-wrapper">
           <template
-            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
+            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
             :key="i"
           >
             <span
@@ -112,7 +112,7 @@ const play = async () => {
 .marquee-wrapper {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 25s linear infinite;
+  animation: marquee 40s linear infinite;
   animation-delay: 0.5s;
 }
 
