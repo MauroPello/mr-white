@@ -6,6 +6,7 @@ withDefaults(defineProps<{ error?: object }>(), {
 
 <template>
   <div>
-    <VueError :error="error" />
+    <LandingPageNavigator />
+    <VueError class="mt-20" :error="error" />
   </div>
 </template>

@@ -11,6 +11,7 @@ import viewportConfig from "./viewport.config";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+
   modules: [
     "@nuxtjs/sitemap",
     "@nuxt/image",
@@ -19,30 +20,39 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/eslint",
     "@nuxtjs/color-mode",
+    "@sentry/nuxt/module",
   ],
+
   components: ["~/components"],
   robots: robotsConfig,
+
   image: {
     dir: "assets/images",
   },
+
   site: {
     name: companySEOTitle,
     url: companyUrl,
     description: companySEODescription,
     logo: companyLogo,
   },
+
   colorMode: {
     preference: "light",
     fallback: "light",
   },
+
   sitemap: {
     credits: false,
     exclude: ['/gioca'],
   },
+
   sourcemap: {
     client: "hidden",
   },
+
   css: ["~/assets/css/tailwind.css", "~/assets/css/main.scss"],
+
   postcss: {
     plugins: {
       "tailwindcss/nesting": {},
@@ -50,9 +60,11 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
   tailwindcss: {
     viewer: false,
   },
+
   app: {
     head: {
       htmlAttrs: {
@@ -67,5 +79,14 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: "undercover-mr-white",
+      project: "javascript-nuxt",
+    },
+
+    autoInjectServerSentry: "top-level-import",
   },
 });
