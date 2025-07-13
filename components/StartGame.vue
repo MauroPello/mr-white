@@ -310,6 +310,14 @@ function discardSavedGame() {
   resetGlobalGameState();
 
   if (savedGameState.value) {
+    // Save player settings before clearing state
+    savePlayerSettingsToLocalStorage({
+      players: savedGameState.value.players ?? [],
+      numberOfUndercovers: savedGameState.value.numberOfUndercovers ?? 1,
+      numberOfMrWhites: savedGameState.value.numberOfMrWhites ?? 0,
+    });
+
+    // Restore players and roles from saved state
     playersState.value = savedGameState.value.players ?? [];
     numberOfUndercoversState.value = savedGameState.value.numberOfUndercovers ?? 1;
     numberOfMrWhitesState.value = savedGameState.value.numberOfMrWhites ?? 0;

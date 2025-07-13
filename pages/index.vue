@@ -26,9 +26,12 @@ const scrollToHash = async (hash: string) => {
 
 onMounted(() => {
   const hash = loadGameStateFromLocalStorage() ? "#gioca" : route.hash;
-  if (hash) {
-    scrollToHash(hash);
+
+  if (hash !== route.hash) {
+    navigateTo(hash, { replace: true });
   }
+
+  scrollToHash(hash);
 });
 
 watch(
