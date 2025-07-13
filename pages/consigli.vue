@@ -139,13 +139,6 @@ useHead({
     },
   ],
 });
-
-const router = useRouter();
-
-const play = async () => {
-  await router.push("/#gioca");
-  router.go(0);
-};
 </script>
 
 <template>
@@ -244,7 +237,7 @@ const play = async () => {
 
       <div class="text-center mt-12">
         <p>Ora che conosci i trucchi, mettili in pratica!</p>
-        <UButton icon="i-heroicons-play-circle" size="lg" @click="play">
+        <UButton icon="i-heroicons-play-circle" size="lg" @click="navigateTo('/#gioca')">
           Torna al Gioco
         </UButton>
       </div>

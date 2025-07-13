@@ -3,8 +3,6 @@ import { companyMainStructuredData } from "~/constants/company";
 import { useGameState } from "~/composables/useGameState";
 import { savePlayerSettingsToLocalStorage } from "~/utils/gameStateStorage";
 
-const router = useRouter();
-
 useHead(companyMainStructuredData);
 
 // --- Call the composable and destructure needed refs and actions ---
@@ -69,8 +67,7 @@ async function playAgain() {
   });
 
   clearGameState(); // Use destructured action
-  await router.push("/#gioca");
-  router.go(0); // Optional reload
+  await navigateTo("/#gioca");
 }
 
 const mrWhiteGuessInput = ref("");
@@ -86,8 +83,7 @@ onMounted(async () => {
   const success = initializeGame(); // Use destructured action
   if (!success) {
     console.warn("Game initialization failed, redirecting to setup.");
-    await router.push("/#gioca");
-    router.go(0); // Optional reload
+    await navigateTo("/#gioca");
   }
 });
 </script>

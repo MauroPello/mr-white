@@ -8,14 +8,36 @@ import { loadGameStateFromLocalStorage } from "~/utils/gameStateStorage";
 
 useHead(companyMainStructuredData);
 
-const router = useRouter();
 const { isMobile } = useScreenSize();
+const route = useRoute();
+
+const scrollToHash = async (hash: string) => {
+  if (!hash) return;
+
+  await nextTick();
+  // Using a timeout to ensure the DOM is fully updated.
+  setTimeout(() => {
+    const element = document.querySelector(hash);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 100);
+};
 
 onMounted(() => {
-  if (loadGameStateFromLocalStorage()) {
-    router.push("/#gioca");
+  const hash = loadGameStateFromLocalStorage() ? "#gioca" : route.hash;
+  if (hash) {
+    scrollToHash(hash);
   }
 });
+
+watch(
+  () => route.hash,
+  (newHash) => {
+    scrollToHash(newHash);
+  },
+  { immediate: false } // Do not run immediately, onMounted handles initial load.
+);
 </script>
 
 <template>

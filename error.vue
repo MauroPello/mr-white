@@ -3,14 +3,17 @@ withDefaults(defineProps<{ error?: object }>(), {
   error: () => ({} as object),
 });
 
+const toast = useToast();
+
 onMounted(() => {
-  useToast().add({
+  toast.add({
     title: "Qualcosa è andato storto",
     description: "Sei stato reindirizzato alla pagina principale.",
     icon: "i-heroicons-exclamation-triangle",
     color: "red",
   });
-  useRouter().push("/");
+
+  navigateTo("/");
 });
 </script>
 

@@ -10,7 +10,6 @@ import {
 } from "~/utils/gameStateStorage";
 import type { WordPair } from "~/types/wordPairs";
 
-const router = useRouter();
 const newPlayerName = ref("");
 const selectedUndercovers = ref(1);
 const selectedMrWhites = ref(0);
@@ -278,7 +277,7 @@ function startNewGame() {
   mrWhiteWinners.value = [];
 
   saveCurrentGameState();
-  router.push("/gioca");
+  navigateTo("/gioca");
 }
 
 function resumeGame() {
@@ -302,7 +301,7 @@ function resumeGame() {
   finalRoleReveal.value = savedGameState.value.finalRoleReveal;
 
   savedGameState.value = null;
-  router.push("/gioca");
+  navigateTo("/gioca");
 }
 
 function discardSavedGame() {
