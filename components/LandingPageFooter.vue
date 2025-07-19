@@ -11,7 +11,7 @@ import { companyName } from "~/constants/company";
     <p>
       Fatto con ❤️ da
       <NuxtLink
-        to="https://www.linkedin.com/in/mauro-pellonara/"
+        to="https://www.instagram.com/mauro.pello/"
         class="font-medium hover:underline"
         target="_blank" rel="noopener noreferrer"
       >Mauro Pellonara</NuxtLink>
