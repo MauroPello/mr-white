@@ -86,6 +86,13 @@ onMounted(async () => {
     await navigateTo("/#gioca");
   }
 });
+
+const hasMrWhiteJustWon = computed(
+  () =>
+    lastEliminatedState.value &&
+    lastEliminatedState.value.role === "MrWhite" &&
+    mrWhiteWinners.value.some((w) => w.name === lastEliminatedState.value?.name)
+);
 </script>
 
 <template>
@@ -175,16 +182,13 @@ onMounted(async () => {
           color="yellow"
           variant="subtle"
           title="Votazione in Parità!"
-          description="Nessuno è stato eliminato. Discutete di nuovo!"
+          description="Nessuno è stato eliminato"
           class="mb-4"
           :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
         />
 
         <!-- Vote Results on Tie -->
-        <div
-          v-if="wasVoteTiedState && lastVoteCount"
-          class="mb-6"
-        >
+        <div v-if="wasVoteTiedState && lastVoteCount" class="mb-6">
           <UDivider label="Riepilogo Voti" class="my-6" />
           <ul class="space-y-2 text-left max-w-md mx-auto">
             <li
@@ -195,7 +199,9 @@ onMounted(async () => {
               <span>
                 {{ voteCount.playerName }}:
                 <span class="font-bold"
-                  >{{ voteCount.count }} vot{{ voteCount.count === 1 ? 'o' : 'i' }}</span
+                  >{{ voteCount.count }} vot{{
+                    voteCount.count === 1 ? "o" : "i"
+                  }}</span
                 >
               </span>
               <UBadge
@@ -209,12 +215,20 @@ onMounted(async () => {
         </div>
 
         <div class="space-y-4 text-gray-700 dark:text-gray-300">
-          <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
-          <p>
-            Mettete giù il telefono e discutete! Cercate di trovare gli undercover e
-            i Mr. White.
-          </p>
-          <p>Quando siete pronti, iniziate a votare.</p>
+          <template v-if="!wasVoteTiedState">
+            <p>Tutti i giocatori rimasti hanno visto la loro parola.</p>
+            <p>
+              Mettete giù il telefono e discutete! Cercate di trovare gli
+              undercover e i Mr. White.
+            </p>
+            <p>Quando siete pronti, iniziate a votare.</p>
+          </template>
+          <template v-else>
+            <p>
+              Nessuno è stato eliminato, quindi potete continuare a discutere e
+              votare di nuovo.
+            </p>
+          </template>
         </div>
 
         <template #footer>
@@ -287,8 +301,7 @@ onMounted(async () => {
         <div v-if="lastEliminatedState">
           <UAlert
             :color="
-              lastEliminatedState.role === 'MrWhite' &&
-              mrWhiteWinners.some((w) => w.name === lastEliminatedState?.name)
+              hasMrWhiteJustWon
                 ? 'green'
                 : 'red'
             "
@@ -299,74 +312,58 @@ onMounted(async () => {
             <template #title>
               <div class="w-full">
                 <UIcon
-                  name="i-heroicons-user-minus-20-solid"
-                  size="24"
-                  class="absolute left-4 bg-red-500"
-                />
-                <span
-                v-if="
-                  !(
-                    lastEliminatedState.role === 'MrWhite' &&
-                    mrWhiteWinners.some(
-                      (w) => w.name === lastEliminatedState?.name
-                    )
-                  )
+                  :name="
+                    hasMrWhiteJustWon
+                      ? 'i-heroicons-trophy-solid'
+                      : 'i-heroicons-user-minus-solid'
                   "
-                >Eliminato!</span
+                  size="24"
+                  :class="`text-${hasMrWhiteJustWon ? 'green' : 'red'}-600`"
+                  class="absolute left-4"
+                />
+                <UBadge color="red" variant="solid" class="text-base">
+                  {{ lastEliminatedState.name }}
+                </UBadge>
+                <span>
+                  {{ ' ' + (hasMrWhiteJustWon ? "vincitore" : "eliminato") }}!</span
                 >
               </div>
             </template>
             <template #description>
-              <template
-                v-if="
-                  lastEliminatedState.role === 'MrWhite' &&
-                  mrWhiteWinners.some(
-                    (w) => w.name === lastEliminatedState?.name
-                  )
-                "
-              >
-                In base ai voti,
-                <UBadge color="red" variant="solid" class="text-base">
-                  {{ lastEliminatedState.name }}
-                </UBadge>
-                è stato eliminato!
+              <template v-if="hasMrWhiteJustWon">
                 <p class="mt-1">
-                  Ma era
+                  Era
                   <span class="font-semibold text-red-600 dark:text-red-400"
                     >Mr. White</span
                   >
                   e ha indovinato la parola dei Civili!
                 </p>
               </template>
-              <template v-else>
-                In base ai voti,
-                <UBadge color="red" variant="solid" class="text-base">
-                  {{ lastEliminatedState.name }}
-                </UBadge>
-                è stato eliminato!
-                <p class="mt-1">
-                  Era
-                  <span
-                    class="font-semibold"
-                    :class="{
-                      'text-orange-600 dark:text-orange-400':
-                        lastEliminatedState.role === 'Undercover',
-                      'text-red-600 dark:text-red-400':
-                        lastEliminatedState.role === 'MrWhite',
-                      'text-green-600 dark:text-green-400':
-                        lastEliminatedState.role === 'Civilian',
-                    }"
-                  >
-                    {{
-                      lastEliminatedState.role === "Undercover"
-                        ? "un Infiltrato"
-                        : lastEliminatedState.role === "MrWhite"
-                        ? "Mr. White"
-                        : "un Civile"
-                    }}!
-                  </span>
-                </p>
-              </template>
+              <p v-else class="mt-1">
+                Era
+                <span
+                  class="font-semibold"
+                  :class="{
+                    'text-orange-600 dark:text-orange-400':
+                      lastEliminatedState.role === 'Undercover',
+                    'text-red-600 dark:text-red-400':
+                      lastEliminatedState.role === 'MrWhite',
+                    'text-green-600 dark:text-green-400':
+                      lastEliminatedState.role === 'Civilian',
+                  }"
+                >
+                  {{
+                    lastEliminatedState.role === "Undercover"
+                      ? "un Infiltrato!"
+                      : lastEliminatedState.role === "MrWhite"
+                      ? "Mr. White"
+                      : "un Civile!"
+                  }}
+                </span>
+                <span v-if="lastEliminatedState.role === 'MrWhite'">
+                  e ha sbagliato ad indovinare la parola dei Civili!
+                </span>
+              </p>
             </template>
           </UAlert>
 
@@ -382,7 +379,9 @@ onMounted(async () => {
                 <span>
                   {{ voteCount.playerName }}:
                   <span class="font-bold"
-                    >{{ voteCount.count }} vot{{ voteCount.count === 1 ? 'o' : 'i' }}</span
+                    >{{ voteCount.count }} vot{{
+                      voteCount.count === 1 ? "o" : "i"
+                    }}</span
                   >
                 </span>
                 <UBadge
@@ -422,9 +421,7 @@ onMounted(async () => {
       <!-- Phase: Mr White Guessing -->
       <UCard v-else-if="gamePhase === 'mr_white_guessing'" class="text-center">
         <template #header>
-          <h1 class="text-xl font-semibold">
-            Mr. White: Prova a Indovinare la Parola!
-          </h1>
+          <h1 class="text-xl font-semibold">Prova a Indovinare la Parola!</h1>
         </template>
         <div v-if="mrWhiteGuessResult === null">
           <div v-if="mrWhiteGuessingPlayer" class="flex flex-col items-center">
@@ -657,7 +654,10 @@ onMounted(async () => {
       </div>
     </UContainer>
 
-    <div v-if="!gamePhase.startsWith('game_over')" class="text-center text-sm pt-6 px-8 w-full">
+    <div
+      v-if="!gamePhase.startsWith('game_over')"
+      class="text-center text-sm pt-6 px-8 w-full"
+    >
       <p>
         Questa partita ti sta annoiando?
         <UButton
