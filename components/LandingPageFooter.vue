@@ -22,10 +22,10 @@ import { companyName } from "~/constants/company";
 
 <style lang="postcss" scoped>
 .landing-page-footer {
-  @apply flex flex-col items-center justify-center gap-3 bg-primary-300 px-4 py-8;
+  @apply flex flex-col items-center justify-center gap-2 bg-primary-300 px-4 py-6;
 
   &__logo__link {
-    @apply flex items-center gap-3 pb-2;
+    @apply flex items-center gap-3;
     @apply text-2xl font-semibold;
   }
 }

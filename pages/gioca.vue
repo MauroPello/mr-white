@@ -89,8 +89,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <UContainer class="py-8">
+  <div class="pt-12 pb-4">
+    <UContainer>
       <!-- Phase: Showing Words -->
       <UCard v-if="gamePhase === 'showing_words'" class="text-center">
         <template #header>
@@ -108,7 +108,7 @@ onMounted(async () => {
           </h2>
 
           <p v-if="!showingWord" class="text-gray-600 dark:text-gray-400">
-            Tocca sotto quando sei pronto/a.
+            Tocca sotto quando sei pronto.
           </p>
 
           <UButton
@@ -175,7 +175,7 @@ onMounted(async () => {
           color="yellow"
           variant="subtle"
           title="Votazione in Parità!"
-          description="Nessuno è stato eliminato/a. Discutete di nuovo!"
+          description="Nessuno è stato eliminato. Discutete di nuovo!"
           class="mb-4"
           :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
         />
@@ -286,7 +286,6 @@ onMounted(async () => {
 
         <div v-if="lastEliminatedState">
           <UAlert
-            icon="i-heroicons-user-minus-20-solid"
             :color="
               lastEliminatedState.role === 'MrWhite' &&
               mrWhiteWinners.some((w) => w.name === lastEliminatedState?.name)
@@ -294,11 +293,17 @@ onMounted(async () => {
                 : 'red'
             "
             variant="subtle"
-            class="mb-4 text-green-800"
+            class="mb-4 text-black"
             :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
           >
             <template #title>
-              <span
+              <div class="w-full">
+                <UIcon
+                  name="i-heroicons-user-minus-20-solid"
+                  size="24"
+                  class="absolute left-4 bg-red-500"
+                />
+                <span
                 v-if="
                   !(
                     lastEliminatedState.role === 'MrWhite' &&
@@ -306,9 +311,10 @@ onMounted(async () => {
                       (w) => w.name === lastEliminatedState?.name
                     )
                   )
-                "
-                >Eliminato/a!</span
-              >
+                  "
+                >Eliminato!</span
+                >
+              </div>
             </template>
             <template #description>
               <template
@@ -323,7 +329,7 @@ onMounted(async () => {
                 <UBadge color="red" variant="solid" class="text-base">
                   {{ lastEliminatedState.name }}
                 </UBadge>
-                è stato/a eliminato/a!
+                è stato eliminato!
                 <p class="mt-1">
                   Ma era
                   <span class="font-semibold text-red-600 dark:text-red-400"
@@ -337,7 +343,7 @@ onMounted(async () => {
                 <UBadge color="red" variant="solid" class="text-base">
                   {{ lastEliminatedState.name }}
                 </UBadge>
-                è stato/a eliminato/a!
+                è stato eliminato!
                 <p class="mt-1">
                   Era
                   <span
@@ -383,7 +389,7 @@ onMounted(async () => {
                   v-if="isPlayerEliminated(voteCount.playerName)"
                   color="red"
                   variant="subtle"
-                  >Eliminato/a</UBadge
+                  >Eliminato</UBadge
                 >
               </li>
             </ul>
@@ -602,7 +608,7 @@ onMounted(async () => {
                 v-else-if="isPlayerEliminated(player.name)"
                 class="italic text-gray-500 dark:text-gray-400 text-sm ml-1"
               >
-                (Eliminato/a)
+                (Eliminato)
               </span>
             </span>
           </li>
@@ -651,7 +657,7 @@ onMounted(async () => {
       </div>
     </UContainer>
 
-    <div v-if="!gamePhase.startsWith('game_over')" class="text-center text-sm py-2 px-8 w-full">
+    <div v-if="!gamePhase.startsWith('game_over')" class="text-center text-sm pt-6 px-8 w-full">
       <p>
         Questa partita ti sta annoiando?
         <UButton
