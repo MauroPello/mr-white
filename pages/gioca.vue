@@ -20,7 +20,6 @@ const {
   finalRoleReveal: finalRoleRevealState,
   wasVoteTied: wasVoteTiedState,
   showingWord,
-  mrWhiteGuessResult,
   mrWhiteWinners,
 
   // Computed Refs
@@ -430,68 +429,39 @@ const hasMrWhiteJustWon = computed(
         <template #header>
           <h1 class="text-xl font-semibold">Prova a Indovinare la Parola!</h1>
         </template>
-        <div v-if="mrWhiteGuessResult === null">
-          <div v-if="mrWhiteGuessingPlayer" class="flex flex-col items-center">
-            <p class="mb-4">
-              <UBadge color="red" variant="solid" class="text-base">
-                {{ mrWhiteGuessingPlayer.name }}
-              </UBadge>
-              , sei stato eliminato come Mr. White! Ora puoi provare a
-              indovinare la parola segreta dei Civili.
-            </p>
-            <UInput
-              v-model="mrWhiteGuessInput"
-              placeholder="Scrivi la parola dei Civili"
-              size="lg"
-              icon="i-heroicons-pencil"
-              class="mb-4 w-full max-w-128"
-              @keyup.enter="submitMrWhiteGuess"
-            />
-            <UButton
-              size="lg"
-              icon="i-heroicons-light-bulb"
-              :disabled="!mrWhiteGuessInput"
-              @click="submitMrWhiteGuess"
-            >
-              Indovina!
-            </UButton>
-          </div>
-          <div v-else>
-            <UAlert
-              icon="i-heroicons-exclamation-circle"
-              color="red"
-              variant="soft"
-              title="Errore Interno"
-              description="Non è stato trovato il giocatore Mr. White per il turno di indovinare."
-            />
-          </div>
+        <div v-if="mrWhiteGuessingPlayer" class="flex flex-col items-center">
+          <p class="mb-4">
+            <UBadge color="red" variant="solid" class="text-base">
+              {{ mrWhiteGuessingPlayer.name }}
+            </UBadge>
+            , sei stato eliminato come Mr. White! Ora puoi provare a indovinare
+            la parola segreta dei Civili.
+          </p>
+          <UInput
+            v-model="mrWhiteGuessInput"
+            placeholder="Scrivi la parola dei Civili"
+            size="lg"
+            icon="i-heroicons-pencil"
+            class="mb-4 w-full max-w-128"
+            @keyup.enter="submitMrWhiteGuess"
+          />
+          <UButton
+            size="lg"
+            icon="i-heroicons-light-bulb"
+            :disabled="!mrWhiteGuessInput"
+            @click="submitMrWhiteGuess"
+          >
+            Indovina!
+          </UButton>
         </div>
         <div v-else>
           <UAlert
-            :icon="
-              mrWhiteGuessResult.correct
-                ? 'i-heroicons-trophy'
-                : 'i-heroicons-x-circle'
-            "
-            :color="mrWhiteGuessResult.correct ? 'green' : 'red'"
-            :title="mrWhiteGuessResult.correct ? 'Indovinato!' : 'Sbagliato!'"
-            :description="
-              mrWhiteGuessResult.correct
-                ? 'Mr. White ha indovinato la parola dei Civili e vince la partita!'
-                : 'Mr. White non ha indovinato la parola. La partita continua!'
-            "
-            variant="subtle"
-            class="mb-4"
-            :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
+            icon="i-heroicons-exclamation-circle"
+            color="red"
+            variant="soft"
+            title="Errore Interno"
+            description="Non è stato trovato il giocatore Mr. White per il turno di indovinare."
           />
-          <UButton
-            color="violet"
-            size="lg"
-            icon="i-heroicons-forward-20-solid"
-            @click="goToDiscussion"
-          >
-            Continua
-          </UButton>
         </div>
       </UCard>
 

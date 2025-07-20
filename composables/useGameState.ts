@@ -618,7 +618,6 @@ export function useGameState() {
     getOriginalAssignmentsInOrder, // Expose for Mr White guess reveal
     // Mr White Guessing
     mrWhiteGuess,
-    mrWhiteGuessResult,
     mrWhiteGuessingPlayer,
     pendingMrWhiteGuess,
   };
