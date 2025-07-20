@@ -178,14 +178,23 @@ const hasMrWhiteJustWon = computed(
 
         <UAlert
           v-if="wasVoteTiedState"
-          icon="i-heroicons-hand-raised"
           color="yellow"
           variant="subtle"
-          title="Votazione in Parità!"
           description="Nessuno è stato eliminato"
           class="mb-4"
           :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
-        />
+        >
+          <template #title>
+            <div class="w-full">
+              <UIcon
+                name="i-heroicons-hand-raised"
+                size="24"
+                class="absolute left-4 text-yellow-500"
+              />
+              <span>Votazione in Parità!</span>
+            </div>
+          </template>
+        </UAlert>
 
         <!-- Vote Results on Tie -->
         <div v-if="wasVoteTiedState && lastVoteCount" class="mb-6">
@@ -300,11 +309,7 @@ const hasMrWhiteJustWon = computed(
 
         <div v-if="lastEliminatedState">
           <UAlert
-            :color="
-              hasMrWhiteJustWon
-                ? 'green'
-                : 'red'
-            "
+            :color="hasMrWhiteJustWon ? 'green' : 'red'"
             variant="subtle"
             class="mb-4 text-black"
             :ui="{ title: 'text-lg font-semibold', description: 'text-base' }"
@@ -318,14 +323,16 @@ const hasMrWhiteJustWon = computed(
                       : 'i-heroicons-user-minus-solid'
                   "
                   size="24"
-                  :class="`text-${hasMrWhiteJustWon ? 'green' : 'red'}-600`"
+                  :class="`text-${hasMrWhiteJustWon ? 'green' : 'red'}-500`"
                   class="absolute left-4"
                 />
                 <UBadge color="red" variant="solid" class="text-base">
                   {{ lastEliminatedState.name }}
                 </UBadge>
                 <span>
-                  {{ ' ' + (hasMrWhiteJustWon ? "vincitore" : "eliminato") }}!</span
+                  {{
+                    " " + (hasMrWhiteJustWon ? "vincitore" : "eliminato")
+                  }}!</span
                 >
               </div>
             </template>
