@@ -7,8 +7,8 @@ import {
   companySEODescription,
 } from "~/constants/company";
 
-const consigliSEOTitle = `Consigli e Strategie per Vincere a ${companyName}`;
-const consigliSEODescription = `Scopri i migliori consigli e strategie per dominare a ${companyName}, sia come Civile che come Mr. White e Undercover!`;
+const consigliSEOTitle = `Diventa un Campione di ${companyName}: Consigli e Strategie`;
+const consigliSEODescription = `Vuoi vincere a ${companyName}? Scopri i nostri consigli per smascherare gli avversari e dominare il gioco, che tu sia Civile, Undercover o Mr. White!`;
 const consigliPageUrl = `${companyUrl}/consigli`;
 
 useHead({
@@ -76,22 +76,24 @@ useHead({
             datePublished: new Date().toISOString(),
             mainEntityOfPage: { "@id": `${consigliPageUrl}#webpage` },
             articleBody: `
-              Consigli Generali:
-              - Ascolta attentamente: Le parole degli altri sono indizi cruciali.
-              - Non essere troppo ovvio: Se sei un Civile, non dare indizi troppo diretti che solo Mr. White non capirebbe.
-              - Non essere troppo vago: Se sei Mr. White, cerca di mimetizzarti, ma non essere così vago da destare sospetti immediati.
+              Consigli per tutti:
+              - Ascolta con attenzione: Le parole degli altri sono indizi preziosi. Fai caso a esitazioni, parole strane o temi ricorrenti per capire chi bluffa.
+              - Pensa in fretta: Non metterci troppo a dare il tuo indizio, potresti sembrare sospetto. La rapidità è un'arma!
+              - Leggi le espressioni: Un'occhiata nervosa o un sorriso troppo sicuro possono svelare molto più delle parole. Diventa un detective delle emozioni!
 
-              Consigli per i Civili:
-              - Dai indizi specifici ma non rivelatori: Pensa a parole correlate che solo chi conosce la parola segreta può capire appieno.
-              - Osserva le reazioni: Chi sembra esitante o confuso dopo un indizio?
-              - Varia i tuoi indizi: Non usare sempre lo stesso tipo di associazione.
+              Sei un Civile? Ecco come vincere:
+              - Indizi intelligenti: Dai un indizio chiaro ma non scontato. Se la parola è "Spiaggia", "Sabbia" è un buon indizio, "Mare" potrebbe essere troppo generico.
+              - Varia i tuoi indizi: Non limitarti a sinonimi. Pensa a oggetti, azioni o luoghi collegati alla parola per mettere in difficoltà chi non la conosce.
+              - Tendi una trappola: Se hai un sospetto, dai un indizio un po' più ambiguo e osserva la reazione. Potrebbe cadere nel tuo tranello!
+              - Accusa con prove: Non puntare il dito a caso. Basa le tue accuse su indizi concreti, come una parola fuori luogo o un'esitazione di troppo.
 
-              Consigli per Mr. White:
-              - Fai finta di capire: Annuisci, mostra sicurezza anche se non hai idea di cosa si stia parlando.
-              - Usa parole generiche all'inizio: Cerca di capire l'argomento generale dalle parole degli altri.
-              - Ruba gli indizi: Se un Civile dice una parola, prova a usarne una simile o correlata nel tuo turno.
-              - Semina zizzania: Se hai un sospetto su chi potrebbe essere un altro Mr. White (se ce n'è più di uno), o se vuoi deviare l'attenzione, accusa qualcun altro con finta sicurezza.
-              - Preparati alla domanda finale: Se vieni scoperto, pensa velocemente a quale potrebbe essere la parola segreta basandoti sugli indizi che hai sentito.
+              Sei un Undercover o Mr. White? Sopravvivi e vinci:
+              - Mimetizzati: All'inizio, ascolta gli altri per capire il tema generale. Usa parole generiche che possano andare bene per più argomenti.
+              - Fai il pappagallo (con astuzia): Ripeti o adatta le parole degli altri per sembrare credibile, ma non esagerare o desterai sospetti.
+              - Mostrati sicuro: Anche se brancoli nel buio, annuisci e sorridi. La sicurezza è la tua migliore maschera.
+              - Crea scompiglio: L'attenzione è su di te? Accusa qualcun altro con decisione, magari sottolineando una sua piccola incertezza.
+              - Vota per ultimo: Osserva le scelte degli altri prima di votare. Ti aiuterà a capire chi sospetta di chi e a chi conviene eliminare.
+              - Prepara il colpo di scena: Se ti scoprono, non è finita! Ripensa a tutti gli indizi e preparati a indovinare la parola segreta. La vittoria potrebbe essere ancora tua.
             `,
           },
           {
@@ -149,96 +151,101 @@ useHead({
 
       <hr >
 
-      <h2>Consigli Generali</h2>
+      <h2>Consigli per Tutti</h2>
       <ul>
         <li>
-          <strong>Ascolta attentamente:</strong> Le parole dette dagli altri
-          giocatori sono la tua fonte principale di informazioni, sia che tu sia
-          un Civile, un Undercover o Mr. White. Cerca pattern, esitazioni o
-          parole fuori contesto.
+          <strong>Ascolta con attenzione:</strong> Le parole degli altri sono
+          indizi preziosi. Fai caso a esitazioni, parole strane o temi
+          ricorrenti per capire chi bluffa.
         </li>
         <li>
-          <strong>Gestisci il tempo:</strong> Non prendere troppo tempo per
-          pensare alla tua parola, potrebbe insospettire gli altri.
+          <strong>Pensa in fretta:</strong> Non metterci troppo a dare il tuo
+          indizio, potresti sembrare sospetto. La rapidità è un'arma!
         </li>
         <li>
-          <strong>Osserva il linguaggio del corpo:</strong> A volte, il
-          nervosismo o la troppa sicurezza possono tradire un giocatore.
+          <strong>Leggi le espressioni:</strong> Un'occhiata nervosa o un
+          sorriso troppo sicuro possono svelare molto più delle parole. Diventa
+          un detective delle emozioni!
         </li>
       </ul>
 
-      <h2>Consigli per i Civili</h2>
+      <h2>Sei un Civile? Ecco come vincere:</h2>
       <p>
-        Il tuo obiettivo è duplice: identificare gli Undercover o Mr. White e
-        dimostrare la tua innocenza.
+        Il tuo obiettivo è semplice: scoprire chi mente e convincere gli altri
+        della tua lealtà.
       </p>
       <ul>
         <li>
-          <strong>Sii specifico, ma non troppo:</strong> La tua parola deve
-          essere chiaramente collegata alla parola segreta, ma non così ovvia da
-          renderla facile da indovinare per gli Undercover e Mr. White se
-          dovesse essere scoperto. Esempio: se la parola è "Spiaggia", "Castello
-          di sabbia" è meglio di "Mare".
+          <strong>Indizi intelligenti:</strong> Dai un indizio chiaro ma non
+          scontato. Se la parola è "Spiaggia", "Sabbia" è un buon indizio, "Mare"
+          potrebbe essere troppo generico.
         </li>
         <li>
-          <strong>Varia gli indizi:</strong> Non dare solo sinonimi o parole
-          della stessa categoria. Pensa ad azioni, luoghi associati,
-          caratteristiche.
+          <strong>Varia i tuoi indizi:</strong> Non limitarti a sinonimi. Pensa
+          a oggetti, azioni o luoghi collegati alla parola per mettere in
+          difficoltà chi non la conosce.
         </li>
         <li>
-          <strong>Metti alla prova i sospettati:</strong> Se sospetti di
-          qualcuno, prova a dare un indizio leggermente più difficile o ambiguo
-          per vedere come reagisce.
+          <strong>Tendi una trappola:</strong> Se hai un sospetto, dai un
+          indizio un po' più ambiguo e osserva la reazione. Potrebbe cadere nel
+          tuo tranello!
         </li>
         <li>
-          <strong>Non accusare a caso:</strong> Basa i tuoi sospetti su prove
-          concrete (parole strane, esitazioni).
+          <strong>Accusa con prove:</strong> Non puntare il dito a caso. Basa le
+          tue accuse su indizi concreti, come una parola fuori luogo o
+          un'esitazione di troppo.
         </li>
       </ul>
 
-      <h2>Consigli per gli Undercover e Mr. White</h2>
+      <h2>Sei un Undercover o Mr. White? Sopravvivi e vinci:</h2>
       <p>
-        Il tuo obiettivo è sopravvivere senza farti scoprire e, se possibile,
-        indovinare la parola segreta.
+        La tua missione è bluffare, confondere gli altri e, se sei Mr. White,
+        indovinare la parola segreta per la vittoria finale.
       </p>
       <ul>
         <li>
-          <strong>Mimetizzati:</strong> Ascolta le prime parole dette dai Civili
-          per capire l'argomento generale. Usa parole generiche o che potrebbero
-          adattarsi a più contesti all'inizio.
+          <strong>Mimetizzati:</strong> All'inizio, ascolta gli altri per capire
+          il tema generale. Usa parole generiche che possano andare bene per più
+          argomenti.
         </li>
         <li>
-          <strong>Sii un pappagallo (con moderazione):</strong> Ripeti o
-          riformula leggermente le parole dette da altri giocatori per sembrare
-          informato. Non farlo troppo spesso o sembrerai sospetto.
+          <strong>Fai il pappagallo (con astuzia):</strong> Ripeti o adatta le
+          parole degli altri per sembrare credibile, ma non esagerare o desterai
+          sospetti.
         </li>
         <li>
-          <strong>Fai finta di capire:</strong> Annuisci, sorridi, mostra
-          sicurezza anche quando non hai la minima idea di cosa stiano parlando.
+          <strong>Mostrati sicuro:</strong> Anche se brancoli nel buio,
+          annuisci e sorridi. La sicurezza è la tua migliore maschera.
         </li>
         <li>
-          <strong>Semina il dubbio:</strong> Se l'attenzione si sta concentrando
-          su di te, prova a deviarla accusando qualcun altro con convinzione.
-          Fai notare una sua presunta esitazione o una parola "strana".
+          <strong>Crea scompiglio:</strong> L'attenzione è su di te? Accusa
+          qualcun altro con decisione, magari sottolineando una sua piccola
+          incertezza.
         </li>
         <li>
-          <strong>Non essere il primo a votare:</strong> Aspetta di vedere come
-          votano gli altri per capire meglio le dinamiche e chi sospetta di chi.
+          <strong>Vota per ultimo:</strong> Osserva le scelte degli altri prima
+          di votare. Ti aiuterà a capire chi sospetta di chi e a chi conviene
+          eliminare.
         </li>
         <li>
-          <strong>Preparati all'ultima sfida:</strong> Se vieni scoperto,
-          ripassa mentalmente tutte le parole dette. Qual è il tema comune?
-          Quale parola potrebbe collegarle tutte? Avere un'idea pronta aumenta
-          le tue chance di vittoria.
+          <strong>Prepara il colpo di scena:</strong> Se ti scoprono, non è
+          finita! Ripensa a tutti gli indizi e preparati a indovinare la parola
+          segreta. La vittoria potrebbe essere ancora tua.
         </li>
       </ul>
 
       <hr >
 
       <div class="text-center mt-12">
-        <p>Ora che conosci i trucchi, mettili in pratica!</p>
-        <UButton icon="i-heroicons-play-circle" size="lg" @click="navigateTo('/#gioca')">
-          Torna al Gioco
+        <p class="text-lg">
+          Ora che hai le strategie giuste, sei pronto a giocare da campione!
+        </p>
+        <UButton
+          icon="i-heroicons-play-circle"
+          size="lg"
+          @click="navigateTo('/#gioca')"
+        >
+          Gioca Ora
         </UButton>
       </div>
     </div>

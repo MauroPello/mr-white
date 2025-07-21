@@ -8,7 +8,6 @@ import { loadGameStateFromLocalStorage } from "~/utils/gameStateStorage";
 
 useHead(companyMainStructuredData);
 
-const { isMobile } = useScreenSize();
 const route = useRoute();
 
 const scrollToHash = async (hash: string) => {
@@ -64,14 +63,20 @@ watch(
           class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:300ms]"
           style="animation-fill-mode: forwards"
         >
-          {{ `Il gioco di società dove tutti conoscono la parola segreta... tranne gli Undercover e Mr. White! ${isMobile ? '' : 'Scopri chi sono o confondi gli altri in questo divertente gioco da fare insieme con un solo telefono!'}` }}
+          Il gioco di società dove tutti hanno una parola segreta... tranne gli Undercover e Mr. White!
         </p>
         <p
-          class="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:400ms]"
+          class="hidden md:block mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:350ms]"
           style="animation-fill-mode: forwards"
         >
-          Con <strong>600+ parole</strong> completamente gratuite, il
-          divertimento è assicurato!
+          Scopri i ruoli, bluffa e divertiti con i tuoi amici usando un solo telefono!
+        </p>
+        <p
+          class="mt-1 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:400ms]"
+          style="animation-fill-mode: forwards"
+        >
+          Con <strong>più di 600 parole</strong> gratuite, il divertimento
+          non finisce mai!
         </p>
         <div
           class="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 animate-appear opacity-0 [--appear-delay:500ms]"
@@ -99,8 +104,8 @@ watch(
           Pronto a Giocare?
         </h2>
         <p class="text-xl text-gray-600 dark:text-gray-300 text-center mb-10">
-          Imposta qui sotto la tua partita e inizia subito a scoprire chi sono
-          gli Undercover e Mr. White!
+          Prepara la partita, scopri chi sono gli Undercover e Mr. White e
+          vinci con i tuoi amici!
         </p>
         <StartGame id="gioca" class="max-w-2xl mx-auto" />
       </div>
@@ -112,7 +117,7 @@ watch(
           Come si Gioca?
         </h2>
         <p class="text-xl text-gray-600 dark:text-gray-300 text-center mb-12">
-          Bastano pochi semplici passi per iniziare a divertirsi:
+          Bastano 5 semplici regole per iniziare a giocare:
         </p>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div class="flex flex-col items-center text-center p-6">
@@ -126,7 +131,7 @@ watch(
               1. Prepara la Partita
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              Scegli quanti siete e quanti Undercover e Mr. White ci saranno.
+              Scegli il numero di giocatori, Undercover e Mr. White.
             </p>
           </div>
           <div class="flex flex-col items-center text-center p-6">
@@ -137,12 +142,11 @@ watch(
             <h3
               class="font-semibold text-lg mb-2 text-gray-900 dark:text-white"
             >
-              2. Passa il Telefono
+              2. Scopri il tuo Ruolo
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              Ogni giocatore guarda in segreto la propria parola senza sapere se
-              è un Undercover o Mr. White. Nel caso di Mr. White, non riceverà
-              nessuna parola!
+              A turno, ogni giocatore scopre il suo ruolo e la parola segreta.
+              Mr. White non riceve nessuna parola!
             </p>
           </div>
           <div class="flex flex-col items-center text-center p-6">
@@ -156,8 +160,8 @@ watch(
               3. Dai un Indizio
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              A turno, ognuno dice una parola legata alla parola segreta per far
-              vedere che la conosce.
+              A turno, ogni giocatore dice una parola-indizio per dimostrare di
+              conoscere la parola segreta.
             </p>
           </div>
           <div class="flex flex-col items-center text-center p-6">
@@ -168,12 +172,11 @@ watch(
             <h3
               class="font-semibold text-lg mb-2 text-gray-900 dark:text-white"
             >
-              4. Votate!
+              4. Vota per Eliminare
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              Votate chi pensate sia Mr. White o un Undercover. Continuate a
-              giocare finché tutti gli Undercover, Mr. White o civili sono
-              eliminati.
+              Dopo ogni giro, votate per eliminare chi pensate sia un
+              Undercover o Mr. White.
             </p>
           </div>
           <div class="flex flex-col items-center text-center p-6">
@@ -187,9 +190,9 @@ watch(
               5. Chi Vince?
             </h3>
             <p class="text-md text-gray-500 dark:text-gray-400">
-              Se eliminate tutti gli Undercover e Mr. White, vincono i civili.
-              Altrimenti, vincono gli Undercover o Mr. White se riesce ad
-              indovinare la parola!
+              I Civili vincono se eliminano tutti gli altri. Gli Undercover e
+              Mr. White vincono se sopravvivono o se Mr. White indovina la
+              parola!
             </p>
           </div>
         </div>
@@ -207,14 +210,13 @@ watch(
             Perché Giocare a Mr. White?
           </h2>
           <p class="text-xl text-gray-600 dark:text-gray-300">
-            Scopri il gioco perfetto per mettere alla prova la tua abilità nel
-            bluffare e capire gli altri.
+            Un gioco di bluff e intuizione perfetto per ogni occasione.
             <NuxtLink
               to="/consigli"
               class="text-primary font-semibold hover:underline"
               >Leggi i nostri consigli</NuxtLink
             >
-            per diventare un maestro!
+            per diventare un campione!
           </p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -232,8 +234,8 @@ watch(
                 Un Solo Telefono
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                Non servono app o più dispositivi. Basta un telefono e un
-                browser per giocare ovunque.
+                Nessuna app da scaricare. Gioca con un solo telefono, dove e
+                quando vuoi.
               </p>
             </div>
           </div>
@@ -248,11 +250,11 @@ watch(
               <h3
                 class="font-semibold text-lg mb-1 text-gray-900 dark:text-white"
               >
-                Risate Garantite
+                Risate Assicurate
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                Perfetto per ridere, rompere il ghiaccio o animare una serata
-                tra amici.
+                Ideale per rompere il ghiaccio e animare una serata in
+                compagnia.
               </p>
             </div>
           </div>
@@ -267,10 +269,11 @@ watch(
               <h3
                 class="font-semibold text-lg mb-1 text-gray-900 dark:text-white"
               >
-                Facile e Veloce
+                Semplice e Veloce
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                Si impara in un minuto, e ogni partita dura solo pochi minuti.
+                Le regole si imparano in un minuto e una partita dura pochi
+                istanti.
               </p>
             </div>
           </div>
@@ -285,10 +288,11 @@ watch(
               <h3
                 class="font-semibold text-lg mb-1 text-gray-900 dark:text-white"
               >
-                Totalmente Gratis
+                Sempre Gratis
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                600+ parole completamente gratuite, gioca quanto vuoi e senza limiti.
+                Gioca con più di 600 parole gratuite, senza limiti e senza
+                costi.
               </p>
             </div>
           </div>
@@ -303,14 +307,14 @@ watch(
         <h2
           class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-3"
         >
-          Ti piace Mr. White? Offrimi un caffè!
+          Ti piace Mr. White? Supporta il gioco!
         </h2>
         <p
           class="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
         >
-          Se ti stai divertendo con {{ companyName }}, puoi darmi una mano a
-          mantenere il gioco gratuito offrendomi un caffè. Senza il vostro
-          supporto non sarebbe possibile mantenere gratuito per tutti questo gioco!
+          Mantenere questo gioco gratuito per tutti è possibile solo grazie a
+          persone come te. Se ti stai divertendo, considera di offrirmi un
+          caffè per supportare il mio lavoro.
         </p>
         <UButton
           icon="i-heroicons-banknotes"
@@ -322,7 +326,7 @@ watch(
           color="primary"
           class="text-xl"
         >
-          Supporta con PayPal
+          Offrimi un caffè
         </UButton>
       </div>
     </UContainer>
