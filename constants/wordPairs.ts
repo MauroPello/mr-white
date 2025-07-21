@@ -469,5 +469,4 @@ export const wordPairs: WordPair[] = [
   { civilian: "Riccio", undercover: "Istrice" },
   { civilian: "Porcospino", undercover: "Istrice" },
   { civilian: "Vespa", undercover: "Calabrone" },
-  { civilian: "Carpa", undercover: "Trota" },
 ];
