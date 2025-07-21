@@ -49,8 +49,8 @@ export function saveGameStateToLocalStorage(
       timestamp: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
-  } catch {
-    console.error("Failed to save game state to localStorage");
+  } catch (error) {
+    console.error("Failed to save game state to localStorage", error);
   }
 }
 
@@ -93,7 +93,8 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
     }
 
     return savedState;
-  } catch {
+  } catch (error) {
+    console.error("Failed to load game state from localStorage", error);
     clearSavedGameState(); // Clear potentially corrupted data
     return null;
   }
@@ -105,8 +106,8 @@ export function loadGameStateFromLocalStorage(): SavedGameState | null {
 export function clearSavedGameState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    console.error("Failed to clear game state from localStorage");
+  } catch (error) {
+    console.error("Failed to clear game state from localStorage", error);
   }
 }
 
@@ -119,8 +120,8 @@ export interface PlayerSettings {
 export function savePlayerSettingsToLocalStorage(settings: PlayerSettings): void {
   try {
     localStorage.setItem(PLAYER_SETTINGS_KEY, JSON.stringify(settings));
-  } catch {
-    console.error("Failed to save player settings to localStorage");
+  } catch (error) {
+    console.error("Failed to save player settings to localStorage", error);
   }
 }
 
@@ -129,7 +130,8 @@ export function loadPlayerSettingsFromLocalStorage(): PlayerSettings | null {
     const json = localStorage.getItem(PLAYER_SETTINGS_KEY);
     if (!json) return null;
     return JSON.parse(json) as PlayerSettings;
-  } catch {
+  } catch (error) {
+    console.error("Failed to load player settings from localStorage", error);
     return null;
   }
 }
@@ -137,7 +139,7 @@ export function loadPlayerSettingsFromLocalStorage(): PlayerSettings | null {
 export function clearPlayerSettingsFromLocalStorage(): void {
   try {
     localStorage.removeItem(PLAYER_SETTINGS_KEY);
-  } catch {
-    console.error("Failed to clear player settings from localStorage");
+  } catch (error) {
+    console.error("Failed to clear player settings from localStorage", error);
   }
 }
