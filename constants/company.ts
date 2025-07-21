@@ -3,7 +3,7 @@ export const mediaFolder = "/_vercel/image?url=%2F";
 export const companyName = "Undercover Mr. White";
 export const companyUrl = "https://www.undercovergioco.it";
 export const companySEOTitle = `${companyName} - Gioco Online di Parole`;
-export const companySEODescription = "600+ parole disponibili! Scopri chi ha la parola diversa in questo divertente party game di parole e bluff. Gioca ora con i tuoi amici!";
+export const companySEODescription = "800+ parole disponibili! Scopri chi ha la parola diversa in questo divertente party game di parole e bluff. Gioca ora con i tuoi amici!";
 export const companyLogo = `${companyUrl}${mediaFolder}logo.png&w=1536&q=100`; // This will now use the new companyUrl
 export const companyMainStructuredData = {
   title: companySEOTitle,

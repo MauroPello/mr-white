@@ -26,7 +26,7 @@ const { isMobile } = useScreenSize();
               v-else-if="i % 3 === 1"
               class="inline-block pl-4 pr-40 md:pr-80"
             >
-              200+ nuove parole aggiunte! 🎲
+              400+ nuove parole aggiunte! 🎲
             </span>
             <span
               v-else

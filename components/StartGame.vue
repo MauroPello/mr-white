@@ -10,6 +10,8 @@ import {
 } from "~/utils/gameStateStorage";
 import type { WordPair } from "~/types/wordPairs";
 
+const { isMinimumMd } = useScreenSize();
+
 const newPlayerName = ref("");
 const selectedUndercovers = ref(1);
 const selectedMrWhites = ref(0);
@@ -353,10 +355,10 @@ function formatTimestamp(timestamp: number): string {
       </p>
 
       <div class="flex justify-center gap-4">
-        <UButton color="green" size="lg" @click="resumeGame">
+        <UButton color="green" :size="isMinimumMd ? 'xl' : 'md'" @click="resumeGame">
           Riprendi Partita
         </UButton>
-        <UButton color="red" variant="soft" size="lg" @click="discardSavedGame">
+        <UButton color="red" variant="soft" :size="isMinimumMd ? 'xl' : 'md'" @click="discardSavedGame">
           Scarta e Inizia Nuova
         </UButton>
       </div>

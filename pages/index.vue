@@ -75,7 +75,7 @@ watch(
           class="mt-1 text-lg leading-8 text-gray-600 dark:text-gray-300 animate-appear opacity-0 [--appear-delay:400ms]"
           style="animation-fill-mode: forwards"
         >
-          Con <strong>più di 600 parole</strong> gratuite, il divertimento
+          Con <strong>più di 800 parole</strong> gratuite, il divertimento
           non finisce mai!
         </p>
         <div
@@ -291,7 +291,7 @@ watch(
                 Sempre Gratis
               </h3>
               <p class="text-md text-gray-500 dark:text-gray-400">
-                Gioca con più di 600 parole gratuite, senza limiti e senza
+                Gioca con più di 800 parole gratuite, senza limiti e senza
                 costi.
               </p>
             </div>
