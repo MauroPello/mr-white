@@ -350,7 +350,7 @@ function formatTimestamp(timestamp: number): string {
       </template>
 
       <p class="text-gray-700 dark:text-gray-300 mb-4">
-        Trovato partita salvata il
+        Abbiamo trovato una partita salvata del
         {{ formatTimestamp(savedGameState.timestamp) }}.
       </p>
 
