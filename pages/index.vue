@@ -310,14 +310,14 @@ watch(
         <h2
           class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-3"
         >
-          Ti piace Mr. White? Supporta il gioco!
+          Aiutami a migliorare il gioco!
         </h2>
         <p
           class="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
         >
-          Mantenere questo gioco gratuito per tutti è possibile solo grazie a
-          persone come te. Se ti stai divertendo, considera di offrirmi un
-          caffè per supportare il mio lavoro.
+          Mantenere questo gioco gratuito è possibile grazie a persone come te.
+          Se ti stai divertendo, considera di offrirmi un caffè. Puoi usare la
+          donazione per lasciare un feedback o suggerire nuove funzionalità!
         </p>
         <UButton
           icon="i-heroicons-banknotes"
