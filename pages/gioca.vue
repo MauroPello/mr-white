@@ -635,6 +635,21 @@ const hasMrWhiteJustWon = computed(
         />
       </p>
     </div>
+    <div
+      v-else
+      class="text-center text-sm pt-6 px-8 w-full"
+    >
+      <p>
+        Vuoi aiutare a migliorare il gioco?
+        <UButton
+          color="blue"
+          variant="link"
+          class="text-sm"
+          label="Clicca qui!"
+          to="/#supporta"
+        />
+      </p>
+    </div>
 
     <UModal v-model="isExitConfirmationModalOpen">
       <UCard>
