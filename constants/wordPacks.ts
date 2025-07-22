@@ -50,7 +50,7 @@ export const wordPacks: WordPack[] = [
       { civilian: "Melanzana", undercover: "Peperone" },
       { civilian: "Caffettiera", undercover: "Teiera" },
       { civilian: "Grattugia", undercover: "Scolapasta" },
-      { civilian: "Mattarello", undercover: "Frusta" },
+      { civilian: "Mattarello", undercover: "Frusta da Cucina" },
       { civilian: "Risotto", undercover: "Paella spagnola" },
       { civilian: "Prezzemolo", undercover: "Basilico" },
       { civilian: "Noce", undercover: "Mandorla" },
