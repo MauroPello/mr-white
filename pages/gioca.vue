@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { companyMainStructuredData } from "~/constants/company";
 import { useGameState } from "~/composables/useGameState";
-import { savePlayerSettingsToLocalStorage } from "~/utils/gameStateStorage";
 
 useHead(companyMainStructuredData);
 
@@ -9,12 +8,10 @@ useHead(companyMainStructuredData);
 const {
   // State Refs
   activePlayers,
-  players,
   gamePhase,
   gameWordPair,
   currentRound,
   numberOfUndercovers,
-  numberOfMrWhites,
   lastEliminated: lastEliminatedState,
   gameOverMessage: gameOverMessageState,
   finalRoleReveal: finalRoleRevealState,
@@ -56,16 +53,8 @@ async function exitGame() {
   await playAgain();
 }
 
-// Simplified Play Again
 async function playAgain() {
-  // Save player settings before clearing state
-  savePlayerSettingsToLocalStorage({
-    players: players.value,
-    numberOfUndercovers: numberOfUndercovers.value,
-    numberOfMrWhites: numberOfMrWhites.value,
-  });
-
-  clearGameState(); // Use destructured action
+  clearGameState();
   await navigateTo("/#gioca");
 }
 
@@ -74,12 +63,12 @@ const mrWhiteGuessInput = ref("");
 function submitMrWhiteGuess() {
   if (!mrWhiteGuessInput.value.trim()) return;
   mrWhiteGuess(mrWhiteGuessInput.value.trim());
-  mrWhiteGuessInput.value = ""; // Clear input after submission
+  mrWhiteGuessInput.value = "";
 }
 
 // --- Lifecycle Hooks ---
 onMounted(async () => {
-  const success = initializeGame(); // Use destructured action
+  const success = initializeGame();
   if (!success) {
     console.warn("Game initialization failed, redirecting to setup.");
     await navigateTo("/#gioca");

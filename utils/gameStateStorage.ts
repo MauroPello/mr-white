@@ -115,6 +115,7 @@ export interface PlayerSettings {
   players: string[];
   numberOfUndercovers: number;
   numberOfMrWhites: number;
+  selectedPackNames?: string[];
 }
 
 export function savePlayerSettingsToLocalStorage(settings: PlayerSettings): void {

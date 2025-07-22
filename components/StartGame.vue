@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { getRandomWordPair } from "~/utils/wordPairs";
-import { wordPairs } from "~/constants/wordPairs"; // Import predefined word pairs
+import { wordPackNames, wordPacks } from "~/constants/wordPacks";
 import { addPlayedWordPair } from "~/utils/playedWordPairsStorage";
 import {
   loadGameStateFromLocalStorage,
   clearSavedGameState,
   loadPlayerSettingsFromLocalStorage,
-  clearPlayerSettingsFromLocalStorage,
+  savePlayerSettingsToLocalStorage,
 } from "~/utils/gameStateStorage";
 import type { WordPair } from "~/types/wordPairs";
 
@@ -15,39 +15,86 @@ const { isMinimumMd } = useScreenSize();
 const newPlayerName = ref("");
 const selectedUndercovers = ref(1);
 const selectedMrWhites = ref(0);
-const useCustomWords = ref(false);
+const shouldUseCustomWords = ref(false);
 const customCivilianWord = ref("");
 const customUndercoverWord = ref("");
 const savedGameState =
   ref<ReturnType<typeof loadGameStateFromLocalStorage>>(null);
+const selectedPackNames = ref<string[]>(wordPackNames);
+const lastSelectedPackNames = ref<string[]>([]);
 
-// Word Selection Mode
-type WordSelectionMode = "random" | "custom" | "select";
-const wordSelectionMode = ref<WordSelectionMode>("random");
-const selectedPredefinedPairIndex = ref<number | undefined>(undefined); // Use undefined instead of null
+function saveCurrentPlayerSettings() {
+  savePlayerSettingsToLocalStorage({
+    players: playersState.value,
+    numberOfUndercovers: selectedUndercovers.value,
+    numberOfMrWhites: selectedMrWhites.value,
+    selectedPackNames: selectedPackNames.value,
+  });
+}
 
-const wordSelectionOptions = [
-  { value: "random", label: "Casuali" },
-  { value: "select", label: "Scelte dalla nostra lista" },
-  { value: "custom", label: "Personalizzate" },
-];
+function updateSpecialRoleCount(
+  role: "undercover" | "mrwhite",
+  change: 1 | -1
+) {
+  if (role === "undercover") {
+    const newValue = selectedUndercovers.value + change;
+    if (newValue >= 0 && newValue <= maxPossibleUndercovers.value) {
+      selectedUndercovers.value = newValue;
+    }
+  } else {
+    const newValue = selectedMrWhites.value + change;
+    if (newValue >= 0 && newValue <= maxPossibleMrWhites.value) {
+      selectedMrWhites.value = newValue;
+    }
+  }
+  saveCurrentPlayerSettings();
+}
 
-// Options for the Select Menu
-const predefinedPairOptions = computed(() =>
-  wordPairs.map((pair, index) => ({
-    label: `${pair.civilian} / ${pair.undercover}`,
-    value: index,
-  }))
-);
+function togglePack(packName: string) {
+  shouldUseCustomWords.value = false; // Disable custom words when a pack is selected
+  const index = selectedPackNames.value.indexOf(packName);
 
-// Accordion items definition (Settings removed)
+  if (index > -1) {
+    // Deselect specific pack
+    selectedPackNames.value.splice(index, 1);
+  } else {
+    // Select specific pack
+    selectedPackNames.value.push(packName);
+  }
+
+  saveCurrentPlayerSettings();
+}
+
+watch(shouldUseCustomWords, (isUsingCustom) => {
+  if (isUsingCustom) {
+    // User wants to use custom words, so save the current pack selection and clear it.
+    if (selectedPackNames.value.length > 0) {
+      lastSelectedPackNames.value = [...selectedPackNames.value];
+    }
+    selectedPackNames.value = [];
+  } else {
+    // User switched back to using word packs, so restore the previous selection.
+    if (lastSelectedPackNames.value.length > 0) {
+      selectedPackNames.value = [...lastSelectedPackNames.value];
+    } else {
+      // If there was no prior selection, default to all packs.
+      selectedPackNames.value = wordPackNames;
+    }
+  }
+});
+
+// Accordion items definition
 const accordionItems = [
   {
     label: "Civili, Undercover e Mr. White",
     slot: "players",
     defaultOpen: true,
   },
-  { label: "Parole", slot: "words" },
+  {
+    label: "Parole",
+    slot: "words",
+    defaultOpen: false,
+  },
 ];
 
 const {
@@ -82,6 +129,23 @@ onMounted(() => {
       playersState.value = [...lastSettings.players];
       selectedUndercovers.value = lastSettings.numberOfUndercovers;
       selectedMrWhites.value = lastSettings.numberOfMrWhites;
+      if (
+        lastSettings.selectedPackNames &&
+        lastSettings.selectedPackNames.length > 0
+      ) {
+        selectedPackNames.value = [...lastSettings.selectedPackNames];
+        lastSelectedPackNames.value = [...lastSettings.selectedPackNames];
+        shouldUseCustomWords.value = false;
+      } else {
+        // Default to all packs if none were saved
+        selectedPackNames.value = wordPackNames;
+        lastSelectedPackNames.value = [...selectedPackNames.value];
+      }
+
+      if (selectedPackNames.value.length !== wordPackNames.length){
+        const accordionButton = document?.querySelector('#startgame-accordion-item-1');
+        (accordionButton as HTMLElement)?.click();
+      }
     } else {
       resetLocalSetupState();
     }
@@ -118,6 +182,9 @@ watch(maxPossibleSpecialRoles, (newMaxSpecial) => {
     if (selectedMrWhites.value > maxPossibleMrWhites.value) {
       selectedMrWhites.value = maxPossibleMrWhites.value;
     }
+    if (selectedUndercovers.value === 0 && selectedMrWhites.value === 0) {
+      selectedUndercovers.value = 1;
+    }
   }
 });
 
@@ -125,11 +192,10 @@ function resetLocalSetupState() {
   selectedUndercovers.value = 1;
   selectedMrWhites.value = 0;
   newPlayerName.value = "";
-  useCustomWords.value = false;
+  shouldUseCustomWords.value = false;
   customCivilianWord.value = "";
   customUndercoverWord.value = "";
-  wordSelectionMode.value = "random";
-  selectedPredefinedPairIndex.value = undefined; // Reset to undefined
+  selectedPackNames.value = wordPackNames;
 }
 
 function resetGlobalGameState() {
@@ -159,10 +225,14 @@ function addPlayer() {
     playersState.value.push(nameToAdd);
     newPlayerName.value = "";
   }
+
+  saveCurrentPlayerSettings();
 }
 
 function removePlayer(index: number) {
   playersState.value.splice(index, 1);
+
+  saveCurrentPlayerSettings();
 }
 
 const errorMessage = ref("");
@@ -178,7 +248,6 @@ function startNewGame() {
   errorMessage.value = ""; // Reset error before starting
 
   clearSavedGameState();
-  clearPlayerSettingsFromLocalStorage();
 
   const numPlayers = playersState.value.length;
   const numUndercovers = selectedUndercovers.value;
@@ -186,7 +255,7 @@ function startNewGame() {
 
   let selectedPair: WordPair | null = null;
 
-  if (wordSelectionMode.value === "custom") {
+  if (shouldUseCustomWords.value) {
     const civilianWord = customCivilianWord.value.trim();
     const undercoverWord = customUndercoverWord.value.trim();
     if (!civilianWord || !undercoverWord) {
@@ -200,19 +269,12 @@ function startNewGame() {
       return;
     }
     selectedPair = { civilian: civilianWord, undercover: undercoverWord };
-  } else if (wordSelectionMode.value === "select") {
-    if (
-      selectedPredefinedPairIndex.value === undefined ||
-      selectedPredefinedPairIndex.value < 0 ||
-      selectedPredefinedPairIndex.value >= wordPairs.length
-    ) {
-      errorMessage.value =
-        "Per favore, seleziona una coppia di parole dalla lista.";
+  } else {
+    if (selectedPackNames.value.length === 0) {
+      errorMessage.value = "Per favore, seleziona almeno un pacchetto.";
       return;
     }
-    selectedPair = wordPairs[selectedPredefinedPairIndex.value]!;
-  } else {
-    selectedPair = getRandomWordPair();
+    selectedPair = getRandomWordPair(selectedPackNames.value);
     if (!selectedPair) {
       errorMessage.value =
         "Errore: Impossibile caricare una coppia di parole casuale.";
@@ -310,22 +372,16 @@ function discardSavedGame() {
   clearSavedGameState();
   resetLocalSetupState();
   resetGlobalGameState();
-
-  if (savedGameState.value) {
-    // Save player settings before clearing state
-    savePlayerSettingsToLocalStorage({
-      players: savedGameState.value.players ?? [],
-      numberOfUndercovers: savedGameState.value.numberOfUndercovers ?? 1,
-      numberOfMrWhites: savedGameState.value.numberOfMrWhites ?? 0,
-    });
-
-    // Restore players and roles from saved state
-    playersState.value = savedGameState.value.players ?? [];
-    numberOfUndercoversState.value = savedGameState.value.numberOfUndercovers ?? 1;
-    numberOfMrWhitesState.value = savedGameState.value.numberOfMrWhites ?? 0;
-  }
-
   savedGameState.value = null;
+
+  const lastSettings = loadPlayerSettingsFromLocalStorage();
+  if (lastSettings) {
+    // Restore players and roles from the local storage
+    playersState.value = lastSettings.players ?? [];
+    numberOfUndercoversState.value = lastSettings.numberOfUndercovers ?? 1;
+    numberOfMrWhitesState.value = lastSettings.numberOfMrWhites ?? 0;
+    selectedPackNames.value = lastSettings.selectedPackNames ?? wordPackNames;
+  }
 }
 
 function formatTimestamp(timestamp: number): string {
@@ -355,10 +411,19 @@ function formatTimestamp(timestamp: number): string {
       </p>
 
       <div class="flex justify-center gap-4">
-        <UButton color="green" :size="isMinimumMd ? 'xl' : 'md'" @click="resumeGame">
+        <UButton
+          color="green"
+          :size="isMinimumMd ? 'xl' : 'md'"
+          @click="resumeGame"
+        >
           Riprendi Partita
         </UButton>
-        <UButton color="red" variant="soft" :size="isMinimumMd ? 'xl' : 'md'" @click="discardSavedGame">
+        <UButton
+          color="red"
+          variant="soft"
+          :size="isMinimumMd ? 'xl' : 'md'"
+          @click="discardSavedGame"
+        >
           Scarta e Inizia Nuova
         </UButton>
       </div>
@@ -373,6 +438,18 @@ function formatTimestamp(timestamp: number): string {
       </template>
 
       <UAccordion :items="accordionItems" size="xl" multiple>
+        <template #default="{ item, index, open }">
+          <UButton variant="soft" size="xl" class="mb-1.5">
+            <span :id="`startgame-accordion-item-${index}`" class="text-left break-all line-clamp-1">{{ item.label }}</span>
+            <template #trailing>
+              <UIcon
+                name="i-heroicons-chevron-right-20-solid"
+                class="w-5 h-5 ms-auto transform transition-transform duration-200"
+                :class="[open && 'rotate-90']"
+              />
+            </template>
+          </UButton>
+        </template>
         <template #players>
           <div class="px-2 space-y-4">
             <!-- Add Player Section -->
@@ -406,11 +483,15 @@ function formatTimestamp(timestamp: number): string {
                 <li
                   v-for="(player, index) in playersState"
                   :key="player"
-                  class="flex justify-between items-center bg-white dark:bg-gray-800 px-3 py-2 sm:py-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
+                  class="flex justify-between items-center bg-white dark:bg-gray-800 px-3 py-1 sm:py-3 rounded shadow-sm border border-gray-200 dark:border-gray-700"
                 >
-                  <span class="text-gray-800 dark:text-gray-100">{{
-                    player
-                  }}</span>
+                  <span class="text-gray-600 dark:text-gray-200">
+                    {{ index + 1 }}.
+                    <span
+                      class="font-medium text-gray-800 dark:text-gray-100"
+                      >{{ player }}</span
+                    >
+                  </span>
                   <UButton
                     icon="i-heroicons-x-circle-20-solid"
                     color="red"
@@ -463,7 +544,7 @@ function formatTimestamp(timestamp: number): string {
                     <template #panel>
                       <div class="p-3 text-sm max-w-xs">
                         Conosce una parola diversa ma simile a quella dei
-                        civili.<br>Deve confondersi tra loro.
+                        civili.<br >Deve confondersi tra loro.
                       </div>
                     </template>
                   </UPopover>
@@ -474,12 +555,7 @@ function formatTimestamp(timestamp: number): string {
                       class="p-1"
                       aria-label="Diminuisci Undercover"
                       :disabled="selectedUndercovers <= 0"
-                      @click="
-                        selectedUndercovers = Math.max(
-                          0,
-                          selectedUndercovers - 1
-                        )
-                      "
+                      @click="updateSpecialRoleCount('undercover', -1)"
                     />
                     <p class="w-4 text-center text-base">
                       {{ selectedUndercovers }}
@@ -490,12 +566,7 @@ function formatTimestamp(timestamp: number): string {
                       class="p-1"
                       aria-label="Aumenta Undercover"
                       :disabled="selectedUndercovers >= maxPossibleUndercovers"
-                      @click="
-                        selectedUndercovers = Math.min(
-                          maxPossibleUndercovers,
-                          selectedUndercovers + 1
-                        )
-                      "
+                      @click="updateSpecialRoleCount('undercover', 1)"
                     />
                     <span
                       class="hidden sm:block text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
@@ -528,7 +599,7 @@ function formatTimestamp(timestamp: number): string {
                     </label>
                     <template #panel>
                       <div class="p-3 text-sm max-w-xs">
-                        Non conosce nessuna parola.<br>Deve indovinare quella
+                        Non conosce nessuna parola.<br >Deve indovinare quella
                         dei civili.
                       </div>
                     </template>
@@ -540,9 +611,7 @@ function formatTimestamp(timestamp: number): string {
                       class="p-1"
                       aria-label="Diminuisci Mr. White"
                       :disabled="selectedMrWhites <= 0"
-                      @click="
-                        selectedMrWhites = Math.max(0, selectedMrWhites - 1)
-                      "
+                      @click="updateSpecialRoleCount('mrwhite', -1)"
                     />
                     <p class="w-4 text-center text-base">
                       {{ selectedMrWhites }}
@@ -553,12 +622,7 @@ function formatTimestamp(timestamp: number): string {
                       class="p-1"
                       aria-label="Aumenta Mr. White"
                       :disabled="selectedMrWhites >= maxPossibleMrWhites"
-                      @click="
-                        selectedMrWhites = Math.min(
-                          maxPossibleMrWhites,
-                          selectedMrWhites + 1
-                        )
-                      "
+                      @click="updateSpecialRoleCount('mrwhite', 1)"
                     />
                     <span
                       class="hidden sm:block text-sm text-gray-500 dark:text-gray-400 w-16 text-right"
@@ -595,63 +659,86 @@ function formatTimestamp(timestamp: number): string {
         </template>
 
         <template #words>
-          <div class="px-2">
-            <!-- Word Selection Mode -->
-            <UFormGroup
-              label="Con quali parole vuoi giocare?"
-              class="mb-4 px-2"
-            >
-              <URadioGroup
-                v-model="wordSelectionMode"
-                :options="wordSelectionOptions"
-              />
-            </UFormGroup>
-
-            <!-- Custom Word Inputs (Conditional) -->
-            <div
-              v-if="wordSelectionMode === 'custom'"
-              class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
-            >
-              <UFormGroup label="Parola Cittadino">
-                <UInput
-                  v-model.trim="customCivilianWord"
-                  placeholder="Es: Cane"
-                  aria-label="Parola Cittadino"
-                  size="lg"
-                />
-              </UFormGroup>
-              <UFormGroup label="Parola Undercover">
-                <UInput
-                  v-model.trim="customUndercoverWord"
-                  placeholder="Es: Gatto"
-                  aria-label="Parola Undercover"
-                  size="lg"
-                />
-              </UFormGroup>
+          <div class="px-2 space-y-6">
+            <!-- Word Pack Selection -->
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-3"
+              >
+                Scegli con quali pacchetti di parole giocare
+              </label>
+              <div
+                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5"
+              >
+                <div
+                  v-for="pack in wordPacks"
+                  :key="pack.name"
+                  class="relative rounded-lg border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 h-20 md:h-24"
+                  :class="{
+                    'bg-primary-400/90 text-white shadow-md scale-105 border-primary-600':
+                      selectedPackNames.includes(pack.name),
+                    'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-transparent':
+                      !selectedPackNames.includes(pack.name),
+                  }"
+                  @click="togglePack(pack.name)"
+                >
+                  <span class="text-3xl mb-1">{{ pack.icon }}</span>
+                  <span class="text-sm font-semibold text-center">{{
+                    pack.name
+                  }}</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Predefined Word Selection (Conditional) -->
-            <UFormGroup
-              v-if="wordSelectionMode === 'select'"
-              label="Scegli Coppia Predefinita"
-              class="mb-4"
-            >
-              <USelectMenu
-                v-model="selectedPredefinedPairIndex"
-                :options="predefinedPairOptions"
-                placeholder="Seleziona una coppia..."
-                value-attribute="value"
-                option-attribute="label"
-                searchable
-                searchable-placeholder="Cerca coppia..."
-                aria-label="Seleziona coppia di parole predefinita"
-              />
-            </UFormGroup>
+            <!-- Custom Words Section -->
+            <div>
+              <UDivider>
+                <span class="text-sm">oppure</span>
+              </UDivider>
+              <div class="flex justify-center mt-4">
+                <UCheckbox
+                  v-model="shouldUseCustomWords"
+                  name="custom-words"
+                  label="Usa parole personalizzate"
+                />
+              </div>
 
-            <!-- Validation for Custom Words -->
+              <div
+                v-if="shouldUseCustomWords"
+                class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"
+              >
+                <UFormGroup label="Parola Cittadino">
+                  <UInput
+                    v-model.trim="customCivilianWord"
+                    placeholder="Es: Cane"
+                    aria-label="Parola Cittadino"
+                    size="lg"
+                  />
+                </UFormGroup>
+                <UFormGroup label="Parola Undercover">
+                  <UInput
+                    v-model.trim="customUndercoverWord"
+                    placeholder="Es: Gatto"
+                    aria-label="Parola Undercover"
+                    size="lg"
+                  />
+                </UFormGroup>
+              </div>
+            </div>
+
+            <!-- Validation Alerts -->
+            <UAlert
+              v-if="!shouldUseCustomWords && selectedPackNames.length === 0"
+              icon="i-heroicons-exclamation-circle"
+              color="orange"
+              variant="soft"
+              title="Selezione Mancante"
+              description="Per favore, scegli almeno un pacchetto di parole."
+              class="mb-4"
+            />
             <UAlert
               v-if="
-                wordSelectionMode === 'custom' &&
+                shouldUseCustomWords &&
                 (!customCivilianWord || !customUndercoverWord)
               "
               icon="i-heroicons-exclamation-circle"
@@ -663,7 +750,7 @@ function formatTimestamp(timestamp: number): string {
             />
             <UAlert
               v-if="
-                wordSelectionMode === 'custom' &&
+                shouldUseCustomWords &&
                 customCivilianWord &&
                 customUndercoverWord &&
                 customCivilianWord.toLowerCase() ===
@@ -674,19 +761,6 @@ function formatTimestamp(timestamp: number): string {
               variant="soft"
               title="Parole Uguali"
               description="Le parole personalizzate non possono essere uguali."
-              class="mb-4"
-            />
-            <!-- Validation for Selected Predefined Word -->
-            <UAlert
-              v-if="
-                wordSelectionMode === 'select' &&
-                selectedPredefinedPairIndex === undefined
-              "
-              icon="i-heroicons-exclamation-circle"
-              color="orange"
-              variant="soft"
-              title="Selezione Mancante"
-              description="Per favore, scegli una coppia di parole dalla lista."
               class="mb-4"
             />
           </div>
@@ -711,13 +785,12 @@ function formatTimestamp(timestamp: number): string {
           selectedUndercovers + selectedMrWhites < 1 ||
           selectedUndercovers > maxPossibleUndercovers ||
           selectedMrWhites > maxPossibleMrWhites ||
-          (wordSelectionMode === 'custom' &&
+          (!shouldUseCustomWords && selectedPackNames.length === 0) ||
+          (shouldUseCustomWords &&
             (!customCivilianWord ||
               !customUndercoverWord ||
               customCivilianWord.toLowerCase() ===
-                customUndercoverWord.toLowerCase())) ||
-          (wordSelectionMode === 'select' &&
-            selectedPredefinedPairIndex === undefined) // Check against undefined
+                customUndercoverWord.toLowerCase()))
         "
         size="xl"
         block
