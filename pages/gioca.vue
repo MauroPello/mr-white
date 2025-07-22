@@ -635,10 +635,7 @@ const hasMrWhiteJustWon = computed(
         />
       </p>
     </div>
-    <div
-      v-else
-      class="text-center text-sm pt-6 px-8 w-full"
-    >
+    <div v-else class="text-center text-sm pt-6 px-8 w-full">
       <p>
         Vuoi aiutare a migliorare il gioco?
         <UButton
@@ -651,7 +648,12 @@ const hasMrWhiteJustWon = computed(
       </p>
     </div>
 
-    <UModal v-model="isExitConfirmationModalOpen">
+    <UModal
+      v-model="isExitConfirmationModalOpen"
+      :ui="{
+        container: 'flex min-h-full items-center justify-center text-center',
+      }"
+    >
       <UCard>
         <template #header>
           <h2 class="text-lg font-semibold">Conferma Uscita</h2>

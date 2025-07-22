@@ -337,7 +337,8 @@ watch(
 </template>
 
 <style lang="postcss" scoped>
-[id^="gioca"] {
+[id^="gioca"],
+[id^="supporta"] {
   scroll-margin-top: 80px; /* Must be the same height as your navbar */
 }
 </style>
