@@ -7,9 +7,31 @@ import {
   companySEODescription,
 } from "~/constants/company";
 
-const consigliSEOTitle = `Diventa un Campione di ${companyName}: Consigli e Strategie`;
-const consigliSEODescription = `Vuoi vincere a ${companyName}? Scopri i nostri consigli per smascherare gli avversari e dominare il gioco, che tu sia Civile, Undercover o Mr. White!`;
+const consigliSEOTitle = `Consigli e Strategie - ${companyName}`;
+const consigliSEODescription = `Diventa un maestro di ${companyName}! Scopri strategie avanzate e consigli divertenti per dominare il gioco, che tu sia Civile, Undercover o il misterioso Mr. White.`;
 const consigliPageUrl = `${companyUrl}/consigli`;
+
+const articleBodyContent = `
+  L'Arte del Sospetto: Consigli per Tutti i Giocatori
+  - L'ascolto è il tuo superpotere: Non distrarti! Le parole degli altri sono un tesoro di indizi. Un'esitazione, una parola troppo strana... tutto può smascherare un impostore.
+  - Il tempo è tuo nemico (o alleato): Rispondi con naturalezza. Se ci metti troppo, sembrerai sospetto. Se sei troppo veloce, potresti tradirti.
+  - Diventa un lettore di menti (o quasi): Le parole non sono tutto. Un'occhiata nervosa, un sorriso tirato... impara a leggere il linguaggio del corpo.
+  - Divertiti! L'obiettivo è passare una bella serata. Una risata può essere la migliore delle strategie.
+
+  La Via del Civile: Diventa un Detective Infallibile
+  - L'indizio perfetto: Né troppo ovvio, né troppo oscuro. Se la parola è "Pizza", "Margherita" è un indizio da manuale. "Cibo" è da principianti e ti farà accusare!
+  - Varia il tuo gioco: Non usare solo sinonimi. Pensa a luoghi, azioni o sensazioni collegate alla parola. Spiazzerai gli impostori.
+  - Tendi una trappola: Sospetti di qualcuno? Lancia un indizio leggermente ambiguo e osserva la sua reazione. Potrebbe cadere dritto nel tuo tranello.
+  - Accusa con stile (e prove): Non puntare il dito a caso. "Ti accuso perché il tuo indizio 'tonda' è sospetto!" è molto più efficace di un "Sei tu!".
+
+  Il Manuale del Bluff: Strategie per Undercover e Mr. White
+  - L'arte della mimetizzazione: All'inizio, stai zitto e ascolta. Cerca di capire il tema generale e poi lancia un indizio vago che possa funzionare.
+  - Il pappagallo intelligente: Ripetere un indizio altrui può salvarti, ma non abusarne. Prova a rielaborarlo con parole tue per sembrare più credibile.
+  - Sicurezza, anche nel panico: Anche se non hai idea di quale sia la parola, mostrati sicuro. Un'espressione serena è la tua migliore maschera.
+  - Attacca per difenderti: Se l'attenzione è su di te, sposta i riflettori. Accusa qualcun altro con decisione, magari sfruttando una sua piccola esitazione.
+  - Il voto strategico: Osserva chi vota per chi. Unisciti alla maggioranza per non destare sospetti, o prova a salvare un altro impostore se ti senti audace.
+  - L'ultima spiaggia di Mr. White: Ti hanno scoperto? Niente panico. Hai un'ultima, gloriosa possibilità. Ripensa a tutti gli indizi e spara la tua ipotesi. La vittoria ha un sapore migliore quando è inaspettata!
+`;
 
 useHead({
   title: consigliSEOTitle,
@@ -17,7 +39,7 @@ useHead({
     { name: "description", content: consigliSEODescription },
     {
       name: "keywords",
-      content: `consigli ${companyName}, strategie ${companyName}, come vincere ${companyName}, trucchi ${companyName}, guida ${companyName}, undercover, mr white, gioco società, gioco bluff`,
+      content: `consigli ${companyName}, strategie ${companyName}, come vincere ${companyName}, trucchi ${companyName}, guida ${companyName}, undercover, mr white, gioco società, gioco bluff, strategie avanzate`,
     },
     { property: "og:title", content: consigliSEOTitle },
     { property: "og:description", content: consigliSEODescription },
@@ -75,26 +97,7 @@ useHead({
             },
             datePublished: new Date().toISOString(),
             mainEntityOfPage: { "@id": `${consigliPageUrl}#webpage` },
-            articleBody: `
-              Consigli per tutti:
-              - Ascolta con attenzione: Le parole degli altri sono indizi preziosi. Fai caso a esitazioni, parole strane o temi ricorrenti per capire chi bluffa.
-              - Pensa in fretta: Non metterci troppo a dare il tuo indizio, potresti sembrare sospetto. La rapidità è un'arma!
-              - Leggi le espressioni: Un'occhiata nervosa o un sorriso troppo sicuro possono svelare molto più delle parole. Diventa un detective delle emozioni!
-
-              Sei un Civile? Ecco come vincere:
-              - Indizi intelligenti: Dai un indizio chiaro ma non scontato. Se la parola è "Spiaggia", "Sabbia" è un buon indizio, "Mare" potrebbe essere troppo generico.
-              - Varia i tuoi indizi: Non limitarti a sinonimi. Pensa a oggetti, azioni o luoghi collegati alla parola per mettere in difficoltà chi non la conosce.
-              - Tendi una trappola: Se hai un sospetto, dai un indizio un po' più ambiguo e osserva la reazione. Potrebbe cadere nel tuo tranello!
-              - Accusa con prove: Non puntare il dito a caso. Basa le tue accuse su indizi concreti, come una parola fuori luogo o un'esitazione di troppo.
-
-              Sei un Undercover o Mr. White? Sopravvivi e vinci:
-              - Mimetizzati: All'inizio, ascolta gli altri per capire il tema generale. Usa parole generiche che possano andare bene per più argomenti.
-              - Fai il pappagallo (con astuzia): Ripeti o adatta le parole degli altri per sembrare credibile, ma non esagerare o desterai sospetti.
-              - Mostrati sicuro: Anche se brancoli nel buio, annuisci e sorridi. La sicurezza è la tua migliore maschera.
-              - Crea scompiglio: L'attenzione è su di te? Accusa qualcun altro con decisione, magari sottolineando una sua piccola incertezza.
-              - Vota per ultimo: Osserva le scelte degli altri prima di votare. Ti aiuterà a capire chi sospetta di chi e a chi conviene eliminare.
-              - Prepara il colpo di scena: Se ti scoprono, non è finita! Ripensa a tutti gli indizi e preparati a indovinare la parola segreta. La vittoria potrebbe essere ancora tua.
-            `,
+            articleBody: articleBodyContent,
           },
           {
             "@type": "WebApplication",
@@ -144,110 +147,130 @@ useHead({
 </script>
 
 <template>
-  <UContainer class="py-12">
-    <div class="prose dark:prose-invert max-w-none">
-      <h1>{{ consigliSEOTitle }}</h1>
-      <p class="lead">{{ consigliSEODescription }}</p>
-
-      <hr >
-
-      <h2>Consigli per Tutti</h2>
-      <ul>
-        <li>
-          <strong>Ascolta con attenzione:</strong> Le parole degli altri sono
-          indizi preziosi. Fai caso a esitazioni, parole strane o temi
-          ricorrenti per capire chi bluffa.
-        </li>
-        <li>
-          <strong>Pensa in fretta:</strong> Non metterci troppo a dare il tuo
-          indizio, potresti sembrare sospetto. La rapidità è un'arma!
-        </li>
-        <li>
-          <strong>Leggi le espressioni:</strong> Un'occhiata nervosa o un
-          sorriso troppo sicuro possono svelare molto più delle parole. Diventa
-          un detective delle emozioni!
-        </li>
-      </ul>
-
-      <h2>Sei un Civile? Ecco come vincere:</h2>
-      <p>
-        Il tuo obiettivo è semplice: scoprire chi mente e convincere gli altri
-        della tua lealtà.
-      </p>
-      <ul>
-        <li>
-          <strong>Indizi intelligenti:</strong> Dai un indizio chiaro ma non
-          scontato. Se la parola è "Spiaggia", "Sabbia" è un buon indizio, "Mare"
-          potrebbe essere troppo generico.
-        </li>
-        <li>
-          <strong>Varia i tuoi indizi:</strong> Non limitarti a sinonimi. Pensa
-          a oggetti, azioni o luoghi collegati alla parola per mettere in
-          difficoltà chi non la conosce.
-        </li>
-        <li>
-          <strong>Tendi una trappola:</strong> Se hai un sospetto, dai un
-          indizio un po' più ambiguo e osserva la reazione. Potrebbe cadere nel
-          tuo tranello!
-        </li>
-        <li>
-          <strong>Accusa con prove:</strong> Non puntare il dito a caso. Basa le
-          tue accuse su indizi concreti, come una parola fuori luogo o
-          un'esitazione di troppo.
-        </li>
-      </ul>
-
-      <h2>Sei un Undercover o Mr. White? Sopravvivi e vinci:</h2>
-      <p>
-        La tua missione è bluffare, confondere gli altri e, se sei Mr. White,
-        indovinare la parola segreta per la vittoria finale.
-      </p>
-      <ul>
-        <li>
-          <strong>Mimetizzati:</strong> All'inizio, ascolta gli altri per capire
-          il tema generale. Usa parole generiche che possano andare bene per più
-          argomenti.
-        </li>
-        <li>
-          <strong>Fai il pappagallo (con astuzia):</strong> Ripeti o adatta le
-          parole degli altri per sembrare credibile, ma non esagerare o desterai
-          sospetti.
-        </li>
-        <li>
-          <strong>Mostrati sicuro:</strong> Anche se brancoli nel buio,
-          annuisci e sorridi. La sicurezza è la tua migliore maschera.
-        </li>
-        <li>
-          <strong>Crea scompiglio:</strong> L'attenzione è su di te? Accusa
-          qualcun altro con decisione, magari sottolineando una sua piccola
-          incertezza.
-        </li>
-        <li>
-          <strong>Vota per ultimo:</strong> Osserva le scelte degli altri prima
-          di votare. Ti aiuterà a capire chi sospetta di chi e a chi conviene
-          eliminare.
-        </li>
-        <li>
-          <strong>Prepara il colpo di scena:</strong> Se ti scoprono, non è
-          finita! Ripensa a tutti gli indizi e preparati a indovinare la parola
-          segreta. La vittoria potrebbe essere ancora tua.
-        </li>
-      </ul>
-
-      <hr >
-
-      <div class="text-center mt-12">
-        <p class="text-lg">
-          Ora che hai le strategie giuste, sei pronto a giocare da campione!
+  <div class="min-h-screen">
+    <UContainer class="py-12">
+      <div class="prose dark:prose-invert mx-auto">
+        <h1>Consigli e Strategie Avanzate</h1>
+        <p class="lead !text-xl !mb-8">
+          {{ consigliSEODescription }}
         </p>
-        <UButton
-          icon="i-heroicons-play-circle"
-          size="lg"
-          @click="navigateTo('/#gioca')"
-        >
-          Gioca Ora
-        </UButton>
+
+        <UAlert
+          icon="i-heroicons-book-open"
+          color="primary"
+          variant="subtle"
+          title="Non conosci le regole del gioco?"
+          description="Prima di tuffarti nelle strategie, assicurati di conoscere le basi. Leggi le regole complete per non perderti neanche un dettaglio!"
+          :actions="[{ label: 'Vai alle Regole', to: '/regole', variant: 'link', color: 'primary', size: 'lg' }]"
+          class="not-prose mb-12"
+          :ui="{ description: 'text-base', title: 'text-lg font-medium', icon: { base: 'size-6' } }"
+        />
+
+        <h2>L'Arte del Sospetto: Consigli per Tutti i Giocatori</h2>
+        <ul>
+          <li>
+            <strong>L'ascolto è il tuo superpotere:</strong> Non distrarti! Le
+            parole degli altri sono un tesoro di indizi. Un'esitazione, una
+            parola troppo strana... tutto può smascherare un impostore.
+          </li>
+          <li>
+            <strong>Il tempo è tuo nemico (o alleato):</strong> Rispondi con
+            naturalezza. Se ci metti troppo, sembrerai sospetto. Se sei troppo
+            veloce, potresti tradirti.
+          </li>
+          <li>
+            <strong>Diventa un lettore di menti (o quasi):</strong> Le parole
+            non sono tutto. Un'occhiata nervosa, un sorriso tirato... impara a
+            leggere il linguaggio del corpo.
+          </li>
+          <li>
+            <strong>Divertiti!</strong> L'obiettivo è passare una bella serata.
+            Una risata può essere la migliore delle strategie.
+          </li>
+        </ul>
+
+        <h2>La Via del Civile: Diventa un Detective Infallibile</h2>
+        <p>
+          Il tuo obiettivo è semplice: scoprire chi mente e convincere gli altri
+          della tua lealtà.
+        </p>
+        <ul>
+          <li>
+            <strong>L'indizio perfetto:</strong> Né troppo ovvio, né troppo
+            oscuro. Se la parola è "Pizza", "Margherita" è un indizio da
+            manuale. "Cibo" è da principianti e ti farà accusare!
+          </li>
+          <li>
+            <strong>Varia il tuo gioco:</strong> Non usare solo sinonimi. Pensa
+            a luoghi, azioni o sensazioni collegate alla parola. Spiazzerai gli
+            impostori.
+          </li>
+          <li>
+            <strong>Tendi una trappola:</strong> Sospetti di qualcuno? Lancia
+            un indizio leggermente ambiguo e osserva la sua reazione. Potrebbe
+            cadere dritto nel tuo tranello.
+          </li>
+          <li>
+            <strong>Accusa con stile (e prove):</strong> Non puntare il dito a
+            caso. "Ti accuso perché il tuo indizio 'tonda' è sospetto!" è molto
+            più efficace di un "Sei tu!".
+          </li>
+        </ul>
+
+        <h2>Il Manuale del Bluff: Strategie per Undercover e Mr. White</h2>
+        <p>
+          La tua missione è bluffare, confondere gli altri e, se sei Mr. White,
+          indovinare la parola segreta per la vittoria finale.
+        </p>
+        <ul>
+          <li>
+            <strong>L'arte della mimetizzazione:</strong> All'inizio, stai
+            zitto e ascolta. Cerca di capire il tema generale e poi lancia un
+            indizio vago che possa funzionare.
+          </li>
+          <li>
+            <strong>Il pappagallo intelligente:</strong> Ripetere un indizio
+            altrui può salvarti, ma non abusarne. Prova a rielaborarlo con
+            parole tue per sembrare più credibile.
+          </li>
+          <li>
+            <strong>Sicurezza, anche nel panico:</strong> Anche se non hai idea
+            di quale sia la parola, mostrati sicuro. Un'espressione serena è la
+            tua migliore maschera.
+          </li>
+          <li>
+            <strong>Attacca per difenderti:</strong> Se l'attenzione è su di te,
+            sposta i riflettori. Accusa qualcun altro con decisione, magari
+            sfruttando una sua piccola esitazione.
+          </li>
+          <li>
+            <strong>Il voto strategico:</strong> Osserva chi vota per chi.
+            Unisciti alla maggioranza per non destare sospetti, o prova a
+            salvare un altro impostore se ti senti audace.
+          </li>
+          <li>
+            <strong>L'ultima spiaggia di Mr. White:</strong> Ti hanno scoperto?
+            Niente panico. Hai un'ultima, gloriosa possibilità. Ripensa a tutti
+            gli indizi e spara la tua ipotesi. La vittoria ha un sapore migliore
+            quando è inaspettata!
+          </li>
+        </ul>
+
+        <hr >
+
+        <div class="text-center mt-12">
+          <p class="text-lg">
+            Ora che hai le strategie giuste, sei pronto a giocare da campione!
+          </p>
+          <UButton
+            icon="i-heroicons-play-circle"
+            size="lg"
+            to="/#gioca"
+          >
+            Gioca Ora
+          </UButton>
+        </div>
       </div>
-    </div>
-  </UContainer>
+    </UContainer>
+  </div>
 </template>

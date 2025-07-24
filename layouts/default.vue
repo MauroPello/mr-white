@@ -61,6 +61,7 @@ useHead({
 
   &__main {
     @apply w-full pt-16 md:pt-20 flex-1;
+    @apply bg-gradient-to-br from-brandy-50 via-brandy-100 to-brandy-200 dark:from-woodsmoke-900 dark:via-woodsmoke-950 dark:to-black;
   }
 }
 </style>

@@ -47,7 +47,7 @@ watch(
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-brandy-50 via-brandy-100 to-brandy-200 dark:from-woodsmoke-900 dark:via-woodsmoke-950 dark:to-black"
+    class="min-h-screen"
   >
     <UContainer class="py-12">
       <div class="text-center mb-16 pt-10">
@@ -89,13 +89,13 @@ watch(
             Inizia a Giocare
           </UButton>
           <UButton
-            to="/consigli"
+            to="/regole"
             variant="ghost"
             icon="i-heroicons-book-open"
             size="xl"
             color="gray"
           >
-            Leggi i Consigli <span aria-hidden="true">→</span>
+            Leggi le Regole <span aria-hidden="true">→</span>
           </UButton>
         </div>
       </div>

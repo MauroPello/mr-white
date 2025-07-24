@@ -46,14 +46,26 @@ const { isMobile } = useScreenSize();
           <p class="hidden sm:block">{{ companyName }}</p>
           <p class="block sm:hidden">Mr. White</p>
         </NuxtLink>
-        <UButton
-          size="sm"
-          class="text-base sm:text-lg text-gray-700 hover:text-black hidden md:block"
-          variant="ghost"
-          to="/consigli"
-        >
-          Consigli
-        </UButton>
+        <div class="hidden md:flex gap-1">
+          <UButton
+            size="sm"
+            class="text-base"
+            variant="ghost"
+            color="gray"
+            to="/regole"
+          >
+            Regole del Gioco
+          </UButton>
+          <UButton
+            size="sm"
+            class="text-base"
+            variant="ghost"
+            color="gray"
+            to="/consigli"
+          >
+            Consigli e Strategie
+          </UButton>
+        </div>
       </div>
       <div class="landing-page-navigator__group">
         <UButton
